@@ -1,11 +1,17 @@
-﻿using SAPbouiCOM.Framework;
-using System;
-using System.Collections.Generic;
+﻿using System;
+using System.Windows.Forms;
+using ContractManagementAddon.Core;
+using ContractManagementAddon.Utilities;
 
 namespace ContractManagementAddon
 {
+    /// <summary>
+    /// Main entry point for the Contract Management Add-on
+    /// </summary>
     class Program
     {
+        private static ContractManagementApplication _application;
+
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -14,47 +20,43 @@ namespace ContractManagementAddon
         {
             try
             {
-                Application oApp = null;
-                if (args.Length < 1)
-                {
-                    oApp = new Application();
-                }
-                else
-                {
-                    //If you want to use an add-on identifier for the development license, you can specify an add-on identifier string as the second parameter.
-                    //oApp = new Application(args[0], "XXXXX");
-                    oApp = new Application(args[0]);
-                }
-                Menu MyMenu = new Menu();
-                MyMenu.AddMenuItems();
-                oApp.RegisterMenuEventHandler(MyMenu.SBO_Application_MenuEvent);
-                Application.SBO_Application.AppEvent += new SAPbouiCOM._IApplicationEvents_AppEventEventHandler(SBO_Application_AppEvent);
-                oApp.Run();
+                Logger.Info("=================================================================");
+                Logger.Info("Starting Contract Management Add-On for SAP Business One");
+                Logger.Info("=================================================================");
+
+                // Initialize and run the application
+                _application = new ContractManagementApplication();
+                _application.Run();
+
+                // Keep the application running
+                Logger.Info("Application is running. Press Ctrl+C or close SAP B1 to exit.");
+                Application.Run();
             }
             catch (Exception ex)
             {
-                System.Windows.Forms.MessageBox.Show(ex.Message);
+                string errorMsg = $"Fatal error starting add-on: {ex.Message}\n\nStack Trace:\n{ex.StackTrace}";
+                Logger.Error(errorMsg, ex);
+                MessageBox.Show(errorMsg, "Contract Management Add-on Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }
-
-        static void SBO_Application_AppEvent(SAPbouiCOM.BoAppEventTypes EventType)
-        {
-            switch (EventType)
+            finally
             {
-                case SAPbouiCOM.BoAppEventTypes.aet_ShutDown:
-                    //Exit Add-On
-                    System.Windows.Forms.Application.Exit();
-                    break;
-                case SAPbouiCOM.BoAppEventTypes.aet_CompanyChanged:
-                    break;
-                case SAPbouiCOM.BoAppEventTypes.aet_FontChanged:
-                    break;
-                case SAPbouiCOM.BoAppEventTypes.aet_LanguageChanged:
-                    break;
-                case SAPbouiCOM.BoAppEventTypes.aet_ServerTerminition:
-                    break;
-                default:
-                    break;
+                // Cleanup on exit
+                if (_application != null)
+                {
+                    try
+                    {
+                        _application.Shutdown();
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Error("Error during cleanup: " + ex.Message, ex);
+                    }
+                }
+
+                Logger.Info("=================================================================");
+                Logger.Info("Contract Management Add-On terminated");
+                Logger.Info("=================================================================");
             }
         }
     }
