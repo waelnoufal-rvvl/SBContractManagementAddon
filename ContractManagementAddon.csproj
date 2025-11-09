@@ -152,6 +152,9 @@
     <None Include="Documentation\WORKFLOW_TUTORIALS.md" />
     <None Include="Localization\README.md" />
     <None Include="packages.config" />
+    <None Include="ContractManagement.ard">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Tests\Localization\README_TESTS.md" />
     <None Include="Tests\Localization\TEST_IMPLEMENTATION_SUMMARY.md" />
   </ItemGroup>
