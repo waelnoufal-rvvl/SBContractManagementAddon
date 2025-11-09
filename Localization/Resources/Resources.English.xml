@@ -1,0 +1,424 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    English Language Resources
+    Contract Management Add-on for SAP Business One
+    Version: 1.0.0
+-->
+<Resources>
+    <Metadata>
+        <Language>English</Language>
+        <LanguageCode>en-US</LanguageCode>
+        <Version>1.0.0</Version>
+        <LastUpdated>2025-01-06</LastUpdated>
+        <Direction>LTR</Direction>
+    </Metadata>
+
+    <Strings>
+        <!-- Common Strings -->
+        <String Key="Common_Yes">Yes</String>
+        <String Key="Common_No">No</String>
+        <String Key="Common_OK">OK</String>
+        <String Key="Common_Cancel">Cancel</String>
+        <String Key="Common_Save">Save</String>
+        <String Key="Common_Close">Close</String>
+        <String Key="Common_Add">Add</String>
+        <String Key="Common_Edit">Edit</String>
+        <String Key="Common_Delete">Delete</String>
+        <String Key="Common_Remove">Remove</String>
+        <String Key="Common_Search">Search</String>
+        <String Key="Common_Browse">Browse</String>
+        <String Key="Common_Refresh">Refresh</String>
+        <String Key="Common_Print">Print</String>
+        <String Key="Common_Export">Export</String>
+        <String Key="Common_Import">Import</String>
+        <String Key="Common_New">New</String>
+        <String Key="Common_Update">Update</String>
+        <String Key="Common_Submit">Submit</String>
+        <String Key="Common_Approve">Approve</String>
+        <String Key="Common_Reject">Reject</String>
+        <String Key="Common_Required">Required</String>
+        <String Key="Common_Optional">Optional</String>
+        <String Key="Common_All">All</String>
+        <String Key="Common_None">None</String>
+        <String Key="Common_Select">Select</String>
+        <String Key="Common_Clear">Clear</String>
+        <String Key="Common_Apply">Apply</String>
+        <String Key="Common_Reset">Reset</String>
+        <String Key="Common_Back">Back</String>
+        <String Key="Common_Next">Next</String>
+        <String Key="Common_Previous">Previous</String>
+        <String Key="Common_Finish">Finish</String>
+        <String Key="Common_Help">Help</String>
+        <String Key="Common_About">About</String>
+        <String Key="Common_Settings">Settings</String>
+        <String Key="Common_Language">Language</String>
+
+        <!-- Menu Items -->
+        <String Key="Menu_ContractManagement">Contract Management</String>
+        <String Key="Menu_Contracts">Contracts</String>
+        <String Key="Menu_Contracts_New">New Contract</String>
+        <String Key="Menu_Contracts_List">Contract List</String>
+        <String Key="Menu_Contracts_Search">Search Contracts</String>
+        <String Key="Menu_IPC">Interim Payment Certificates</String>
+        <String Key="Menu_IPC_New">New IPC</String>
+        <String Key="Menu_IPC_List">IPC List</String>
+        <String Key="Menu_IPC_Pending">Pending Approvals</String>
+        <String Key="Menu_ChangeOrders">Change Orders</String>
+        <String Key="Menu_ChangeOrders_New">New Change Order</String>
+        <String Key="Menu_ChangeOrders_List">Change Order List</String>
+        <String Key="Menu_Revenue">Revenue Recognition</String>
+        <String Key="Menu_Revenue_PO">Performance Obligations</String>
+        <String Key="Menu_Revenue_Schedule">Revenue Schedules</String>
+        <String Key="Menu_Revenue_Post">Post Revenue</String>
+        <String Key="Menu_Setup">Setup</String>
+        <String Key="Menu_Setup_Currency">Currency Master</String>
+        <String Key="Menu_Setup_ExchangeRates">Exchange Rates</String>
+        <String Key="Menu_Setup_Settings">Add-on Settings</String>
+        <String Key="Menu_Setup_Permissions">User Permissions</String>
+        <String Key="Menu_Reports">Reports</String>
+        <String Key="Menu_Reports_Revenue">Revenue Recognition Summary</String>
+        <String Key="Menu_Reports_Contracts">Contract Summary</String>
+        <String Key="Menu_Reports_Backlog">Contract Backlog</String>
+        <String Key="Menu_Reports_Aging">Aging Analysis</String>
+        <String Key="Menu_Tools">Tools</String>
+        <String Key="Menu_Tools_Import">Import Data</String>
+        <String Key="Menu_Tools_Export">Export Data</String>
+        <String Key="Menu_Tools_Audit">Audit Log</String>
+
+        <!-- Contract Form -->
+        <String Key="Form_Contract_Title">Contract Management</String>
+        <String Key="Form_Contract_New">New Contract</String>
+        <String Key="Form_Contract_Edit">Edit Contract</String>
+
+        <!-- Contract Fields -->
+        <String Key="Contract_Code">Contract Code</String>
+        <String Key="Contract_Name">Contract Name</String>
+        <String Key="Contract_Customer">Customer</String>
+        <String Key="Contract_CustomerCode">Customer Code</String>
+        <String Key="Contract_CustomerName">Customer Name</String>
+        <String Key="Contract_ContactPerson">Contact Person</String>
+        <String Key="Contract_Email">Email</String>
+        <String Key="Contract_Phone">Phone</String>
+        <String Key="Contract_StartDate">Start Date</String>
+        <String Key="Contract_EndDate">End Date</String>
+        <String Key="Contract_Status">Status</String>
+        <String Key="Contract_Type">Contract Type</String>
+        <String Key="Contract_Type_FixedPrice">Fixed Price</String>
+        <String Key="Contract_Type_TimeAndMaterials">Time &amp; Materials</String>
+        <String Key="Contract_Type_CostPlus">Cost Plus</String>
+        <String Key="Contract_Currency">Currency</String>
+        <String Key="Contract_ExchangeRate">Exchange Rate</String>
+        <String Key="Contract_TotalValue">Total Value</String>
+        <String Key="Contract_LocalValue">Local Currency Value</String>
+        <String Key="Contract_PaymentTerms">Payment Terms</String>
+        <String Key="Contract_TaxGroup">Tax Group</String>
+        <String Key="Contract_TaxAmount">Tax Amount</String>
+        <String Key="Contract_Owner">Owner</String>
+        <String Key="Contract_Department">Department</String>
+        <String Key="Contract_Remarks">Remarks</String>
+        <String Key="Contract_Attachments">Attachments</String>
+        <String Key="Contract_CreatedBy">Created By</String>
+        <String Key="Contract_CreatedDate">Created Date</String>
+        <String Key="Contract_ModifiedBy">Modified By</String>
+        <String Key="Contract_ModifiedDate">Modified Date</String>
+
+        <!-- Contract Sections -->
+        <String Key="Section_GeneralInformation">General Information</String>
+        <String Key="Section_FinancialInformation">Financial Information</String>
+        <String Key="Section_ContractLines">Contract Lines</String>
+        <String Key="Section_AdditionalInformation">Additional Information</String>
+        <String Key="Section_Dates">Dates</String>
+        <String Key="Section_ContactInformation">Contact Information</String>
+
+        <!-- Contract Lines -->
+        <String Key="ContractLine_ItemCode">Item Code</String>
+        <String Key="ContractLine_Description">Description</String>
+        <String Key="ContractLine_ItemType">Item Type</String>
+        <String Key="ContractLine_ItemType_Service">Service</String>
+        <String Key="ContractLine_ItemType_Item">Item</String>
+        <String Key="ContractLine_ItemType_Resource">Resource</String>
+        <String Key="ContractLine_Quantity">Quantity</String>
+        <String Key="ContractLine_Unit">Unit</String>
+        <String Key="ContractLine_UnitPrice">Unit Price</String>
+        <String Key="ContractLine_GrossTotal">Gross Total</String>
+        <String Key="ContractLine_Discount">Discount %</String>
+        <String Key="ContractLine_DiscountAmount">Discount Amount</String>
+        <String Key="ContractLine_Tax">Tax %</String>
+        <String Key="ContractLine_TaxAmount">Tax Amount</String>
+        <String Key="ContractLine_LineTotal">Line Total</String>
+        <String Key="ContractLine_Category">Category</String>
+        <String Key="ContractLine_GLAccount">G/L Account</String>
+        <String Key="ContractLine_CostCenter">Cost Center</String>
+        <String Key="ContractLine_Project">Project</String>
+
+        <!-- IPC Form -->
+        <String Key="Form_IPC_Title">Interim Payment Certificate</String>
+        <String Key="Form_IPC_New">New IPC</String>
+        <String Key="Form_IPC_Edit">Edit IPC</String>
+
+        <!-- IPC Fields -->
+        <String Key="IPC_Number">IPC Number</String>
+        <String Key="IPC_ContractCode">Contract Code</String>
+        <String Key="IPC_ContractName">Contract Name</String>
+        <String Key="IPC_Date">IPC Date</String>
+        <String Key="IPC_PeriodFrom">Period From</String>
+        <String Key="IPC_PeriodTo">Period To</String>
+        <String Key="IPC_Type">IPC Type</String>
+        <String Key="IPC_Type_Regular">Regular</String>
+        <String Key="IPC_Type_Final">Final</String>
+        <String Key="IPC_Type_RetentionRelease">Retention Release</String>
+        <String Key="IPC_Status">Status</String>
+        <String Key="IPC_GrossAmount">Gross Amount</String>
+        <String Key="IPC_Retention">Retention</String>
+        <String Key="IPC_RetentionPercent">Retention %</String>
+        <String Key="IPC_Advances">Previous Advances</String>
+        <String Key="IPC_Subtotal">Subtotal</String>
+        <String Key="IPC_VAT">VAT</String>
+        <String Key="IPC_NetPayable">Net Amount Payable</String>
+        <String Key="IPC_Remarks">Remarks</String>
+        <String Key="IPC_PreparedBy">Prepared By</String>
+        <String Key="IPC_ApprovedBy">Approved By</String>
+
+        <!-- IPC Sections -->
+        <String Key="Section_IPCHeader">IPC Header</String>
+        <String Key="Section_WorkSummary">Work Summary</String>
+        <String Key="Section_PerformanceObligations">Performance Obligations</String>
+        <String Key="Section_FinancialCalculation">Financial Calculation</String>
+        <String Key="Section_SupportingDocuments">Supporting Documents</String>
+        <String Key="Section_Approval">Approval</String>
+
+        <!-- Performance Obligations -->
+        <String Key="PO_Code">PO Code</String>
+        <String Key="PO_Description">Description</String>
+        <String Key="PO_Value">PO Value</String>
+        <String Key="PO_PreviousAmount">Previous Amount</String>
+        <String Key="PO_ThisPeriod">This Period</String>
+        <String Key="PO_TotalPercent">Total %</String>
+        <String Key="PO_Completion">Completion %</String>
+        <String Key="PO_Completed">Completed</String>
+
+        <!-- Change Order Form -->
+        <String Key="Form_CO_Title">Change Order</String>
+        <String Key="Form_CO_New">New Change Order</String>
+        <String Key="Form_CO_Edit">Edit Change Order</String>
+
+        <!-- Change Order Fields -->
+        <String Key="CO_Number">CO Number</String>
+        <String Key="CO_ContractCode">Contract Code</String>
+        <String Key="CO_Date">CO Date</String>
+        <String Key="CO_EffectiveDate">Effective Date</String>
+        <String Key="CO_Type">Change Type</String>
+        <String Key="CO_Type_Scope">Scope</String>
+        <String Key="CO_Type_Schedule">Schedule</String>
+        <String Key="CO_Type_Cost">Cost</String>
+        <String Key="CO_Type_All">All</String>
+        <String Key="CO_Priority">Priority</String>
+        <String Key="CO_Priority_High">High</String>
+        <String Key="CO_Priority_Medium">Medium</String>
+        <String Key="CO_Priority_Low">Low</String>
+        <String Key="CO_Subject">Subject</String>
+        <String Key="CO_Reason">Reason for Change</String>
+        <String Key="CO_Impact">Impact Description</String>
+        <String Key="CO_OriginalValue">Original Contract Value</String>
+        <String Key="CO_PreviousChanges">Previous Changes</String>
+        <String Key="CO_CurrentValue">Current Contract Value</String>
+        <String Key="CO_ThisChange">This Change Order</String>
+        <String Key="CO_RevisedValue">Revised Contract Value</String>
+        <String Key="CO_OriginalEndDate">Original End Date</String>
+        <String Key="CO_DaysExtension">Days Extension</String>
+        <String Key="CO_RevisedEndDate">Revised End Date</String>
+
+        <!-- Revenue Recognition -->
+        <String Key="Form_Revenue_Title">Revenue Recognition</String>
+        <String Key="Revenue_Method">Recognition Method</String>
+        <String Key="Revenue_Method_PointInTime">Point in Time</String>
+        <String Key="Revenue_Method_OverTime">Over Time</String>
+        <String Key="Revenue_ProgressMethod">Progress Measurement Method</String>
+        <String Key="Revenue_ProgressMethod_Input">Input Method (Cost-to-Cost)</String>
+        <String Key="Revenue_ProgressMethod_Output">Output Method (Units Delivered)</String>
+        <String Key="Revenue_ProgressMethod_TimeBased">Time-Based (Straight Line)</String>
+        <String Key="Revenue_AllocatedAmount">Allocated Amount</String>
+        <String Key="Revenue_RecognizedToDate">Recognized to Date</String>
+        <String Key="Revenue_DeferredRevenue">Deferred Revenue</String>
+        <String Key="Revenue_RemainingRevenue">Remaining Revenue</String>
+        <String Key="Revenue_EstimatedCost">Estimated Total Cost</String>
+        <String Key="Revenue_ActualCost">Actual Costs to Date</String>
+        <String Key="Revenue_PerformancePeriod">Performance Period</String>
+
+        <!-- Currency & Exchange Rates -->
+        <String Key="Form_Currency_Title">Currency Master</String>
+        <String Key="Currency_Code">Currency Code</String>
+        <String Key="Currency_Name">Currency Name</String>
+        <String Key="Currency_Symbol">Symbol</String>
+        <String Key="Currency_DecimalPlaces">Decimal Places</String>
+        <String Key="Currency_ISOCode">ISO Code</String>
+        <String Key="Currency_NumericCode">Numeric Code</String>
+        <String Key="Currency_Active">Active</String>
+        <String Key="Currency_AllowInContracts">Allow in Contracts</String>
+        <String Key="Currency_RateSource">Rate Source</String>
+        <String Key="Currency_RateSource_Manual">Manual</String>
+        <String Key="Currency_RateSource_Auto">Auto-Update</String>
+        <String Key="Currency_RateSource_Fixed">Fixed</String>
+        <String Key="Currency_ExternalService">External Service</String>
+        <String Key="Currency_UpdateFrequency">Update Frequency</String>
+        <String Key="Currency_LastUpdated">Last Updated</String>
+        <String Key="Currency_CurrentRate">Current Rate</String>
+
+        <!-- Exchange Rates -->
+        <String Key="Form_ExchangeRate_Title">Exchange Rate Management</String>
+        <String Key="ExchangeRate_EffectiveDate">Effective Date</String>
+        <String Key="ExchangeRate_FromCurrency">From Currency</String>
+        <String Key="ExchangeRate_ToCurrency">To Currency</String>
+        <String Key="ExchangeRate_Rate">Exchange Rate</String>
+        <String Key="ExchangeRate_InverseRate">Inverse Rate</String>
+        <String Key="ExchangeRate_Type">Rate Type</String>
+        <String Key="ExchangeRate_Type_Buying">Buying</String>
+        <String Key="ExchangeRate_Type_Selling">Selling</String>
+        <String Key="ExchangeRate_Type_Average">Average</String>
+        <String Key="ExchangeRate_GetLatest">Get Latest Rate</String>
+        <String Key="ExchangeRate_History">Rate History</String>
+
+        <!-- Status Values -->
+        <String Key="Status_Draft">Draft</String>
+        <String Key="Status_Active">Active</String>
+        <String Key="Status_Pending">Pending</String>
+        <String Key="Status_PendingApproval">Pending Approval</String>
+        <String Key="Status_Approved">Approved</String>
+        <String Key="Status_Rejected">Rejected</String>
+        <String Key="Status_Posted">Posted</String>
+        <String Key="Status_Paid">Paid</String>
+        <String Key="Status_Completed">Completed</String>
+        <String Key="Status_Cancelled">Cancelled</String>
+        <String Key="Status_Closed">Closed</String>
+        <String Key="Status_OnHold">On Hold</String>
+
+        <!-- Messages -->
+        <String Key="Msg_SaveSuccess">Record saved successfully.</String>
+        <String Key="Msg_SaveError">Error saving record: {0}</String>
+        <String Key="Msg_DeleteConfirm">Are you sure you want to delete this record?</String>
+        <String Key="Msg_DeleteSuccess">Record deleted successfully.</String>
+        <String Key="Msg_DeleteError">Error deleting record: {0}</String>
+        <String Key="Msg_RequiredField">{0} is required.</String>
+        <String Key="Msg_InvalidDate">Invalid date: {0}</String>
+        <String Key="Msg_InvalidAmount">Invalid amount: {0}</String>
+        <String Key="Msg_EndDateBeforeStart">End date cannot be before start date.</String>
+        <String Key="Msg_NegativeAmount">Amount cannot be negative.</String>
+        <String Key="Msg_DuplicateCode">This code already exists.</String>
+        <String Key="Msg_NoDataFound">No data found.</String>
+        <String Key="Msg_LoadingData">Loading data...</String>
+        <String Key="Msg_Processing">Processing...</String>
+        <String Key="Msg_PleaseWait">Please wait...</String>
+        <String Key="Msg_OperationCancelled">Operation cancelled.</String>
+        <String Key="Msg_ConfirmSubmit">Are you sure you want to submit for approval?</String>
+        <String Key="Msg_SubmitSuccess">Submitted for approval successfully.</String>
+        <String Key="Msg_ApprovalSuccess">Approved successfully.</String>
+        <String Key="Msg_RejectionSuccess">Rejected successfully.</String>
+        <String Key="Msg_LanguageChanged">Language changed to {0}. Please restart forms to see changes.</String>
+        <String Key="Msg_ExchangeRateUpdated">Exchange rate updated successfully.</String>
+        <String Key="Msg_ExchangeRateUpdateError">Error updating exchange rate: {0}</String>
+        <String Key="Msg_NoActiveContract">No active contract found.</String>
+        <String Key="Msg_ContractNotFound">Contract not found.</String>
+        <String Key="Msg_IPCAlreadyExists">An IPC already exists for this period.</String>
+        <String Key="Msg_OverlappingPeriod">Period overlaps with existing IPC.</String>
+        <String Key="Msg_TotalMismatch">Total value does not match sum of lines.</String>
+
+        <!-- Validation Messages -->
+        <String Key="Val_ContractCodeRequired">Contract code is required.</String>
+        <String Key="Val_ContractNameRequired">Contract name is required.</String>
+        <String Key="Val_CustomerRequired">Customer is required.</String>
+        <String Key="Val_StartDateRequired">Start date is required.</String>
+        <String Key="Val_EndDateRequired">End date is required.</String>
+        <String Key="Val_CurrencyRequired">Currency is required.</String>
+        <String Key="Val_MinOneLine">At least one contract line is required.</String>
+        <String Key="Val_InvalidEmail">Invalid email address.</String>
+        <String Key="Val_InvalidPhone">Invalid phone number.</String>
+        <String Key="Val_ExchangeRateZero">Exchange rate cannot be zero.</String>
+        <String Key="Val_QuantityZero">Quantity must be greater than zero.</String>
+        <String Key="Val_PriceNegative">Price cannot be negative.</String>
+        <String Key="Val_DiscountRange">Discount must be between 0 and 100.</String>
+        <String Key="Val_CompletionRange">Completion percentage must be between 0 and 100.</String>
+
+        <!-- Reports -->
+        <String Key="Report_RevenueRecognition">Revenue Recognition Summary</String>
+        <String Key="Report_ContractSummary">Contract Summary Report</String>
+        <String Key="Report_Backlog">Contract Backlog Report</String>
+        <String Key="Report_AgingAnalysis">Aging Analysis Report</String>
+        <String Key="Report_Parameters">Report Parameters</String>
+        <String Key="Report_FromDate">From Date</String>
+        <String Key="Report_ToDate">To Date</String>
+        <String Key="Report_Period">Period</String>
+        <String Key="Report_Customer">Customer</String>
+        <String Key="Report_Contract">Contract</String>
+        <String Key="Report_ShowDetails">Show Details</String>
+        <String Key="Report_GroupBy">Group By</String>
+        <String Key="Report_SortBy">Sort By</String>
+        <String Key="Report_Generate">Generate Report</String>
+
+        <!-- Settings -->
+        <String Key="Settings_General">General Settings</String>
+        <String Key="Settings_Numbering">Numbering Series</String>
+        <String Key="Settings_Defaults">Default Values</String>
+        <String Key="Settings_Approval">Approval Workflow</String>
+        <String Key="Settings_Email">Email Notifications</String>
+        <String Key="Settings_DefaultCurrency">Default Currency</String>
+        <String Key="Settings_DateFormat">Date Format</String>
+        <String Key="Settings_DecimalPlaces">Decimal Places</String>
+        <String Key="Settings_EnableAudit">Enable Audit Log</String>
+        <String Key="Settings_AutoSave">Auto-Save Interval</String>
+        <String Key="Settings_Language">Default Language</String>
+
+        <!-- Help & About -->
+        <String Key="Help_UserGuide">User Guide</String>
+        <String Key="Help_Documentation">Documentation</String>
+        <String Key="Help_Support">Support</String>
+        <String Key="Help_ContactUs">Contact Us</String>
+        <String Key="About_Version">Version</String>
+        <String Key="About_Copyright">Copyright © 2025 All Rights Reserved</String>
+        <String Key="About_LicensedTo">Licensed To</String>
+
+        <!-- Buttons -->
+        <String Key="Btn_SaveAndClose">Save and Close</String>
+        <String Key="Btn_SaveAndNew">Save and New</String>
+        <String Key="Btn_AddLine">Add Line</String>
+        <String Key="Btn_RemoveLine">Remove Line</String>
+        <String Key="Btn_Calculate">Calculate</String>
+        <String Key="Btn_Recalculate">Recalculate</String>
+        <String Key="Btn_ViewDetails">View Details</String>
+        <String Key="Btn_Attach">Attach File</String>
+        <String Key="Btn_ViewAttachment">View Attachment</String>
+        <String Key="Btn_DownloadAttachment">Download Attachment</String>
+        <String Key="Btn_RemoveAttachment">Remove Attachment</String>
+        <String Key="Btn_SendNotification">Send Notification</String>
+        <String Key="Btn_ViewHistory">View History</String>
+        <String Key="Btn_ViewAuditLog">View Audit Log</String>
+        <String Key="Btn_SubmitForApproval">Submit for Approval</String>
+
+        <!-- Tooltips -->
+        <String Key="Tip_Required">This field is required</String>
+        <String Key="Tip_Browse">Click to browse</String>
+        <String Key="Tip_Calendar">Click to select date</String>
+        <String Key="Tip_Calculate">Click to calculate automatically</String>
+        <String Key="Tip_Refresh">Click to refresh data</String>
+        <String Key="Tip_AddLine">Add a new line</String>
+        <String Key="Tip_RemoveLine">Remove selected line</String>
+        <String Key="Tip_ViewDetails">View detailed information</String>
+        <String Key="Tip_Attachment">Attach supporting documents</String>
+
+        <!-- Labels -->
+        <String Key="Label_Total">Total:</String>
+        <String Key="Label_Subtotal">Subtotal:</String>
+        <String Key="Label_GrandTotal">Grand Total:</String>
+        <String Key="Label_Balance">Balance:</String>
+        <String Key="Label_Amount">Amount:</String>
+        <String Key="Label_Percentage">Percentage:</String>
+        <String Key="Label_Count">Count:</String>
+        <String Key="Label_Of">of</String>
+        <String Key="Label_To">to</String>
+        <String Key="Label_From">from</String>
+        <String Key="Label_Records">records</String>
+        <String Key="Label_Items">items</String>
+        <String Key="Label_Lines">lines</String>
+        <String Key="Label_Page">Page</String>
+
+    </Strings>
+</Resources>

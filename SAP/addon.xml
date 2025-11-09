@@ -1,0 +1,594 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+============================================================
+SAP Business One Add-on Manifest
+Contract Management Add-on
+Version: 1.0.0
+Date: November 5, 2025
+============================================================
+-->
+<AddOn>
+    <!-- General Information -->
+    <General>
+        <Name>Contract Management</Name>
+        <Version>1.0.0</Version>
+        <Description>Comprehensive contract management solution for SAP Business One featuring revenue recognition compliance (ASC 606/IFRS 15) and multi-currency support</Description>
+        <Vendor>Your Company Name</Vendor>
+        <VendorURL>https://yourcompany.com</VendorURL>
+        <SupportEmail>support@yourcompany.com</SupportEmail>
+        <SupportPhone>+1-XXX-XXX-XXXX</SupportPhone>
+        <DocumentationURL>https://yourcompany.com/docs/contract-management</DocumentationURL>
+        <ReleaseDate>2025-11-05</ReleaseDate>
+        <Category>Financial Management</Category>
+        <SubCategory>Contract Management</SubCategory>
+    </General>
+
+    <!-- System Requirements -->
+    <Requirements>
+        <SAPB1Version>9.3</SAPB1Version>
+        <MinimumPatchLevel>00</MinimumPatchLevel>
+        <DotNetVersion>4.7.2</DotNetVersion>
+        <OperatingSystem>
+            <Windows>
+                <MinVersion>6.1</MinVersion> <!-- Windows 7 SP1 / Server 2008 R2 SP1 -->
+                <SupportedVersions>
+                    <Version>Windows 10</Version>
+                    <Version>Windows 11</Version>
+                    <Version>Windows Server 2012</Version>
+                    <Version>Windows Server 2016</Version>
+                    <Version>Windows Server 2019</Version>
+                    <Version>Windows Server 2022</Version>
+                </SupportedVersions>
+            </Windows>
+        </OperatingSystem>
+        <DatabaseTypes>
+            <Type>MSSQL</Type>
+            <Type>HANA</Type>
+        </DatabaseTypes>
+        <DatabaseVersions>
+            <MSSQL>2014</MSSQL>
+            <HANA>2.0 SPS 03</HANA>
+        </DatabaseVersions>
+    </Requirements>
+
+    <!-- Files Included in Add-on -->
+    <Files>
+        <File>
+            <Name>ContractManagementAddon.exe</Name>
+            <Type>Executable</Type>
+            <Version>1.0.0.0</Version>
+            <Size>2048</Size> <!-- KB -->
+            <Description>Main add-on executable</Description>
+        </File>
+        <File>
+            <Name>ContractManagementAddon.exe.config</Name>
+            <Type>Configuration</Type>
+            <Version>1.0.0.0</Version>
+            <Description>Application configuration file</Description>
+        </File>
+        <File>
+            <Name>Interop.SAPbobsCOM.dll</Name>
+            <Type>Library</Type>
+            <Description>SAP Business One DI API interop</Description>
+        </File>
+        <File>
+            <Name>Interop.SAPbouiCOM.dll</Name>
+            <Type>Library</Type>
+            <Description>SAP Business One UI API interop</Description>
+        </File>
+    </Files>
+
+    <!-- Database Objects -->
+    <Database>
+        <!-- Migration Scripts -->
+        <Scripts>
+            <Script Type="SQLServer" Order="1">
+                <Name>01_Add_PerformObligCode_Field_SQLServer.sql</Name>
+                <Description>Adds PerformanceObligationCode field to CM_DEFERRED_REV table</Description>
+                <RunOn>FirstInstall</RunOn>
+                <Required>true</Required>
+            </Script>
+            <Script Type="HANA" Order="1">
+                <Name>01_Add_PerformObligCode_Field_HANA.sql</Name>
+                <Description>Adds PerformanceObligationCode field to CM_DEFERRED_REV table</Description>
+                <RunOn>FirstInstall</RunOn>
+                <Required>true</Required>
+            </Script>
+        </Scripts>
+
+        <!-- User Defined Objects (UDOs) -->
+        <UserDefinedObjects>
+            <UDO>
+                <Name>CM_CURRENCY</Name>
+                <TableName>@CM_CURRENCY</TableName>
+                <Description>Currency master data (ISO 4217 compliant)</Description>
+                <ObjectType>MasterData</ObjectType>
+                <CanFind>true</CanFind>
+                <CanDelete>true</CanDelete>
+                <CanCancel>false</CanCancel>
+                <CanLog>true</CanLog>
+            </UDO>
+            <UDO>
+                <Name>CM_EXCHANGE_RATE</Name>
+                <TableName>@CM_EXCHANGE_RATE</TableName>
+                <Description>Exchange rates with historical tracking</Description>
+                <ObjectType>MasterData</ObjectType>
+                <CanFind>true</CanFind>
+                <CanDelete>true</CanDelete>
+                <CanCancel>false</CanCancel>
+                <CanLog>true</CanLog>
+            </UDO>
+            <UDO>
+                <Name>CM_PERFORMANCE_OBLIGATION</Name>
+                <TableName>@CM_PERFORMANCE_OBLIGATION</TableName>
+                <Description>Performance obligations (ASC 606 Step 2)</Description>
+                <ObjectType>MasterData</ObjectType>
+                <CanFind>true</CanFind>
+                <CanDelete>false</CanDelete>
+                <CanCancel>true</CanCancel>
+                <CanLog>true</CanLog>
+            </UDO>
+            <UDO>
+                <Name>CM_REVENUE_SCHEDULE</Name>
+                <TableName>@CM_REVENUE_SCHEDULE</TableName>
+                <Description>Revenue recognition schedules</Description>
+                <ObjectType>Document</ObjectType>
+                <CanFind>true</CanFind>
+                <CanDelete>false</CanDelete>
+                <CanCancel>true</CanCancel>
+                <CanLog>true</CanLog>
+            </UDO>
+            <UDO>
+                <Name>CM_DEFERRED_REV</Name>
+                <TableName>@CM_DEFERRED_REV</TableName>
+                <Description>Deferred revenue tracking (contract liabilities)</Description>
+                <ObjectType>Document</ObjectType>
+                <CanFind>true</CanFind>
+                <CanDelete>false</CanDelete>
+                <CanCancel>true</CanCancel>
+                <CanLog>true</CanLog>
+            </UDO>
+            <UDO>
+                <Name>CM_CONTRACT_ASSET</Name>
+                <TableName>@CM_CONTRACT_ASSET</TableName>
+                <Description>Contract assets (unbilled revenue)</Description>
+                <ObjectType>Document</ObjectType>
+                <CanFind>true</CanFind>
+                <CanDelete>false</CanDelete>
+                <CanCancel>true</CanCancel>
+                <CanLog>true</CanLog>
+            </UDO>
+            <UDO>
+                <Name>CM_CONTRACT_BACKLOG</Name>
+                <TableName>@CM_CONTRACT_BACKLOG</TableName>
+                <Description>Contract backlog and forecasting</Description>
+                <ObjectType>MasterData</ObjectType>
+                <CanFind>true</CanFind>
+                <CanDelete>true</CanDelete>
+                <CanCancel>false</CanCancel>
+                <CanLog>true</CanLog>
+            </UDO>
+            <UDO>
+                <Name>CM_REV_RECOGNITION_LOG</Name>
+                <TableName>@CM_REV_RECOGNITION_LOG</TableName>
+                <Description>Revenue recognition audit trail</Description>
+                <ObjectType>NoObject</ObjectType>
+                <CanFind>true</CanFind>
+                <CanDelete>false</CanDelete>
+                <CanCancel>false</CanCancel>
+                <CanLog>false</CanLog>
+            </UDO>
+        </UserDefinedObjects>
+
+        <!-- User Defined Tables (UDTs) - If separate from UDOs -->
+        <UserDefinedTables>
+            <UDT>
+                <Name>CM_CONVERSION_LOG</Name>
+                <TableName>@CM_CONVERSION_LOG</TableName>
+                <Description>Currency conversion audit log</Description>
+                <TableType>NoObject</TableType>
+            </UDT>
+        </UserDefinedTables>
+    </Database>
+
+    <!-- Menus and User Interface -->
+    <UserInterface>
+        <Menus>
+            <!-- Main Menu -->
+            <Menu>
+                <ID>CM_MAIN</ID>
+                <Name>Contract Management</Name>
+                <ParentID>43520</ParentID> <!-- Modules menu -->
+                <Position>1</Position>
+                <Type>Popup</Type>
+                <Image>Resources\menu_main.bmp</Image>
+            </Menu>
+
+            <!-- Contracts Submenu -->
+            <Menu>
+                <ID>CM_CONTRACTS</ID>
+                <Name>Contracts</Name>
+                <ParentID>CM_MAIN</ParentID>
+                <Position>1</Position>
+                <Type>Item</Type>
+                <FormID>CM_CONTRACT_FORM</FormID>
+            </Menu>
+
+            <!-- IPCs Submenu -->
+            <Menu>
+                <ID>CM_IPC</ID>
+                <Name>Interim Payment Certificates</Name>
+                <ParentID>CM_MAIN</ParentID>
+                <Position>2</Position>
+                <Type>Item</Type>
+                <FormID>CM_IPC_FORM</FormID>
+            </Menu>
+
+            <!-- Change Orders Submenu -->
+            <Menu>
+                <ID>CM_CHANGE_ORDER</ID>
+                <Name>Change Orders</Name>
+                <ParentID>CM_MAIN</ParentID>
+                <Position>3</Position>
+                <Type>Item</Type>
+                <FormID>CM_CO_FORM</FormID>
+            </Menu>
+
+            <!-- Revenue Recognition Submenu -->
+            <Menu>
+                <ID>CM_REVENUE</ID>
+                <Name>Revenue Recognition</Name>
+                <ParentID>CM_MAIN</ParentID>
+                <Position>4</Position>
+                <Type>Popup</Type>
+            </Menu>
+
+            <Menu>
+                <ID>CM_REVENUE_SCHEDULE</ID>
+                <Name>Revenue Schedules</Name>
+                <ParentID>CM_REVENUE</ParentID>
+                <Position>1</Position>
+                <Type>Item</Type>
+                <FormID>CM_REV_SCHEDULE_FORM</FormID>
+            </Menu>
+
+            <Menu>
+                <ID>CM_PERFORMANCE_OBL</ID>
+                <Name>Performance Obligations</Name>
+                <ParentID>CM_REVENUE</ParentID>
+                <Position>2</Position>
+                <Type>Item</Type>
+                <FormID>CM_PERF_OBL_FORM</FormID>
+            </Menu>
+
+            <Menu>
+                <ID>CM_DEFERRED_REV</ID>
+                <Name>Deferred Revenue</Name>
+                <ParentID>CM_REVENUE</ParentID>
+                <Position>3</Position>
+                <Type>Item</Type>
+                <FormID>CM_DEFERRED_REV_FORM</FormID>
+            </Menu>
+
+            <!-- Currency Management Submenu -->
+            <Menu>
+                <ID>CM_CURRENCY</ID>
+                <Name>Currency Management</Name>
+                <ParentID>CM_MAIN</ParentID>
+                <Position>5</Position>
+                <Type>Popup</Type>
+            </Menu>
+
+            <Menu>
+                <ID>CM_CURRENCY_MASTER</ID>
+                <Name>Currency Master</Name>
+                <ParentID>CM_CURRENCY</ParentID>
+                <Position>1</Position>
+                <Type>Item</Type>
+                <FormID>CM_CURRENCY_FORM</FormID>
+            </Menu>
+
+            <Menu>
+                <ID>CM_EXCHANGE_RATES</ID>
+                <Name>Exchange Rates</Name>
+                <ParentID>CM_CURRENCY</ParentID>
+                <Position>2</Position>
+                <Type>Item</Type>
+                <FormID>CM_EXCHANGE_RATE_FORM</FormID>
+            </Menu>
+
+            <!-- Reports Submenu -->
+            <Menu>
+                <ID>CM_REPORTS</ID>
+                <Name>Reports</Name>
+                <ParentID>CM_MAIN</ParentID>
+                <Position>6</Position>
+                <Type>Popup</Type>
+            </Menu>
+
+            <Menu>
+                <ID>CM_REP_REVENUE_SUMMARY</ID>
+                <Name>Revenue Recognition Summary</Name>
+                <ParentID>CM_REPORTS</ParentID>
+                <Position>1</Position>
+                <Type>Item</Type>
+                <FormID>CM_REP_REV_SUMMARY</FormID>
+            </Menu>
+
+            <Menu>
+                <ID>CM_REP_CONTRACT_SUMMARY</ID>
+                <Name>Contract Summary</Name>
+                <ParentID>CM_REPORTS</ParentID>
+                <Position>2</Position>
+                <Type>Item</Type>
+                <FormID>CM_REP_CONTRACT_SUMMARY</FormID>
+            </Menu>
+
+            <Menu>
+                <ID>CM_REP_BACKLOG</ID>
+                <Name>Contract Backlog</Name>
+                <ParentID>CM_REPORTS</ParentID>
+                <Position>3</Position>
+                <Type>Item</Type>
+                <FormID>CM_REP_BACKLOG</FormID>
+            </Menu>
+
+            <!-- Setup/Configuration -->
+            <Menu>
+                <ID>CM_SETUP</ID>
+                <Name>Setup</Name>
+                <ParentID>CM_MAIN</ParentID>
+                <Position>7</Position>
+                <Type>Item</Type>
+                <FormID>CM_SETUP_FORM</FormID>
+            </Menu>
+        </Menus>
+
+        <!-- Forms -->
+        <Forms>
+            <Form>
+                <ID>CM_CONTRACT_FORM</ID>
+                <Type>System</Type>
+                <Menu>CM_CONTRACTS</Menu>
+                <Description>Contract management form</Description>
+            </Form>
+            <Form>
+                <ID>CM_IPC_FORM</ID>
+                <Type>System</Type>
+                <Menu>CM_IPC</Menu>
+                <Description>Interim Payment Certificate form</Description>
+            </Form>
+            <!-- Add more forms as implemented -->
+        </Forms>
+    </UserInterface>
+
+    <!-- Features -->
+    <Features>
+        <Feature>
+            <Name>Revenue Recognition</Name>
+            <Description>ASC 606 / IFRS 15 compliant revenue recognition</Description>
+            <Enabled>true</Enabled>
+            <Category>Financial Accounting</Category>
+        </Feature>
+        <Feature>
+            <Name>Multi-Currency Support</Name>
+            <Description>ISO 4217 compliant multi-currency with exchange rate management</Description>
+            <Enabled>true</Enabled>
+            <Category>Financial Management</Category>
+        </Feature>
+        <Feature>
+            <Name>Contract Management</Name>
+            <Description>Comprehensive contract lifecycle management</Description>
+            <Enabled>true</Enabled>
+            <Category>Project Management</Category>
+        </Feature>
+        <Feature>
+            <Name>IPC Processing</Name>
+            <Description>Interim Payment Certificate creation and processing</Description>
+            <Enabled>true</Enabled>
+            <Category>Billing</Category>
+        </Feature>
+        <Feature>
+            <Name>Change Order Management</Name>
+            <Description>Contract change order processing and approval</Description>
+            <Enabled>true</Enabled>
+            <Category>Contract Management</Category>
+        </Feature>
+        <Feature>
+            <Name>Performance Obligations</Name>
+            <Description>ASC 606 Step 2 - Identify performance obligations</Description>
+            <Enabled>true</Enabled>
+            <Category>Revenue Recognition</Category>
+        </Feature>
+        <Feature>
+            <Name>Deferred Revenue</Name>
+            <Description>Contract liability tracking and management</Description>
+            <Enabled>true</Enabled>
+            <Category>Revenue Recognition</Category>
+        </Feature>
+        <Feature>
+            <Name>Contract Assets</Name>
+            <Description>Unbilled revenue tracking</Description>
+            <Enabled>true</Enabled>
+            <Category>Revenue Recognition</Category>
+        </Feature>
+    </Features>
+
+    <!-- Authorizations -->
+    <Authorizations>
+        <Authorization>
+            <Name>Full Access</Name>
+            <Description>Full access to all Contract Management features</Description>
+            <Code>CM_FULL</Code>
+        </Authorization>
+        <Authorization>
+            <Name>Contract Manager</Name>
+            <Description>Create and manage contracts, IPCs, and change orders</Description>
+            <Code>CM_MANAGER</Code>
+        </Authorization>
+        <Authorization>
+            <Name>Finance Manager</Name>
+            <Description>Access to revenue recognition and financial features</Description>
+            <Code>CM_FINANCE</Code>
+        </Authorization>
+        <Authorization>
+            <Name>Billing Clerk</Name>
+            <Description>Create and manage IPCs only</Description>
+            <Code>CM_BILLING</Code>
+        </Authorization>
+        <Authorization>
+            <Name>Read Only</Name>
+            <Description>View-only access to all features</Description>
+            <Code>CM_READONLY</Code>
+        </Authorization>
+    </Authorizations>
+
+    <!-- Configuration -->
+    <Configuration>
+        <Settings>
+            <Setting>
+                <Name>BaseCurrency</Name>
+                <Description>Base currency for the company</Description>
+                <Type>String</Type>
+                <DefaultValue>USD</DefaultValue>
+                <Required>true</Required>
+            </Setting>
+            <Setting>
+                <Name>DefaultProgressMethod</Name>
+                <Description>Default revenue recognition progress method</Description>
+                <Type>String</Type>
+                <DefaultValue>Cost-to-Cost</DefaultValue>
+                <AllowedValues>Cost-to-Cost,Units,Milestone,Time-Based</AllowedValues>
+            </Setting>
+            <Setting>
+                <Name>AutoRecognizeRevenue</Name>
+                <Description>Automatically recognize revenue on IPC approval</Description>
+                <Type>Boolean</Type>
+                <DefaultValue>true</DefaultValue>
+            </Setting>
+            <Setting>
+                <Name>RequireApprovalAbove</Name>
+                <Description>Require manual approval for revenue above this amount</Description>
+                <Type>Decimal</Type>
+                <DefaultValue>100000</DefaultValue>
+            </Setting>
+            <Setting>
+                <Name>LogLevel</Name>
+                <Description>Application logging level</Description>
+                <Type>String</Type>
+                <DefaultValue>Info</DefaultValue>
+                <AllowedValues>Debug,Info,Warning,Error</AllowedValues>
+            </Setting>
+        </Settings>
+    </Configuration>
+
+    <!-- Dependencies -->
+    <Dependencies>
+        <Dependency>
+            <Name>SAP Business One DI API</Name>
+            <Version>9.3</Version>
+            <Required>true</Required>
+            <Type>API</Type>
+        </Dependency>
+        <Dependency>
+            <Name>SAP Business One UI API</Name>
+            <Version>9.3</Version>
+            <Required>true</Required>
+            <Type>API</Type>
+        </Dependency>
+        <Dependency>
+            <Name>.NET Framework</Name>
+            <Version>4.7.2</Version>
+            <Required>true</Required>
+            <Type>Runtime</Type>
+        </Dependency>
+    </Dependencies>
+
+    <!-- Installation -->
+    <Installation>
+        <Steps>
+            <Step Order="1">
+                <Name>Prerequisites Check</Name>
+                <Description>Verify SAP B1 and .NET Framework versions</Description>
+                <Type>Validation</Type>
+            </Step>
+            <Step Order="2">
+                <Name>Copy Files</Name>
+                <Description>Copy add-on files to installation directory</Description>
+                <Type>FileCopy</Type>
+            </Step>
+            <Step Order="3">
+                <Name>Database Migration</Name>
+                <Description>Run database migration scripts</Description>
+                <Type>DatabaseScript</Type>
+                <Manual>true</Manual>
+            </Step>
+            <Step Order="4">
+                <Name>Create UDOs</Name>
+                <Description>Create User Defined Objects in SAP B1</Description>
+                <Type>UDOCreation</Type>
+            </Step>
+            <Step Order="5">
+                <Name>Register Add-on</Name>
+                <Description>Register add-on with SAP B1</Description>
+                <Type>Registration</Type>
+            </Step>
+            <Step Order="6">
+                <Name>Initialize Data</Name>
+                <Description>Load currency seed data (optional)</Description>
+                <Type>DataInitialization</Type>
+                <Optional>true</Optional>
+            </Step>
+        </Steps>
+    </Installation>
+
+    <!-- Support and Maintenance -->
+    <Support>
+        <Channel>
+            <Type>Email</Type>
+            <Contact>support@yourcompany.com</Contact>
+            <Hours>Monday-Friday 8AM-6PM EST</Hours>
+            <ResponseTime>4 hours</ResponseTime>
+        </Channel>
+        <Channel>
+            <Type>Phone</Type>
+            <Contact>+1-XXX-XXX-XXXX</Contact>
+            <Hours>Monday-Friday 8AM-6PM EST</Hours>
+            <ResponseTime>2 hours</ResponseTime>
+        </Channel>
+        <Channel>
+            <Type>Web</Type>
+            <Contact>https://yourcompany.com/support</Contact>
+            <Hours>24/7</Hours>
+            <ResponseTime>24 hours</ResponseTime>
+        </Channel>
+    </Support>
+
+    <!-- License Information -->
+    <License>
+        <Type>Commercial</Type>
+        <Model>Per-User</Model>
+        <Terms>Annual Subscription</Terms>
+        <Agreement>See LICENSE.txt for complete terms</Agreement>
+    </License>
+
+    <!-- Version History -->
+    <VersionHistory>
+        <Version>
+            <Number>1.0.0</Number>
+            <ReleaseDate>2025-11-05</ReleaseDate>
+            <Type>Major Release</Type>
+            <Changes>
+                <Change Type="Feature">Revenue Recognition (ASC 606 / IFRS 15)</Change>
+                <Change Type="Feature">Multi-Currency Support (ISO 4217)</Change>
+                <Change Type="Feature">Contract Management</Change>
+                <Change Type="Feature">IPC Processing</Change>
+                <Change Type="Feature">Change Order Management</Change>
+                <Change Type="Feature">Performance Obligations</Change>
+                <Change Type="Feature">Deferred Revenue Tracking</Change>
+                <Change Type="Feature">Contract Assets</Change>
+            </Changes>
+        </Version>
+    </VersionHistory>
+
+</AddOn>

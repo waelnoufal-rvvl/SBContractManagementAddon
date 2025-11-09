@@ -1,0 +1,425 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Arabic Language Resources
+    Contract Management Add-on for SAP Business One
+    Version: 1.0.0
+    ملفات اللغة العربية
+-->
+<Resources>
+    <Metadata>
+        <Language>Arabic</Language>
+        <LanguageCode>ar-SA</LanguageCode>
+        <Version>1.0.0</Version>
+        <LastUpdated>2025-01-06</LastUpdated>
+        <Direction>RTL</Direction>
+    </Metadata>
+
+    <Strings>
+        <!-- Common Strings - سلاسل نصية شائعة -->
+        <String Key="Common_Yes">نعم</String>
+        <String Key="Common_No">لا</String>
+        <String Key="Common_OK">موافق</String>
+        <String Key="Common_Cancel">إلغاء</String>
+        <String Key="Common_Save">حفظ</String>
+        <String Key="Common_Close">إغلاق</String>
+        <String Key="Common_Add">إضافة</String>
+        <String Key="Common_Edit">تعديل</String>
+        <String Key="Common_Delete">حذف</String>
+        <String Key="Common_Remove">إزالة</String>
+        <String Key="Common_Search">بحث</String>
+        <String Key="Common_Browse">استعراض</String>
+        <String Key="Common_Refresh">تحديث</String>
+        <String Key="Common_Print">طباعة</String>
+        <String Key="Common_Export">تصدير</String>
+        <String Key="Common_Import">استيراد</String>
+        <String Key="Common_New">جديد</String>
+        <String Key="Common_Update">تحديث</String>
+        <String Key="Common_Submit">إرسال</String>
+        <String Key="Common_Approve">اعتماد</String>
+        <String Key="Common_Reject">رفض</String>
+        <String Key="Common_Required">مطلوب</String>
+        <String Key="Common_Optional">اختياري</String>
+        <String Key="Common_All">الكل</String>
+        <String Key="Common_None">لا شيء</String>
+        <String Key="Common_Select">اختيار</String>
+        <String Key="Common_Clear">مسح</String>
+        <String Key="Common_Apply">تطبيق</String>
+        <String Key="Common_Reset">إعادة تعيين</String>
+        <String Key="Common_Back">رجوع</String>
+        <String Key="Common_Next">التالي</String>
+        <String Key="Common_Previous">السابق</String>
+        <String Key="Common_Finish">إنهاء</String>
+        <String Key="Common_Help">مساعدة</String>
+        <String Key="Common_About">حول</String>
+        <String Key="Common_Settings">إعدادات</String>
+        <String Key="Common_Language">اللغة</String>
+
+        <!-- Menu Items - عناصر القائمة -->
+        <String Key="Menu_ContractManagement">إدارة العقود</String>
+        <String Key="Menu_Contracts">العقود</String>
+        <String Key="Menu_Contracts_New">عقد جديد</String>
+        <String Key="Menu_Contracts_List">قائمة العقود</String>
+        <String Key="Menu_Contracts_Search">بحث في العقود</String>
+        <String Key="Menu_IPC">شهادات الدفع المرحلية</String>
+        <String Key="Menu_IPC_New">شهادة دفع جديدة</String>
+        <String Key="Menu_IPC_List">قائمة شهادات الدفع</String>
+        <String Key="Menu_IPC_Pending">الموافقات المعلقة</String>
+        <String Key="Menu_ChangeOrders">أوامر التغيير</String>
+        <String Key="Menu_ChangeOrders_New">أمر تغيير جديد</String>
+        <String Key="Menu_ChangeOrders_List">قائمة أوامر التغيير</String>
+        <String Key="Menu_Revenue">الاعتراف بالإيرادات</String>
+        <String Key="Menu_Revenue_PO">التزامات الأداء</String>
+        <String Key="Menu_Revenue_Schedule">جداول الإيرادات</String>
+        <String Key="Menu_Revenue_Post">ترحيل الإيرادات</String>
+        <String Key="Menu_Setup">إعداد</String>
+        <String Key="Menu_Setup_Currency">العملات الرئيسية</String>
+        <String Key="Menu_Setup_ExchangeRates">أسعار الصرف</String>
+        <String Key="Menu_Setup_Settings">إعدادات الإضافة</String>
+        <String Key="Menu_Setup_Permissions">صلاحيات المستخدمين</String>
+        <String Key="Menu_Reports">التقارير</String>
+        <String Key="Menu_Reports_Revenue">ملخص الاعتراف بالإيرادات</String>
+        <String Key="Menu_Reports_Contracts">ملخص العقود</String>
+        <String Key="Menu_Reports_Backlog">العقود المتأخرة</String>
+        <String Key="Menu_Reports_Aging">تحليل التقادم</String>
+        <String Key="Menu_Tools">الأدوات</String>
+        <String Key="Menu_Tools_Import">استيراد البيانات</String>
+        <String Key="Menu_Tools_Export">تصدير البيانات</String>
+        <String Key="Menu_Tools_Audit">سجل التدقيق</String>
+
+        <!-- Contract Form - نموذج العقد -->
+        <String Key="Form_Contract_Title">إدارة العقود</String>
+        <String Key="Form_Contract_New">عقد جديد</String>
+        <String Key="Form_Contract_Edit">تعديل العقد</String>
+
+        <!-- Contract Fields - حقول العقد -->
+        <String Key="Contract_Code">رمز العقد</String>
+        <String Key="Contract_Name">اسم العقد</String>
+        <String Key="Contract_Customer">العميل</String>
+        <String Key="Contract_CustomerCode">رمز العميل</String>
+        <String Key="Contract_CustomerName">اسم العميل</String>
+        <String Key="Contract_ContactPerson">جهة الاتصال</String>
+        <String Key="Contract_Email">البريد الإلكتروني</String>
+        <String Key="Contract_Phone">الهاتف</String>
+        <String Key="Contract_StartDate">تاريخ البدء</String>
+        <String Key="Contract_EndDate">تاريخ الانتهاء</String>
+        <String Key="Contract_Status">الحالة</String>
+        <String Key="Contract_Type">نوع العقد</String>
+        <String Key="Contract_Type_FixedPrice">سعر ثابت</String>
+        <String Key="Contract_Type_TimeAndMaterials">وقت ومواد</String>
+        <String Key="Contract_Type_CostPlus">التكلفة زائد</String>
+        <String Key="Contract_Currency">العملة</String>
+        <String Key="Contract_ExchangeRate">سعر الصرف</String>
+        <String Key="Contract_TotalValue">القيمة الإجمالية</String>
+        <String Key="Contract_LocalValue">القيمة بالعملة المحلية</String>
+        <String Key="Contract_PaymentTerms">شروط الدفع</String>
+        <String Key="Contract_TaxGroup">مجموعة الضريبة</String>
+        <String Key="Contract_TaxAmount">مبلغ الضريبة</String>
+        <String Key="Contract_Owner">المالك</String>
+        <String Key="Contract_Department">القسم</String>
+        <String Key="Contract_Remarks">ملاحظات</String>
+        <String Key="Contract_Attachments">المرفقات</String>
+        <String Key="Contract_CreatedBy">أنشأه</String>
+        <String Key="Contract_CreatedDate">تاريخ الإنشاء</String>
+        <String Key="Contract_ModifiedBy">عدله</String>
+        <String Key="Contract_ModifiedDate">تاريخ التعديل</String>
+
+        <!-- Contract Sections - أقسام العقد -->
+        <String Key="Section_GeneralInformation">المعلومات العامة</String>
+        <String Key="Section_FinancialInformation">المعلومات المالية</String>
+        <String Key="Section_ContractLines">بنود العقد</String>
+        <String Key="Section_AdditionalInformation">معلومات إضافية</String>
+        <String Key="Section_Dates">التواريخ</String>
+        <String Key="Section_ContactInformation">معلومات الاتصال</String>
+
+        <!-- Contract Lines - بنود العقد -->
+        <String Key="ContractLine_ItemCode">رمز الصنف</String>
+        <String Key="ContractLine_Description">الوصف</String>
+        <String Key="ContractLine_ItemType">نوع الصنف</String>
+        <String Key="ContractLine_ItemType_Service">خدمة</String>
+        <String Key="ContractLine_ItemType_Item">صنف</String>
+        <String Key="ContractLine_ItemType_Resource">مورد</String>
+        <String Key="ContractLine_Quantity">الكمية</String>
+        <String Key="ContractLine_Unit">الوحدة</String>
+        <String Key="ContractLine_UnitPrice">سعر الوحدة</String>
+        <String Key="ContractLine_GrossTotal">الإجمالي الكلي</String>
+        <String Key="ContractLine_Discount">الخصم %</String>
+        <String Key="ContractLine_DiscountAmount">مبلغ الخصم</String>
+        <String Key="ContractLine_Tax">الضريبة %</String>
+        <String Key="ContractLine_TaxAmount">مبلغ الضريبة</String>
+        <String Key="ContractLine_LineTotal">إجمالي البند</String>
+        <String Key="ContractLine_Category">الفئة</String>
+        <String Key="ContractLine_GLAccount">حساب الأستاذ العام</String>
+        <String Key="ContractLine_CostCenter">مركز التكلفة</String>
+        <String Key="ContractLine_Project">المشروع</String>
+
+        <!-- IPC Form - نموذج شهادة الدفع المرحلية -->
+        <String Key="Form_IPC_Title">شهادة الدفع المرحلية</String>
+        <String Key="Form_IPC_New">شهادة دفع جديدة</String>
+        <String Key="Form_IPC_Edit">تعديل شهادة الدفع</String>
+
+        <!-- IPC Fields - حقول شهادة الدفع -->
+        <String Key="IPC_Number">رقم شهادة الدفع</String>
+        <String Key="IPC_ContractCode">رمز العقد</String>
+        <String Key="IPC_ContractName">اسم العقد</String>
+        <String Key="IPC_Date">تاريخ الشهادة</String>
+        <String Key="IPC_PeriodFrom">الفترة من</String>
+        <String Key="IPC_PeriodTo">الفترة إلى</String>
+        <String Key="IPC_Type">نوع الشهادة</String>
+        <String Key="IPC_Type_Regular">عادية</String>
+        <String Key="IPC_Type_Final">نهائية</String>
+        <String Key="IPC_Type_RetentionRelease">إطلاق الاحتجاز</String>
+        <String Key="IPC_Status">الحالة</String>
+        <String Key="IPC_GrossAmount">المبلغ الإجمالي</String>
+        <String Key="IPC_Retention">الاحتجاز</String>
+        <String Key="IPC_RetentionPercent">نسبة الاحتجاز %</String>
+        <String Key="IPC_Advances">السلف السابقة</String>
+        <String Key="IPC_Subtotal">المجموع الفرعي</String>
+        <String Key="IPC_VAT">ضريبة القيمة المضافة</String>
+        <String Key="IPC_NetPayable">صافي المبلغ المستحق</String>
+        <String Key="IPC_Remarks">ملاحظات</String>
+        <String Key="IPC_PreparedBy">أعدها</String>
+        <String Key="IPC_ApprovedBy">اعتمدها</String>
+
+        <!-- IPC Sections - أقسام شهادة الدفع -->
+        <String Key="Section_IPCHeader">رأس الشهادة</String>
+        <String Key="Section_WorkSummary">ملخص العمل</String>
+        <String Key="Section_PerformanceObligations">التزامات الأداء</String>
+        <String Key="Section_FinancialCalculation">الحسابات المالية</String>
+        <String Key="Section_SupportingDocuments">المستندات الداعمة</String>
+        <String Key="Section_Approval">الاعتماد</String>
+
+        <!-- Performance Obligations - التزامات الأداء -->
+        <String Key="PO_Code">رمز الالتزام</String>
+        <String Key="PO_Description">الوصف</String>
+        <String Key="PO_Value">قيمة الالتزام</String>
+        <String Key="PO_PreviousAmount">المبلغ السابق</String>
+        <String Key="PO_ThisPeriod">هذه الفترة</String>
+        <String Key="PO_TotalPercent">النسبة الإجمالية %</String>
+        <String Key="PO_Completion">نسبة الإنجاز %</String>
+        <String Key="PO_Completed">مكتمل</String>
+
+        <!-- Change Order Form - نموذج أمر التغيير -->
+        <String Key="Form_CO_Title">أمر التغيير</String>
+        <String Key="Form_CO_New">أمر تغيير جديد</String>
+        <String Key="Form_CO_Edit">تعديل أمر التغيير</String>
+
+        <!-- Change Order Fields - حقول أمر التغيير -->
+        <String Key="CO_Number">رقم أمر التغيير</String>
+        <String Key="CO_ContractCode">رمز العقد</String>
+        <String Key="CO_Date">تاريخ أمر التغيير</String>
+        <String Key="CO_EffectiveDate">تاريخ السريان</String>
+        <String Key="CO_Type">نوع التغيير</String>
+        <String Key="CO_Type_Scope">النطاق</String>
+        <String Key="CO_Type_Schedule">الجدول الزمني</String>
+        <String Key="CO_Type_Cost">التكلفة</String>
+        <String Key="CO_Type_All">الكل</String>
+        <String Key="CO_Priority">الأولوية</String>
+        <String Key="CO_Priority_High">عالية</String>
+        <String Key="CO_Priority_Medium">متوسطة</String>
+        <String Key="CO_Priority_Low">منخفضة</String>
+        <String Key="CO_Subject">الموضوع</String>
+        <String Key="CO_Reason">سبب التغيير</String>
+        <String Key="CO_Impact">وصف التأثير</String>
+        <String Key="CO_OriginalValue">القيمة الأصلية للعقد</String>
+        <String Key="CO_PreviousChanges">التغييرات السابقة</String>
+        <String Key="CO_CurrentValue">القيمة الحالية للعقد</String>
+        <String Key="CO_ThisChange">أمر التغيير الحالي</String>
+        <String Key="CO_RevisedValue">القيمة المعدلة للعقد</String>
+        <String Key="CO_OriginalEndDate">تاريخ الانتهاء الأصلي</String>
+        <String Key="CO_DaysExtension">أيام التمديد</String>
+        <String Key="CO_RevisedEndDate">تاريخ الانتهاء المعدل</String>
+
+        <!-- Revenue Recognition - الاعتراف بالإيرادات -->
+        <String Key="Form_Revenue_Title">الاعتراف بالإيرادات</String>
+        <String Key="Revenue_Method">طريقة الاعتراف</String>
+        <String Key="Revenue_Method_PointInTime">في وقت محدد</String>
+        <String Key="Revenue_Method_OverTime">على مدى الوقت</String>
+        <String Key="Revenue_ProgressMethod">طريقة قياس التقدم</String>
+        <String Key="Revenue_ProgressMethod_Input">طريقة المدخلات (التكلفة إلى التكلفة)</String>
+        <String Key="Revenue_ProgressMethod_Output">طريقة المخرجات (الوحدات المسلمة)</String>
+        <String Key="Revenue_ProgressMethod_TimeBased">على أساس الوقت (خط مستقيم)</String>
+        <String Key="Revenue_AllocatedAmount">المبلغ المخصص</String>
+        <String Key="Revenue_RecognizedToDate">المعترف به حتى تاريخه</String>
+        <String Key="Revenue_DeferredRevenue">الإيرادات المؤجلة</String>
+        <String Key="Revenue_RemainingRevenue">الإيرادات المتبقية</String>
+        <String Key="Revenue_EstimatedCost">التكلفة الإجمالية المقدرة</String>
+        <String Key="Revenue_ActualCost">التكاليف الفعلية حتى تاريخه</String>
+        <String Key="Revenue_PerformancePeriod">فترة الأداء</String>
+
+        <!-- Currency & Exchange Rates - العملات وأسعار الصرف -->
+        <String Key="Form_Currency_Title">العملات الرئيسية</String>
+        <String Key="Currency_Code">رمز العملة</String>
+        <String Key="Currency_Name">اسم العملة</String>
+        <String Key="Currency_Symbol">الرمز</String>
+        <String Key="Currency_DecimalPlaces">المنازل العشرية</String>
+        <String Key="Currency_ISOCode">رمز ISO</String>
+        <String Key="Currency_NumericCode">الرمز الرقمي</String>
+        <String Key="Currency_Active">نشط</String>
+        <String Key="Currency_AllowInContracts">السماح في العقود</String>
+        <String Key="Currency_RateSource">مصدر السعر</String>
+        <String Key="Currency_RateSource_Manual">يدوي</String>
+        <String Key="Currency_RateSource_Auto">تحديث تلقائي</String>
+        <String Key="Currency_RateSource_Fixed">ثابت</String>
+        <String Key="Currency_ExternalService">الخدمة الخارجية</String>
+        <String Key="Currency_UpdateFrequency">تكرار التحديث</String>
+        <String Key="Currency_LastUpdated">آخر تحديث</String>
+        <String Key="Currency_CurrentRate">السعر الحالي</String>
+
+        <!-- Exchange Rates - أسعار الصرف -->
+        <String Key="Form_ExchangeRate_Title">إدارة أسعار الصرف</String>
+        <String Key="ExchangeRate_EffectiveDate">تاريخ السريان</String>
+        <String Key="ExchangeRate_FromCurrency">من العملة</String>
+        <String Key="ExchangeRate_ToCurrency">إلى العملة</String>
+        <String Key="ExchangeRate_Rate">سعر الصرف</String>
+        <String Key="ExchangeRate_InverseRate">السعر العكسي</String>
+        <String Key="ExchangeRate_Type">نوع السعر</String>
+        <String Key="ExchangeRate_Type_Buying">شراء</String>
+        <String Key="ExchangeRate_Type_Selling">بيع</String>
+        <String Key="ExchangeRate_Type_Average">متوسط</String>
+        <String Key="ExchangeRate_GetLatest">الحصول على أحدث سعر</String>
+        <String Key="ExchangeRate_History">سجل الأسعار</String>
+
+        <!-- Status Values - قيم الحالة -->
+        <String Key="Status_Draft">مسودة</String>
+        <String Key="Status_Active">نشط</String>
+        <String Key="Status_Pending">معلق</String>
+        <String Key="Status_PendingApproval">معلق الاعتماد</String>
+        <String Key="Status_Approved">معتمد</String>
+        <String Key="Status_Rejected">مرفوض</String>
+        <String Key="Status_Posted">مرحل</String>
+        <String Key="Status_Paid">مدفوع</String>
+        <String Key="Status_Completed">مكتمل</String>
+        <String Key="Status_Cancelled">ملغى</String>
+        <String Key="Status_Closed">مغلق</String>
+        <String Key="Status_OnHold">قيد الانتظار</String>
+
+        <!-- Messages - الرسائل -->
+        <String Key="Msg_SaveSuccess">تم حفظ السجل بنجاح.</String>
+        <String Key="Msg_SaveError">خطأ في حفظ السجل: {0}</String>
+        <String Key="Msg_DeleteConfirm">هل أنت متأكد من حذف هذا السجل؟</String>
+        <String Key="Msg_DeleteSuccess">تم حذف السجل بنجاح.</String>
+        <String Key="Msg_DeleteError">خطأ في حذف السجل: {0}</String>
+        <String Key="Msg_RequiredField">{0} مطلوب.</String>
+        <String Key="Msg_InvalidDate">تاريخ غير صحيح: {0}</String>
+        <String Key="Msg_InvalidAmount">مبلغ غير صحيح: {0}</String>
+        <String Key="Msg_EndDateBeforeStart">لا يمكن أن يكون تاريخ الانتهاء قبل تاريخ البدء.</String>
+        <String Key="Msg_NegativeAmount">لا يمكن أن يكون المبلغ سالباً.</String>
+        <String Key="Msg_DuplicateCode">هذا الرمز موجود بالفعل.</String>
+        <String Key="Msg_NoDataFound">لم يتم العثور على بيانات.</String>
+        <String Key="Msg_LoadingData">جاري تحميل البيانات...</String>
+        <String Key="Msg_Processing">جاري المعالجة...</String>
+        <String Key="Msg_PleaseWait">يرجى الانتظار...</String>
+        <String Key="Msg_OperationCancelled">تم إلغاء العملية.</String>
+        <String Key="Msg_ConfirmSubmit">هل أنت متأكد من إرسال للاعتماد؟</String>
+        <String Key="Msg_SubmitSuccess">تم الإرسال للاعتماد بنجاح.</String>
+        <String Key="Msg_ApprovalSuccess">تم الاعتماد بنجاح.</String>
+        <String Key="Msg_RejectionSuccess">تم الرفض بنجاح.</String>
+        <String Key="Msg_LanguageChanged">تم تغيير اللغة إلى {0}. يرجى إعادة تشغيل النماذج لرؤية التغييرات.</String>
+        <String Key="Msg_ExchangeRateUpdated">تم تحديث سعر الصرف بنجاح.</String>
+        <String Key="Msg_ExchangeRateUpdateError">خطأ في تحديث سعر الصرف: {0}</String>
+        <String Key="Msg_NoActiveContract">لم يتم العثور على عقد نشط.</String>
+        <String Key="Msg_ContractNotFound">لم يتم العثور على العقد.</String>
+        <String Key="Msg_IPCAlreadyExists">توجد بالفعل شهادة دفع لهذه الفترة.</String>
+        <String Key="Msg_OverlappingPeriod">الفترة تتداخل مع شهادة دفع موجودة.</String>
+        <String Key="Msg_TotalMismatch">القيمة الإجمالية لا تطابق مجموع البنود.</String>
+
+        <!-- Validation Messages - رسائل التحقق -->
+        <String Key="Val_ContractCodeRequired">رمز العقد مطلوب.</String>
+        <String Key="Val_ContractNameRequired">اسم العقد مطلوب.</String>
+        <String Key="Val_CustomerRequired">العميل مطلوب.</String>
+        <String Key="Val_StartDateRequired">تاريخ البدء مطلوب.</String>
+        <String Key="Val_EndDateRequired">تاريخ الانتهاء مطلوب.</String>
+        <String Key="Val_CurrencyRequired">العملة مطلوبة.</String>
+        <String Key="Val_MinOneLine">مطلوب بند واحد على الأقل.</String>
+        <String Key="Val_InvalidEmail">عنوان بريد إلكتروني غير صحيح.</String>
+        <String Key="Val_InvalidPhone">رقم هاتف غير صحيح.</String>
+        <String Key="Val_ExchangeRateZero">لا يمكن أن يكون سعر الصرف صفراً.</String>
+        <String Key="Val_QuantityZero">يجب أن تكون الكمية أكبر من صفر.</String>
+        <String Key="Val_PriceNegative">لا يمكن أن يكون السعر سالباً.</String>
+        <String Key="Val_DiscountRange">يجب أن يكون الخصم بين 0 و 100.</String>
+        <String Key="Val_CompletionRange">يجب أن تكون نسبة الإنجاز بين 0 و 100.</String>
+
+        <!-- Reports - التقارير -->
+        <String Key="Report_RevenueRecognition">ملخص الاعتراف بالإيرادات</String>
+        <String Key="Report_ContractSummary">تقرير ملخص العقود</String>
+        <String Key="Report_Backlog">تقرير العقود المتأخرة</String>
+        <String Key="Report_AgingAnalysis">تقرير تحليل التقادم</String>
+        <String Key="Report_Parameters">معاملات التقرير</String>
+        <String Key="Report_FromDate">من تاريخ</String>
+        <String Key="Report_ToDate">إلى تاريخ</String>
+        <String Key="Report_Period">الفترة</String>
+        <String Key="Report_Customer">العميل</String>
+        <String Key="Report_Contract">العقد</String>
+        <String Key="Report_ShowDetails">إظهار التفاصيل</String>
+        <String Key="Report_GroupBy">تجميع حسب</String>
+        <String Key="Report_SortBy">ترتيب حسب</String>
+        <String Key="Report_Generate">إنشاء التقرير</String>
+
+        <!-- Settings - الإعدادات -->
+        <String Key="Settings_General">الإعدادات العامة</String>
+        <String Key="Settings_Numbering">سلاسل الترقيم</String>
+        <String Key="Settings_Defaults">القيم الافتراضية</String>
+        <String Key="Settings_Approval">سير عمل الاعتماد</String>
+        <String Key="Settings_Email">إشعارات البريد الإلكتروني</String>
+        <String Key="Settings_DefaultCurrency">العملة الافتراضية</String>
+        <String Key="Settings_DateFormat">تنسيق التاريخ</String>
+        <String Key="Settings_DecimalPlaces">المنازل العشرية</String>
+        <String Key="Settings_EnableAudit">تفعيل سجل التدقيق</String>
+        <String Key="Settings_AutoSave">فترة الحفظ التلقائي</String>
+        <String Key="Settings_Language">اللغة الافتراضية</String>
+
+        <!-- Help & About - المساعدة وحول -->
+        <String Key="Help_UserGuide">دليل المستخدم</String>
+        <String Key="Help_Documentation">الوثائق</String>
+        <String Key="Help_Support">الدعم الفني</String>
+        <String Key="Help_ContactUs">اتصل بنا</String>
+        <String Key="About_Version">الإصدار</String>
+        <String Key="About_Copyright">جميع الحقوق محفوظة © 2025</String>
+        <String Key="About_LicensedTo">مرخص لـ</String>
+
+        <!-- Buttons - الأزرار -->
+        <String Key="Btn_SaveAndClose">حفظ وإغلاق</String>
+        <String Key="Btn_SaveAndNew">حفظ وجديد</String>
+        <String Key="Btn_AddLine">إضافة بند</String>
+        <String Key="Btn_RemoveLine">إزالة بند</String>
+        <String Key="Btn_Calculate">حساب</String>
+        <String Key="Btn_Recalculate">إعادة الحساب</String>
+        <String Key="Btn_ViewDetails">عرض التفاصيل</String>
+        <String Key="Btn_Attach">إرفاق ملف</String>
+        <String Key="Btn_ViewAttachment">عرض المرفق</String>
+        <String Key="Btn_DownloadAttachment">تنزيل المرفق</String>
+        <String Key="Btn_RemoveAttachment">إزالة المرفق</String>
+        <String Key="Btn_SendNotification">إرسال إشعار</String>
+        <String Key="Btn_ViewHistory">عرض السجل</String>
+        <String Key="Btn_ViewAuditLog">عرض سجل التدقيق</String>
+        <String Key="Btn_SubmitForApproval">إرسال للاعتماد</String>
+
+        <!-- Tooltips - تلميحات الأدوات -->
+        <String Key="Tip_Required">هذا الحقل مطلوب</String>
+        <String Key="Tip_Browse">انقر للاستعراض</String>
+        <String Key="Tip_Calendar">انقر لاختيار التاريخ</String>
+        <String Key="Tip_Calculate">انقر للحساب التلقائي</String>
+        <String Key="Tip_Refresh">انقر لتحديث البيانات</String>
+        <String Key="Tip_AddLine">إضافة بند جديد</String>
+        <String Key="Tip_RemoveLine">إزالة البند المحدد</String>
+        <String Key="Tip_ViewDetails">عرض المعلومات التفصيلية</String>
+        <String Key="Tip_Attachment">إرفاق المستندات الداعمة</String>
+
+        <!-- Labels - التسميات -->
+        <String Key="Label_Total">المجموع:</String>
+        <String Key="Label_Subtotal">المجموع الفرعي:</String>
+        <String Key="Label_GrandTotal">الإجمالي الكلي:</String>
+        <String Key="Label_Balance">الرصيد:</String>
+        <String Key="Label_Amount">المبلغ:</String>
+        <String Key="Label_Percentage">النسبة:</String>
+        <String Key="Label_Count">العدد:</String>
+        <String Key="Label_Of">من</String>
+        <String Key="Label_To">إلى</String>
+        <String Key="Label_From">من</String>
+        <String Key="Label_Records">سجلات</String>
+        <String Key="Label_Items">عناصر</String>
+        <String Key="Label_Lines">بنود</String>
+        <String Key="Label_Page">صفحة</String>
+
+    </Strings>
+</Resources>
