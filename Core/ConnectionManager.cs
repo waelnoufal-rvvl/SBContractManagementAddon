@@ -78,6 +78,27 @@ namespace ContractManagementAddon.Core
                             );
                         }
 
+                        // Check if SAP B1 process is running
+                        var sapProcesses = System.Diagnostics.Process.GetProcessesByName("SAP");
+                        Logger.Info($"SAP Business One processes found: {sapProcesses.Length}");
+                        if (sapProcesses.Length == 0)
+                        {
+                            Logger.Error("SAP Business One (SAP.exe) is NOT running!");
+                            throw new Exception(
+                                "SAP Business One is not running!\n\n" +
+                                "Please start SAP Business One client:\n" +
+                                "1. Launch SAP Business One from Start Menu or Desktop\n" +
+                                "2. Log in with your credentials\n" +
+                                "3. Select your company database\n" +
+                                "4. Wait for the main window to fully load\n" +
+                                "5. Then press F5 in Visual Studio to run the add-on"
+                            );
+                        }
+                        else
+                        {
+                            Logger.Info($"SAP B1 process detected: {sapProcesses[0].ProcessName} (PID: {sapProcesses[0].Id})");
+                        }
+
                         // Method 1: Try GetActiveObject (most reliable for development)
                         try
                         {
@@ -88,6 +109,7 @@ namespace ContractManagementAddon.Core
                         catch (Exception ex1)
                         {
                             Logger.Info($"GetActiveObject failed: {ex1.Message}");
+                            Logger.Warning("SAP.exe is running but COM object is not available - SAP B1 may not be fully logged in yet");
                         }
 
                         // Method 2: Try Connect with empty string
