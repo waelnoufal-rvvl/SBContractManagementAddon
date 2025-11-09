@@ -1,6 +1,7 @@
 using System;
 using System.Configuration;
 using System.Data.Odbc;
+using System.Linq;
 using System.Runtime.InteropServices;
 using SAPbouiCOM;
 using SAPbobsCOM;
@@ -78,25 +79,79 @@ namespace ContractManagementAddon.Core
                             );
                         }
 
-                        // Check if SAP B1 process is running
-                        var sapProcesses = System.Diagnostics.Process.GetProcessesByName("SAP");
-                        Logger.Info($"SAP Business One processes found: {sapProcesses.Length}");
-                        if (sapProcesses.Length == 0)
+                        // Check if SAP B1 process is running - search comprehensively
+                        Logger.Info("Searching for SAP Business One process...");
+
+                        // Try common SAP B1 process names
+                        string[] possibleNames = { "SAP", "SAPBusinessOne", "SBO", "SAP Business One", "SAPClient" };
+                        System.Diagnostics.Process[] sapProcesses = null;
+                        string foundProcessName = null;
+
+                        foreach (var name in possibleNames)
                         {
-                            Logger.Error("SAP Business One (SAP.exe) is NOT running!");
-                            throw new Exception(
-                                "SAP Business One is not running!\n\n" +
-                                "Please start SAP Business One client:\n" +
-                                "1. Launch SAP Business One from Start Menu or Desktop\n" +
-                                "2. Log in with your credentials\n" +
-                                "3. Select your company database\n" +
-                                "4. Wait for the main window to fully load\n" +
-                                "5. Then press F5 in Visual Studio to run the add-on"
-                            );
+                            try
+                            {
+                                sapProcesses = System.Diagnostics.Process.GetProcessesByName(name);
+                                if (sapProcesses.Length > 0)
+                                {
+                                    foundProcessName = name;
+                                    Logger.Info($"Found SAP B1 using process name: {name}");
+                                    break;
+                                }
+                            }
+                            catch { }
+                        }
+
+                        // If not found, search all processes for SAP-related ones
+                        if (sapProcesses == null || sapProcesses.Length == 0)
+                        {
+                            Logger.Warning("Standard SAP process names not found. Searching all running processes...");
+
+                            var allProcesses = System.Diagnostics.Process.GetProcesses();
+                            var sapRelated = allProcesses.Where(p => {
+                                try
+                                {
+                                    string pName = p.ProcessName.ToUpper();
+                                    string wTitle = p.MainWindowTitle ?? "";
+                                    return pName.Contains("SAP") || pName.Contains("SBO") ||
+                                           wTitle.Contains("SAP Business One") || wTitle.Contains("SAP B1");
+                                }
+                                catch { return false; }
+                            }).ToList();
+
+                            Logger.Info($"Found {sapRelated.Count} SAP-related process(es):");
+                            foreach (var proc in sapRelated)
+                            {
+                                try
+                                {
+                                    Logger.Info($"  → {proc.ProcessName} (PID: {proc.Id}, Window: '{proc.MainWindowTitle}')");
+                                }
+                                catch (Exception ex)
+                                {
+                                    Logger.Info($"  → {proc.ProcessName} (PID: {proc.Id}, Error getting window title: {ex.Message})");
+                                }
+                            }
+
+                            if (sapRelated.Count == 0)
+                            {
+                                Logger.Error("❌ No SAP Business One process found!");
+                                Logger.Error("Please verify:");
+                                Logger.Error("  1. SAP Business One client is actually running");
+                                Logger.Error("  2. You are logged in (not just at login screen)");
+                                Logger.Error("  3. The main SAP B1 window is visible");
+                            }
                         }
                         else
                         {
-                            Logger.Info($"SAP B1 process detected: {sapProcesses[0].ProcessName} (PID: {sapProcesses[0].Id})");
+                            Logger.Info($"✓ SAP B1 process detected: {foundProcessName}");
+                            foreach (var proc in sapProcesses)
+                            {
+                                try
+                                {
+                                    Logger.Info($"  → PID: {proc.Id}, Window: '{proc.MainWindowTitle}'");
+                                }
+                                catch { }
+                            }
                         }
 
                         // Method 1: Try GetActiveObject (most reliable for development)
