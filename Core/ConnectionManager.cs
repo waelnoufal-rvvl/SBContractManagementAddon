@@ -31,43 +31,77 @@ namespace ContractManagementAddon.Core
 
                     SAPbouiCOM.SboGuiApi sboGuiApi = new SAPbouiCOM.SboGuiApi();
 
-                    // Get connection string from environment or command line
+                    // PRODUCTION MODE: Get connection string from SAP B1 (when registered)
+                    // SAP B1 passes connection string as first command-line argument when launching add-on
                     _connectionString = Environment.GetCommandLineArgs().Length > 1
                         ? Environment.GetCommandLineArgs()[1]
-                        : GetConnectionString();
+                        : null;
 
-                    if (string.IsNullOrEmpty(_connectionString))
+                    if (!string.IsNullOrEmpty(_connectionString))
                     {
-                        Logger.Info("No connection string found, attempting to connect to running SAP B1 instance...");
+                        // Production: Use connection string from SAP B1
+                        Logger.Info("Connecting using connection string from SAP B1 (registered add-on mode)");
+                        sboGuiApi.Connect(_connectionString);
+                        _uiApp = sboGuiApi.GetApplication();
+                        Logger.Info("Successfully connected to SAP B1 (registered mode)");
+                    }
+                    else
+                    {
+                        // DEVELOPMENT MODE: Connect to already-running SAP B1 instance
+                        Logger.Info("No connection string (development mode) - connecting to running SAP B1...");
 
-                        // Try to connect to already running SAP B1 instance
+                        // Method 1: Try GetActiveObject (most reliable for development)
                         try
                         {
-                            // Method 1: Try using GetApplication directly (works if SAP B1 is running)
                             _uiApp = (SAPbouiCOM.Application)Marshal.GetActiveObject("SAPbouiCOM.Application");
-                            Logger.Info("Successfully connected to running SAP B1 instance (direct method)");
+                            Logger.Info("✓ Connected to running SAP B1 instance (GetActiveObject)");
                             return _uiApp;
                         }
-                        catch
+                        catch (Exception ex1)
                         {
-                            // Method 2: Try empty connection string (sometimes works)
-                            Logger.Info("Direct connection failed, trying empty connection string...");
-                            try
-                            {
-                                sboGuiApi.Connect("");
-                                _uiApp = sboGuiApi.GetApplication();
-                                Logger.Info("Successfully connected with empty connection string");
-                                return _uiApp;
-                            }
-                            catch
-                            {
-                                throw new Exception("Connection string not found and could not connect to running SAP B1 instance. Please ensure SAP B1 is running and logged in, or register this add-on with SAP B1.");
-                            }
+                            Logger.Info($"GetActiveObject failed: {ex1.Message}");
                         }
-                    }
 
-                    sboGuiApi.Connect(_connectionString);
-                    _uiApp = sboGuiApi.GetApplication();
+                        // Method 2: Try Connect with empty string
+                        try
+                        {
+                            Logger.Info("Trying SboGuiApi.Connect with empty string...");
+                            sboGuiApi.Connect("");
+                            _uiApp = sboGuiApi.GetApplication();
+                            Logger.Info("✓ Connected with empty connection string");
+                            return _uiApp;
+                        }
+                        catch (Exception ex2)
+                        {
+                            Logger.Info($"Empty connection string failed: {ex2.Message}");
+                        }
+
+                        // Method 3: Try Connect with null
+                        try
+                        {
+                            Logger.Info("Trying SboGuiApi.Connect with null...");
+                            sboGuiApi.Connect(null);
+                            _uiApp = sboGuiApi.GetApplication();
+                            Logger.Info("✓ Connected with null connection string");
+                            return _uiApp;
+                        }
+                        catch (Exception ex3)
+                        {
+                            Logger.Info($"Null connection string failed: {ex3.Message}");
+                        }
+
+                        // All methods failed
+                        throw new Exception(
+                            "Cannot connect to SAP Business One.\n\n" +
+                            "DEVELOPMENT MODE:\n" +
+                            "1. Make sure SAP Business One is running and you are logged in\n" +
+                            "2. Then run this add-on from Visual Studio (F5)\n\n" +
+                            "PRODUCTION MODE:\n" +
+                            "1. Build the project in Release mode\n" +
+                            "2. Register the add-on using SAP B1 → Administration → Add-ons → Add-on Administration\n" +
+                            "3. SAP B1 will launch the add-on automatically when you log in"
+                        );
+                    }
 
                     Logger.Info("Successfully connected to UI API");
                 }
