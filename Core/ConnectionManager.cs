@@ -51,33 +51,11 @@ namespace ContractManagementAddon.Core
                         // DEVELOPMENT MODE: Connect to already-running SAP B1 instance
                         Logger.Info("No connection string (development mode) - connecting to running SAP B1...");
 
-                        // Check process architecture (SAP B1 requires 32-bit)
+                        // Check process architecture
                         bool is64Bit = Environment.Is64BitProcess;
                         Logger.Info($"Add-on process: {(is64Bit ? "64-bit" : "32-bit")}");
                         Logger.Info($"Operating System: {(Environment.Is64BitOperatingSystem ? "64-bit" : "32-bit")}");
-
-                        if (is64Bit)
-                        {
-                            Logger.Error("CRITICAL: Add-on is running as 64-bit but SAP B1 requires 32-bit!");
-                            Logger.Error("FIX: In Visual Studio → Solution Configuration → Platform → Select 'x86'");
-                            throw new Exception(
-                                "Architecture Mismatch!\n\n" +
-                                "SAP Business One is 32-bit but this add-on is running as 64-bit.\n\n" +
-                                "TO FIX in Visual Studio 2019:\n" +
-                                "1. Click the dropdown next to 'Debug' (shows 'AnyCPU' or 'x64')\n" +
-                                "2. Click 'Configuration Manager...'\n" +
-                                "3. Under 'Active solution platform', select 'x86'\n" +
-                                "4. If 'x86' doesn't exist:\n" +
-                                "   - Select '<New...>'\n" +
-                                "   - Type or select: x86\n" +
-                                "   - Copy settings from: AnyCPU\n" +
-                                "   - Click OK\n" +
-                                "5. Close Configuration Manager\n" +
-                                "6. Press F5 to run again\n\n" +
-                                "The project is already configured for x86, but Visual Studio\n" +
-                                "must be set to use the x86 platform configuration."
-                            );
-                        }
+                        Logger.Info($"Architecture configured for SAP B1 10.0 64-bit HANA version");
 
                         // Check if SAP B1 process is running - search comprehensively
                         Logger.Info("Searching for SAP Business One process...");
