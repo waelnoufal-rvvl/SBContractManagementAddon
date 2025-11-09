@@ -15,30 +15,36 @@ This SAP Business One add-on project has been configured for Visual Studio 2019 
 - .NET Framework 4.8 Development Tools
 - NuGet Package Manager
 
-### 3. SAP Business One DI API & UI API
-The following SAP assemblies must be registered in your system (typically in `C:\Windows\SysWOW64`):
-- `SAPbouiCOM.dll` - SAP Business One UI API
-- `SAPbobsCOM90.dll` - SAP Business One DI API (version may vary: 91, 100, etc.)
+### 3. SAP Business One SDK Assembly
+The SAP Business One SDK must be installed, which includes:
+- `SAPBusinessOneSDK.dll` - The unified SDK assembly containing:
+  - SAPbouiCOM (UI API)
+  - SAPbobsCOM (DI API)
+  - SAPbouiCOM.Framework (Framework classes)
 
 ## Configuration Changes Made
 
 ### 1. Project File Updates
 - **ToolsVersion**: Updated from 12.0 to 15.0 (VS2019 compatible)
 - **Platform Target**: Set to x86 (required for SAP B1 32-bit COM interop)
-- **SAP References**: Added proper references to SAPbouiCOM and SAPbobsCOM
+- **SAP References**: Uses SAPBusinessOneSDK (standard SDK assembly)
 
-### 2. SAP Business One SDK References
-The project now includes proper references to:
+### 2. SAP Business One SDK Reference
+The project uses the standard SAP Business One SDK assembly:
 ```xml
-<Reference Include="SAPbouiCOM">
-  <HintPath>$(SystemRoot)\SysWOW64\SAPbouiCOM.dll</HintPath>
-</Reference>
-<Reference Include="SAPbobsCOM">
-  <HintPath>$(SystemRoot)\SysWOW64\SAPbobsCOM90.dll</HintPath>
+<Reference Include="SAPBusinessOneSDK">
+  <HintPath>$(ProgramFiles)\SAP\SAP Business One SDK\Assemblies\SAPBusinessOneSDK.dll</HintPath>
+  <Private>False</Private>
 </Reference>
 ```
 
-**Note**: If your SAP B1 version uses a different DI API version (e.g., SAPbobsCOM91.dll, SAPbobsCOM100.dll), update the reference in the .csproj file accordingly.
+**Benefits of using SAPBusinessOneSDK:**
+- Single unified reference instead of multiple COM DLLs
+- Includes SAPbouiCOM.Framework for template support
+- Version-independent (works with all SAP B1 versions)
+- Standard approach recommended by SAP
+
+**Default Installation Path:** `C:\Program Files (x86)\SAP\SAP Business One SDK\Assemblies\`
 
 ### 3. Assembly Information
 - Updated AssemblyInfo.cs with correct project information
@@ -95,24 +101,26 @@ ContractManagementAddon.exe "0030002C0030002C00530041005000420044005F00440061007
 
 ## Troubleshooting
 
-### Issue: "Could not load file or assembly 'SAPbouiCOM'"
+### Issue: "Could not load file or assembly 'SAPBusinessOneSDK'"
 **Solution**:
-1. Verify SAP Business One Client is installed
-2. Check that SAPbouiCOM.dll exists in `C:\Windows\SysWOW64\`
-3. Right-click the project → Add Reference → Browse
-4. Navigate to `C:\Windows\SysWOW64\` and manually add `SAPbouiCOM.dll`
+1. Verify SAP Business One SDK is installed
+2. Check SDK installation path: `C:\Program Files (x86)\SAP\SAP Business One SDK\`
+3. Verify SAPBusinessOneSDK.dll exists in: `C:\Program Files (x86)\SAP\SAP Business One SDK\Assemblies\`
+4. If SDK is not installed:
+   - Download SAP Business One SDK from SAP Service Marketplace
+   - Run the SDK installer
+   - Rebuild the solution after installation
 
-### Issue: "Could not load file or assembly 'SAPbobsCOM90'"
+### Issue: SDK Reference Shows Warning in Visual Studio
 **Solution**:
-1. Check your SAP B1 version
-2. Find the correct DI API DLL in `C:\Windows\SysWOW64\`:
-   - SAP B1 9.0: `SAPbobsCOM90.dll`
-   - SAP B1 9.1: `SAPbobsCOM91.dll`
-   - SAP B1 9.2: `SAPbobsCOM92.dll`
-   - SAP B1 9.3: `SAPbobsCOM93.dll`
-   - SAP B1 10.0: `SAPbobsCOM100.dll`
-3. Update the reference in `ContractManagementAddon.csproj` to match your version
-4. Rebuild the solution
+1. Right-click the project → Add Reference
+2. Click "Browse" button
+3. Navigate to: `C:\Program Files (x86)\SAP\SAP Business One SDK\Assemblies\`
+4. Select `SAPBusinessOneSDK.dll`
+5. Click Add
+6. Rebuild the solution
+
+**Note**: The SAPBusinessOneSDK.dll works with all SAP B1 versions (9.0, 9.1, 9.2, 9.3, 10.0, etc.) - no version-specific configuration needed!
 
 ### Issue: Platform Mismatch Errors
 **Solution**:

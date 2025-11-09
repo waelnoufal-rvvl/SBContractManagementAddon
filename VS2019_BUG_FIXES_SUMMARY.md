@@ -43,43 +43,40 @@ November 9, 2025
 </PropertyGroup>
 ```
 
-### 3. Missing/Incorrect SAP Business One SDK References (CRITICAL)
+### 3. Missing SAP Business One SDK Reference Path (CRITICAL)
 **Problem**:
-- Invalid reference `<Reference Include="SAPBusinessOneSDK" />` without proper path
-- Missing SAPbouiCOM (UI API) reference
-- Missing SAPbobsCOM (DI API) reference
+- Template had `<Reference Include="SAPBusinessOneSDK" />` without HintPath
+- Missing path to SAPBusinessOneSDK.dll
+- Visual Studio couldn't locate the SDK assembly
 
 **Impact**:
-- Build failures with "could not load assembly" errors
-- Program.cs uses SAPbouiCOM.Framework but it wasn't referenced
-- ConnectionManager.cs uses both SAPbouiCOM and SAPbobsCOM
+- Build failures with "could not load assembly SAPBusinessOneSDK" errors
+- Code uses SAPbouiCOM.Framework but assembly wasn't found
+- ConnectionManager.cs uses SAPbouiCOM and SAPbobsCOM which are in SDK
 
-**Fix**: Replaced invalid reference with proper SAP B1 SDK references
-**File**: ContractManagementAddon.csproj:195-204
+**Fix**: Added proper HintPath to SAPBusinessOneSDK assembly
+**File**: ContractManagementAddon.csproj:195-198
 
 ```xml
-<!-- Removed -->
+<!-- Before (Missing HintPath) -->
 <Reference Include="SAPBusinessOneSDK" />
 
-<!-- Added -->
-<Reference Include="SAPbouiCOM">
-  <HintPath>$(SystemRoot)\SysWOW64\SAPbouiCOM.dll</HintPath>
-  <EmbedInteropTypes>False</EmbedInteropTypes>
-  <Private>False</Private>
-</Reference>
-<Reference Include="SAPbobsCOM">
-  <HintPath>$(SystemRoot)\SysWOW64\SAPbobsCOM90.dll</HintPath>
-  <EmbedInteropTypes>False</EmbedInteropTypes>
+<!-- After (With Proper Path) -->
+<Reference Include="SAPBusinessOneSDK">
+  <HintPath>$(ProgramFiles)\SAP\SAP Business One SDK\Assemblies\SAPBusinessOneSDK.dll</HintPath>
   <Private>False</Private>
 </Reference>
 ```
 
-**Note**: The DI API version (SAPbobsCOM90.dll) may need to be updated based on your SAP B1 version:
-- SAP B1 9.0: SAPbobsCOM90.dll
-- SAP B1 9.1: SAPbobsCOM91.dll
-- SAP B1 9.2: SAPbobsCOM92.dll
-- SAP B1 9.3: SAPbobsCOM93.dll
-- SAP B1 10.0: SAPbobsCOM100.dll
+**Why SAPBusinessOneSDK is the Correct Approach**:
+- ✅ Single unified assembly (includes UI API, DI API, and Framework)
+- ✅ Version-independent (works with all SAP B1 versions)
+- ✅ Standard approach recommended by SAP
+- ✅ Includes SAPbouiCOM.Framework namespace
+- ✅ No need to manage multiple COM DLL versions
+
+**Default Installation Path**:
+- `C:\Program Files (x86)\SAP\SAP Business One SDK\Assemblies\SAPBusinessOneSDK.dll`
 
 ### 4. Outdated AssemblyInfo Template Values
 **Problem**: AssemblyInfo.cs contained old template placeholder values
@@ -157,16 +154,17 @@ To verify all fixes are working:
 1. ✅ Open ContractManagementAddon.sln in Visual Studio 2019
 2. ✅ Check Solution Explorer - no errors on project load
 3. ✅ Right-click solution → Restore NuGet Packages
-4. ✅ Check References folder - SAPbouiCOM and SAPbobsCOM should show without warnings
+4. ✅ Check References folder - SAPBusinessOneSDK should show without warnings
 5. ✅ Build → Build Solution (Ctrl+Shift+B)
 6. ✅ Check Output window - build should succeed with 0 errors
 
 ## Known Considerations
 
-### SAP Business One Version Compatibility
-- The project references SAPbobsCOM90.dll (for SAP B1 9.0)
-- If you're using a different SAP B1 version, update the reference in the .csproj file
-- Check `C:\Windows\SysWOW64\` for your specific version
+### SAP Business One SDK Installation
+- The project uses SAPBusinessOneSDK.dll which is version-independent
+- Works with all SAP B1 versions (9.0, 9.1, 9.2, 9.3, 10.0, etc.)
+- SDK must be installed at: `C:\Program Files (x86)\SAP\SAP Business One SDK\`
+- No version-specific configuration needed!
 
 ### Visual Studio 2022 Incompatibility
 - **IMPORTANT**: SAP Business One SDK is NOT compatible with Visual Studio 2022
@@ -218,10 +216,11 @@ To verify all fixes are working:
 ## Notes for Developers
 
 1. Always build as x86 (32-bit) for SAP B1 compatibility
-2. Keep SAP Business One client installed and updated
-3. Verify SAP DLL versions match your B1 installation
+2. Keep SAP Business One SDK installed and updated
+3. SAPBusinessOneSDK.dll is version-independent - works with all SAP B1 versions
 4. Use VS2019 only - VS2022 is not supported by SAP
 5. Run SAP B1 client before debugging the add-on
+6. SAPbouiCOM.Framework namespace is available through SAPBusinessOneSDK
 
 ---
 **Fixed by**: Claude
