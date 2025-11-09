@@ -50,6 +50,34 @@ namespace ContractManagementAddon.Core
                         // DEVELOPMENT MODE: Connect to already-running SAP B1 instance
                         Logger.Info("No connection string (development mode) - connecting to running SAP B1...");
 
+                        // Check process architecture (SAP B1 requires 32-bit)
+                        bool is64Bit = Environment.Is64BitProcess;
+                        Logger.Info($"Add-on process: {(is64Bit ? "64-bit" : "32-bit")}");
+                        Logger.Info($"Operating System: {(Environment.Is64BitOperatingSystem ? "64-bit" : "32-bit")}");
+
+                        if (is64Bit)
+                        {
+                            Logger.Error("CRITICAL: Add-on is running as 64-bit but SAP B1 requires 32-bit!");
+                            Logger.Error("FIX: In Visual Studio → Solution Configuration → Platform → Select 'x86'");
+                            throw new Exception(
+                                "Architecture Mismatch!\n\n" +
+                                "SAP Business One is 32-bit but this add-on is running as 64-bit.\n\n" +
+                                "TO FIX in Visual Studio 2019:\n" +
+                                "1. Click the dropdown next to 'Debug' (shows 'AnyCPU' or 'x64')\n" +
+                                "2. Click 'Configuration Manager...'\n" +
+                                "3. Under 'Active solution platform', select 'x86'\n" +
+                                "4. If 'x86' doesn't exist:\n" +
+                                "   - Select '<New...>'\n" +
+                                "   - Type or select: x86\n" +
+                                "   - Copy settings from: AnyCPU\n" +
+                                "   - Click OK\n" +
+                                "5. Close Configuration Manager\n" +
+                                "6. Press F5 to run again\n\n" +
+                                "The project is already configured for x86, but Visual Studio\n" +
+                                "must be set to use the x86 platform configuration."
+                            );
+                        }
+
                         // Method 1: Try GetActiveObject (most reliable for development)
                         try
                         {
@@ -90,17 +118,27 @@ namespace ContractManagementAddon.Core
                             Logger.Info($"Null connection string failed: {ex3.Message}");
                         }
 
-                        // All methods failed
-                        throw new Exception(
+                        // All methods failed - provide detailed diagnostics
+                        string errorMsg =
                             "Cannot connect to SAP Business One.\n\n" +
-                            "DEVELOPMENT MODE:\n" +
-                            "1. Make sure SAP Business One is running and you are logged in\n" +
-                            "2. Then run this add-on from Visual Studio (F5)\n\n" +
-                            "PRODUCTION MODE:\n" +
-                            "1. Build the project in Release mode\n" +
-                            "2. Register the add-on using SAP B1 → Administration → Add-ons → Add-on Administration\n" +
-                            "3. SAP B1 will launch the add-on automatically when you log in"
-                        );
+                            "TROUBLESHOOTING CHECKLIST:\n" +
+                            "☐ SAP Business One is running and fully logged in\n" +
+                            "☐ You can see the main SAP B1 window with menus\n" +
+                            "☐ Visual Studio platform is set to 'x86' (not AnyCPU or x64)\n" +
+                            "   → Check dropdown next to 'Debug' button in VS toolbar\n\n" +
+                            "DEVELOPMENT MODE SETUP:\n" +
+                            "1. Start SAP Business One and log in completely\n" +
+                            "2. In Visual Studio: Configuration Manager → Platform → x86\n" +
+                            "3. Press F5 to run the add-on\n\n" +
+                            "PRODUCTION MODE SETUP:\n" +
+                            "1. Build in Release mode (x86 platform)\n" +
+                            "2. Register: SAP B1 → Administration → Add-ons → Add-on Administration\n" +
+                            "3. SAP B1 will auto-launch the add-on on login\n\n" +
+                            "Check the log file for detailed diagnostics:\n" +
+                            $"C:\\Logs\\ContractManagement\\ContractManagement_{DateTime.Now:yyyyMMdd}.log";
+
+                        Logger.Error(errorMsg);
+                        throw new Exception(errorMsg);
                     }
 
                     Logger.Info("Successfully connected to UI API");
