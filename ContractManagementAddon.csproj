@@ -69,6 +69,7 @@
     <Reference Include="SAPBusinessOneSDK">
       <HintPath>$(MSBuildProgramFiles32)\SAP\SAP Business One SDK\Assemblies\SAPBusinessOneSDK.dll</HintPath>
       <Private>False</Private>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
   </ItemGroup>
   <ItemGroup>
