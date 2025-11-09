@@ -1,11 +1,12 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-16"?>
 <AddOnRegData>
   <AddOn>
-    <Name>Contract Management</Name>
-    <Description>Contract Management Add-on for SAP Business One - Revenue Recognition and Multi-Currency Support</Description>
+    <Name>ContractManagement</Name>
+    <Description>Contract Management Add-on for SAP Business One</Description>
     <Type>2</Type>
     <Extention></Extention>
     <FileName>ContractManagementAddon.exe</FileName>
     <Interopability>1</Interopability>
+    <Port>0</Port>
   </AddOn>
 </AddOnRegData>

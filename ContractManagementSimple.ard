@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<AddOnRegData>
+  <AddOn>
+    <Name>ContractManagement</Name>
+    <Type>2</Type>
+    <FileName>ContractManagementAddon.exe</FileName>
+  </AddOn>
+</AddOnRegData>

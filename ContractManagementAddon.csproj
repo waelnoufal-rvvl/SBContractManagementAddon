@@ -147,6 +147,9 @@
     <None Include="ContractManagement.ard">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="ContractManagementSimple.ard">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Tests\Localization\README_TESTS.md" />
     <None Include="Tests\Localization\TEST_IMPLEMENTATION_SUMMARY.md" />
   </ItemGroup>
