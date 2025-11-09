@@ -112,7 +112,8 @@
     <!-- <Compile Include="Tests\Localization\RTLLayoutTests.cs" /> -->
     <!-- Excluded: Requires LanguageManager methods not yet implemented -->
     <Compile Include="Tests\Localization\RunLocalizationTests.cs" />
-    <Compile Include="Tests\Performance\PerformanceBenchmarks.cs" />
+    <!-- <Compile Include="Tests\Performance\PerformanceBenchmarks.cs" /> -->
+    <!-- Excluded: Requires BenchmarkDotNet package (not installed) -->
     <Compile Include="Tests\TestDataGenerator.cs" />
     <Compile Include="Tests\Unit\ContractTests.cs" />
     <Compile Include="Utilities\CurrencySeedData.cs" />
