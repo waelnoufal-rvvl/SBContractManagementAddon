@@ -1076,6 +1076,8 @@ namespace ContractManagementAddon.DataAccess
         /// </summary>
         private void CreatePerformanceObligationTable()
         {
+            UserTablesMD userTable = null;
+
             try
             {
                 Logger.Info("Creating Performance Obligation table...");
@@ -1083,7 +1085,7 @@ namespace ContractManagementAddon.DataAccess
                 // Create header table
                 if (!DatabaseHelper.UserTableExists(_company, "CM_PERF_OBL"))
                 {
-                    UserTablesMD userTable = (UserTablesMD)_company.GetBusinessObject(BoObjectTypes.oUserTables);
+                    userTable = (UserTablesMD)_company.GetBusinessObject(BoObjectTypes.oUserTables);
                     userTable.TableName = "CM_PERF_OBL";
                     userTable.TableDescription = "Performance Obligations";
                     userTable.TableType = BoUTBTableType.bott_MasterData;
@@ -1092,6 +1094,11 @@ namespace ContractManagementAddon.DataAccess
                     {
                         throw new Exception(_company.GetLastErrorDescription());
                     }
+
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(userTable);
+                    userTable = null;
+
+                    Logger.Info("Performance Obligation header table created");
 
                     // Add header fields
                     AddUserField("CM_PERF_OBL", "ContractCode", "Contract Code", BoFieldTypes.db_Alpha, 20);
@@ -1109,11 +1116,15 @@ namespace ContractManagementAddon.DataAccess
                     AddUserField("CM_PERF_OBL", "CreateDate", "Create Date", BoFieldTypes.db_Date);
                     AddUserField("CM_PERF_OBL", "CreateUser", "Create User", BoFieldTypes.db_Alpha, 50);
                 }
+                else
+                {
+                    Logger.Info("Performance Obligation header table already exists");
+                }
 
                 // Create lines table
                 if (!DatabaseHelper.UserTableExists(_company, "CM_PERF_OBL_LNS"))
                 {
-                    UserTablesMD userTable = (UserTablesMD)_company.GetBusinessObject(BoObjectTypes.oUserTables);
+                    userTable = (UserTablesMD)_company.GetBusinessObject(BoObjectTypes.oUserTables);
                     userTable.TableName = "CM_PERF_OBL_LNS";
                     userTable.TableDescription = "Performance Obligation Lines";
                     userTable.TableType = BoUTBTableType.bott_MasterDataLines;
@@ -1122,6 +1133,9 @@ namespace ContractManagementAddon.DataAccess
                     {
                         throw new Exception(_company.GetLastErrorDescription());
                     }
+
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(userTable);
+                    userTable = null;
 
                     Logger.Info("Performance Obligation lines table created");
 
@@ -1144,6 +1158,13 @@ namespace ContractManagementAddon.DataAccess
             {
                 Logger.Error("Error creating Performance Obligation table: " + ex.Message, ex);
                 throw;
+            }
+            finally
+            {
+                if (userTable != null)
+                {
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(userTable);
+                }
             }
         }
 
