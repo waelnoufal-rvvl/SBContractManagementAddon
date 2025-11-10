@@ -68,9 +68,16 @@ namespace ContractManagementAddon.Forms
                 }
 
                 CreateForm();
+                Logger.Info("CreateForm() completed successfully");
+
                 InitializeControls();
+                Logger.Info("InitializeControls() completed successfully");
+
                 AttachEvents();
+                Logger.Info("AttachEvents() completed successfully");
+
                 LoadNewContract();
+                Logger.Info("LoadNewContract() completed successfully");
 
                 _form.Visible = true;
                 Logger.Info("Contract form opened");
