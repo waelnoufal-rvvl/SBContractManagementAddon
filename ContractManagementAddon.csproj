@@ -209,6 +209,9 @@
     <Compile Include="DataAccess\RevenueRecognitionRepository.cs" />
     <Compile Include="DataAccess\UDOManager.cs" />
     <Compile Include="Forms\ChangeOrderForm.cs" />
+    <Compile Include="Forms\Contract.b1f.cs">
+      <DependentUpon>Contract.b1f</DependentUpon>
+    </Compile>
     <Compile Include="Forms\ContractForm.b1f.cs" />
     <Compile Include="Forms\ContractFormLocalized.cs" />
     <Compile Include="Forms\DashboardForm.cs" />
@@ -265,6 +268,7 @@
     <Content Include="SAP\addon.xml" />
     <Content Include="Forms\ContractForm.b1f">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <FormCategory>UserForm</FormCategory>
     </Content>
   </ItemGroup>
   <ItemGroup>
@@ -274,6 +278,9 @@
     <None Include="Documentation\QUICK_REFERENCE_CARDS.md" />
     <None Include="Documentation\SCREENSHOT_CAPTURE_GUIDE.md" />
     <None Include="Documentation\WORKFLOW_TUTORIALS.md" />
+    <None Include="Forms\Contract.b1f">
+      <FormCategory>UserForm</FormCategory>
+    </None>
     <None Include="Localization\README.md" />
     <None Include="packages.config" />
     <None Include="Tests\Localization\README_TESTS.md" />
