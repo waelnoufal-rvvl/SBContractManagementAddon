@@ -95,35 +95,35 @@ namespace ContractManagementAddon.Services
                 int nextCode = GetNextApprovalTemplateCode();
 
                 // Insert into OWDD (Approval Template Definition) - Safe query building
-                // SAP HANA system tables use PascalCase column names
+                // HANA requires quoted column names to preserve case
                 Dictionary<string, object> templateValues = new Dictionary<string, object>
                 {
-                    { "Code", nextCode },
-                    { "Name", templateCode },
-                    { "Descrip", templateName },
-                    { "IsActive", "Y" },
-                    { "CreateDate", DateTime.Now },
-                    { "CreateTime", DateTime.Now.Hour * 100 + DateTime.Now.Minute },
-                    { "UserSign", GetUserIDFromUserCode(_company.UserName) }
+                    { "\"Code\"", nextCode },
+                    { "\"Name\"", templateCode },
+                    { "\"Descrip\"", templateName },
+                    { "\"IsActive\"", "Y" },
+                    { "\"CreateDate\"", DateTime.Now },
+                    { "\"CreateTime\"", DateTime.Now.Hour * 100 + DateTime.Now.Minute },
+                    { "\"UserSign\"", GetUserIDFromUserCode(_company.UserName) }
                 };
 
                 string insertTemplate = _dbHelper.BuildInsertQuery("OWDD", templateValues);
                 _dbHelper.ExecuteQuery(insertTemplate);
 
                 // Insert stages into WDD1 (Template Stages)
-                // SAP HANA system tables use PascalCase column names
+                // HANA requires quoted column names to preserve case
                 foreach (var stage in stages)
                 {
                     Dictionary<string, object> stageValues = new Dictionary<string, object>
                     {
-                        { "Code", nextCode },
-                        { "LineNum", stage.StageNumber - 1 },
-                        { "StepName", stage.StageName },
-                        { "ApprovalType", stage.AuthorizerType },
-                        { "MinAmnt", stage.MinAmount },
-                        { "MaxAmnt", stage.MaxAmount },
-                        { "UserID", GetUserIDFromUserCode(_company.UserName) },
-                        { "IsActive", "Y" }
+                        { "\"Code\"", nextCode },
+                        { "\"LineNum\"", stage.StageNumber - 1 },
+                        { "\"StepName\"", stage.StageName },
+                        { "\"ApprovalType\"", stage.AuthorizerType },
+                        { "\"MinAmnt\"", stage.MinAmount },
+                        { "\"MaxAmnt\"", stage.MaxAmount },
+                        { "\"UserID\"", GetUserIDFromUserCode(_company.UserName) },
+                        { "\"IsActive\"", "Y" }
                     };
 
                     string insertStage = _dbHelper.BuildInsertQuery("WDD1", stageValues);
@@ -147,11 +147,11 @@ namespace ContractManagementAddon.Services
         {
             try
             {
-                // SAP HANA system tables use PascalCase column names
+                // HANA requires quoted column names to preserve case
                 string query = $@"
                     SELECT COUNT(*) as CNT
                     FROM OWDD
-                    WHERE Name = {_dbHelper.QuoteString(templateCode)}";
+                    WHERE \"Name\" = {_dbHelper.QuoteString(templateCode)}";
 
                 return _dbHelper.ExecuteCount(query) > 0;
             }
@@ -171,8 +171,8 @@ namespace ContractManagementAddon.Services
             try
             {
                 // Use COALESCE instead of ISNULL for HANA compatibility
-                // SAP HANA system tables use PascalCase column names
-                string query = $"SELECT {_dbHelper.GetMaxWithDefault("Code", "0")} + 1 as NextCode FROM OWDD";
+                // HANA requires quoted column names to preserve case
+                string query = $"SELECT {_dbHelper.GetMaxWithDefault("\"Code\"", "0")} + 1 as NextCode FROM OWDD";
 
                 return _dbHelper.ExecuteScalar<int>(query, "NextCode");
             }
