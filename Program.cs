@@ -17,34 +17,64 @@ namespace ContractManagementAddon
         {
             try
             {
-                // Check if SAP B1 is running by trying to get the connection string
-                if (args.Length < 1)
-                {
-                    // No connection string provided - show helpful message
-                    string message = "This add-on must be started from SAP Business One.\n\n" +
-                                   "To run this add-on:\n" +
-                                   "1. Start SAP Business One and log in\n" +
-                                   "2. Register this add-on using Add-On Administration\n" +
-                                   "3. The add-on will start automatically\n\n" +
-                                   "For development/testing:\n" +
-                                   "- Ensure SAP B1 is running\n" +
-                                   "- The add-on will attempt to connect to the running instance";
-
-                    System.Windows.Forms.MessageBox.Show(message, "Contract Management Add-On",
-                        System.Windows.Forms.MessageBoxButtons.OK,
-                        System.Windows.Forms.MessageBoxIcon.Information);
-                }
-
                 Application oApp = null;
-                if (args.Length < 1)
+
+                // Try to create Application object with error handling
+                try
                 {
-                    oApp = new Application();
+                    if (args.Length < 1)
+                    {
+                        // Try alternative connection methods for development
+                        System.Windows.Forms.MessageBox.Show(
+                            "Attempting to connect to running SAP Business One instance...\n\n" +
+                            "If this fails, please:\n" +
+                            "1. Ensure SAP B1 is running and logged in\n" +
+                            "2. Register this add-on in SAP B1\n" +
+                            "3. Restart from SAP B1",
+                            "Contract Management Add-On - Development Mode",
+                            System.Windows.Forms.MessageBoxButtons.OK,
+                            System.Windows.Forms.MessageBoxIcon.Information);
+
+                        // Try to connect with empty string (works if SAP B1 is running)
+                        oApp = new Application("");
+                    }
+                    else
+                    {
+                        //If you want to use an add-on identifier for the development license, you can specify an add-on identifier string as the second parameter.
+                        //oApp = new Application(args[0], "XXXXX");
+                        oApp = new Application(args[0]);
+                    }
                 }
-                else
+                catch (Exception connEx)
                 {
-                    //If you want to use an add-on identifier for the development license, you can specify an add-on identifier string as the second parameter.
-                    //oApp = new Application(args[0], "XXXXX");
-                    oApp = new Application(args[0]);
+                    // Connection failed - provide detailed instructions
+                    string helpMessage = "CONNECTION FAILED\n\n" +
+                        "Cannot connect to SAP Business One.\n\n" +
+                        "IMPORTANT: This add-on CANNOT run standalone!\n\n" +
+                        "To run this add-on properly:\n\n" +
+                        "OPTION 1 - Register the Add-On (Recommended):\n" +
+                        "1. Build this project in Visual Studio\n" +
+                        "2. Copy ContractManagementAddon.exe to a permanent folder\n" +
+                        "3. Open SAP Business One\n" +
+                        "4. Go to: Administration → Add-Ons → Add-On Administration\n" +
+                        "5. Click 'Register Add-On Manually'\n" +
+                        "6. Browse to SAP\\addon.xml in your project folder\n" +
+                        "7. Complete registration\n" +
+                        "8. Restart SAP B1\n\n" +
+                        "OPTION 2 - Attach Debugger:\n" +
+                        "1. Start SAP B1 and log in\n" +
+                        "2. Register add-on (one-time)\n" +
+                        "3. In Visual Studio: Debug → Attach to Process\n" +
+                        "4. Select ContractManagementAddon.exe\n\n" +
+                        "Error details: " + connEx.Message;
+
+                    System.Windows.Forms.MessageBox.Show(
+                        helpMessage,
+                        "Cannot Start Add-On",
+                        System.Windows.Forms.MessageBoxButtons.OK,
+                        System.Windows.Forms.MessageBoxIcon.Error);
+
+                    return; // Exit the application
                 }
 
                 // Connect to SAP B1 and get company object
@@ -61,14 +91,7 @@ namespace ContractManagementAddon
             catch (Exception ex)
             {
                 string errorMsg = "Failed to start Contract Management Add-On:\n\n" + ex.Message;
-                if (ex.Message.Contains("Could not find SBO"))
-                {
-                    errorMsg += "\n\nPlease ensure:\n" +
-                               "1. SAP Business One is running\n" +
-                               "2. You are logged into a company\n" +
-                               "3. The add-on is registered in Add-On Administration";
-                }
-                System.Windows.Forms.MessageBox.Show(errorMsg, "Connection Error",
+                System.Windows.Forms.MessageBox.Show(errorMsg, "Startup Error",
                     System.Windows.Forms.MessageBoxButtons.OK,
                     System.Windows.Forms.MessageBoxIcon.Error);
             }
