@@ -105,17 +105,24 @@ namespace ContractManagementAddon.DataAccess
                 Logger.Info("Contract header table created");
 
                 // Create lines table
-                userTable = (UserTablesMD)_company.GetBusinessObject(BoObjectTypes.oUserTables);
-                userTable.TableName = "CONTRACT_LNS";
-                userTable.TableDescription = "Contract Lines";
-                userTable.TableType = BoUTBTableType.bott_MasterDataLines;
-
-                if (userTable.Add() != 0)
+                if (!DatabaseHelper.UserTableExists(_company, "CONTRACT_LNS"))
                 {
-                    throw new Exception(_company.GetLastErrorDescription());
-                }
+                    userTable = (UserTablesMD)_company.GetBusinessObject(BoObjectTypes.oUserTables);
+                    userTable.TableName = "CONTRACT_LNS";
+                    userTable.TableDescription = "Contract Lines";
+                    userTable.TableType = BoUTBTableType.bott_MasterDataLines;
 
-                Logger.Info("Contract lines table created");
+                    if (userTable.Add() != 0)
+                    {
+                        throw new Exception(_company.GetLastErrorDescription());
+                    }
+
+                    Logger.Info("Contract lines table created");
+                }
+                else
+                {
+                    Logger.Info("Contract lines table already exists");
+                }
 
                 // Create fields for header
                 CreateContractFields();
@@ -197,14 +204,23 @@ namespace ContractManagementAddon.DataAccess
                 }
 
                 // Create lines table
-                userTable = (UserTablesMD)_company.GetBusinessObject(BoObjectTypes.oUserTables);
-                userTable.TableName = "IPC_LNS";
-                userTable.TableDescription = "IPC Lines";
-                userTable.TableType = BoUTBTableType.bott_DocumentLines;
-
-                if (userTable.Add() != 0)
+                if (!DatabaseHelper.UserTableExists(_company, "IPC_LNS"))
                 {
-                    throw new Exception(_company.GetLastErrorDescription());
+                    userTable = (UserTablesMD)_company.GetBusinessObject(BoObjectTypes.oUserTables);
+                    userTable.TableName = "IPC_LNS";
+                    userTable.TableDescription = "IPC Lines";
+                    userTable.TableType = BoUTBTableType.bott_DocumentLines;
+
+                    if (userTable.Add() != 0)
+                    {
+                        throw new Exception(_company.GetLastErrorDescription());
+                    }
+
+                    Logger.Info("IPC lines table created");
+                }
+                else
+                {
+                    Logger.Info("IPC lines table already exists");
                 }
 
                 CreateIPCFields();
@@ -285,14 +301,23 @@ namespace ContractManagementAddon.DataAccess
                 }
 
                 // Create lines table
-                userTable = (UserTablesMD)_company.GetBusinessObject(BoObjectTypes.oUserTables);
-                userTable.TableName = "CO_LNS";
-                userTable.TableDescription = "Change Order Lines";
-                userTable.TableType = BoUTBTableType.bott_DocumentLines;
-
-                if (userTable.Add() != 0)
+                if (!DatabaseHelper.UserTableExists(_company, "CO_LNS"))
                 {
-                    throw new Exception(_company.GetLastErrorDescription());
+                    userTable = (UserTablesMD)_company.GetBusinessObject(BoObjectTypes.oUserTables);
+                    userTable.TableName = "CO_LNS";
+                    userTable.TableDescription = "Change Order Lines";
+                    userTable.TableType = BoUTBTableType.bott_DocumentLines;
+
+                    if (userTable.Add() != 0)
+                    {
+                        throw new Exception(_company.GetLastErrorDescription());
+                    }
+
+                    Logger.Info("Change Order lines table created");
+                }
+                else
+                {
+                    Logger.Info("Change Order lines table already exists");
                 }
 
                 CreateChangeOrderFields();
@@ -958,6 +983,8 @@ namespace ContractManagementAddon.DataAccess
                         throw new Exception(_company.GetLastErrorDescription());
                     }
 
+                    Logger.Info("Performance Obligation lines table created");
+
                     // Add line fields
                     AddUserField("CM_PERF_OBL_LNS", "ItemCode", "Item Code", BoFieldTypes.db_Alpha, 20);
                     AddUserField("CM_PERF_OBL_LNS", "Description", "Description", BoFieldTypes.db_Alpha, 254);
@@ -965,6 +992,10 @@ namespace ContractManagementAddon.DataAccess
                     AddUserField("CM_PERF_OBL_LNS", "EstimatedCost", "Estimated Cost", BoFieldTypes.db_Float, subType: BoFldSubTypes.st_Sum);
                     AddUserField("CM_PERF_OBL_LNS", "ActualCost", "Actual Cost", BoFieldTypes.db_Float, subType: BoFldSubTypes.st_Sum);
                     AddUserField("CM_PERF_OBL_LNS", "CompletionPct", "Completion %", BoFieldTypes.db_Float, subType: BoFldSubTypes.st_Percentage);
+                }
+                else
+                {
+                    Logger.Info("Performance Obligation lines table already exists");
                 }
 
                 Logger.Info("Performance Obligation table created successfully");
