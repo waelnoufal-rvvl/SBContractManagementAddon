@@ -31,9 +31,9 @@ namespace ContractManagementAddon.DataAccess
 
             try
             {
-                string query = $@"SELECT * FROM ""@CM_PERF_OBL""
-                                 WHERE ""U_ContractCode"" = '{DatabaseHelper.EscapeSqlString(contractCode)}'
-                                 ORDER BY ""U_OblNumber""";
+                string query = $@"SELECT * FROM ""@CM_PERF_OBL"" T0
+                                 WHERE T0.""U_ContractCode"" = '{DatabaseHelper.EscapeSqlString(contractCode)}'
+                                 ORDER BY T0.""U_OblNumber""";
 
                 recordset = DatabaseHelper.ExecuteQuery(_company, query);
 
@@ -71,8 +71,8 @@ namespace ContractManagementAddon.DataAccess
 
             try
             {
-                string query = $@"SELECT * FROM ""@CM_PERF_OBL""
-                                 WHERE ""Code"" = '{DatabaseHelper.EscapeSqlString(code)}'";
+                string query = $@"SELECT * FROM ""@CM_PERF_OBL"" T0
+                                 WHERE T0.""Code"" = '{DatabaseHelper.EscapeSqlString(code)}'";
 
                 recordset = DatabaseHelper.ExecuteQuery(_company, query);
 
@@ -112,9 +112,9 @@ namespace ContractManagementAddon.DataAccess
 
             try
             {
-                string query = $@"SELECT * FROM ""@CM_PERF_OBL_LNS""
-                                 WHERE ""Code"" = '{DatabaseHelper.EscapeSqlString(obligationCode)}'
-                                 ORDER BY ""LineId""";
+                string query = $@"SELECT * FROM ""@CM_PERF_OBL_LNS"" T0
+                                 WHERE T0.""Code"" = '{DatabaseHelper.EscapeSqlString(obligationCode)}'
+                                 ORDER BY T0.""LineId""";
 
                 recordset = DatabaseHelper.ExecuteQuery(_company, query);
 
@@ -302,9 +302,9 @@ namespace ContractManagementAddon.DataAccess
 
             try
             {
-                string query = $@"SELECT * FROM ""@CM_REV_SCHEDULE""
-                                 WHERE ""U_ContractCode"" = '{DatabaseHelper.EscapeSqlString(contractCode)}'
-                                 ORDER BY ""U_PeriodStartDate""";
+                string query = $@"SELECT * FROM ""@CM_REV_SCHEDULE"" T0
+                                 WHERE T0.""U_ContractCode"" = '{DatabaseHelper.EscapeSqlString(contractCode)}'
+                                 ORDER BY T0.""U_PeriodStartDate""";
 
                 recordset = DatabaseHelper.ExecuteQuery(_company, query);
 
@@ -455,10 +455,10 @@ namespace ContractManagementAddon.DataAccess
 
             try
             {
-                string query = $@"SELECT * FROM ""@CM_DEFERRED_REV""
-                                 WHERE ""U_ContractCode"" = '{DatabaseHelper.EscapeSqlString(contractCode)}'
-                                 AND ""U_Status"" = 'Active'
-                                 ORDER BY ""U_CreateDate""";
+                string query = $@"SELECT * FROM ""@CM_DEFERRED_REV"" T0
+                                 WHERE T0.""U_ContractCode"" = '{DatabaseHelper.EscapeSqlString(contractCode)}'
+                                 AND T0.""U_Status"" = 'Active'
+                                 ORDER BY T0.""U_CreateDate""";
 
                 recordset = DatabaseHelper.ExecuteQuery(_company, query);
 

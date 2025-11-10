@@ -66,7 +66,7 @@ namespace ContractManagementAddon.DataAccess
 
             try
             {
-                string query = $@"SELECT * FROM ""@CM_CURRENCY"" WHERE ""Code"" = '{DatabaseHelper.EscapeSqlString(code)}'";
+                string query = $@"SELECT * FROM ""@CM_CURRENCY"" T0 WHERE T0.""Code"" = '{DatabaseHelper.EscapeSqlString(code)}'";
                 recordset = DatabaseHelper.ExecuteQuery(_company, query);
 
                 if (recordset.EoF)
@@ -102,7 +102,7 @@ namespace ContractManagementAddon.DataAccess
 
             try
             {
-                string query = @"SELECT * FROM ""@CM_CURRENCY"" WHERE ""U_IsBaseCurrency"" = 'Y'";
+                string query = @"SELECT * FROM ""@CM_CURRENCY"" T0 WHERE T0.""U_IsBaseCurrency"" = 'Y'";
                 recordset = DatabaseHelper.ExecuteQuery(_company, query);
 
                 if (recordset.EoF)

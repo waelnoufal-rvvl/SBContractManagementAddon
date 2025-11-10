@@ -182,7 +182,7 @@ namespace ContractManagementAddon.Services
             try
             {
                 Recordset recordset = (Recordset)_company.GetBusinessObject(BoObjectTypes.BoRecordset);
-                string query = $@"SELECT COUNT(*) as CNT FROM ""@CM_CURRENCY"" WHERE ""Code"" = '{DatabaseHelper.EscapeSqlString(currencyCode)}'";
+                string query = $@"SELECT COUNT(*) as CNT FROM ""@CM_CURRENCY"" T0 WHERE T0.""Code"" = '{DatabaseHelper.EscapeSqlString(currencyCode)}'";
                 recordset.DoQuery(query);
 
                 if (!recordset.EoF)
@@ -537,7 +537,7 @@ namespace ContractManagementAddon.Services
             try
             {
                 Recordset recordset = (Recordset)_company.GetBusinessObject(BoObjectTypes.BoRecordset);
-                string query = $@"SELECT * FROM ""@CM_CURRENCY"" WHERE ""Code"" = '{DatabaseHelper.EscapeSqlString(currencyCode)}'";
+                string query = $@"SELECT * FROM ""@CM_CURRENCY"" T0 WHERE T0.""Code"" = '{DatabaseHelper.EscapeSqlString(currencyCode)}'";
                 recordset.DoQuery(query);
 
                 if (!recordset.EoF)
