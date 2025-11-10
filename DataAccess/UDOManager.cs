@@ -73,13 +73,7 @@ namespace ContractManagementAddon.DataAccess
                 Logger.Error("Failed to create UDOs: " + ex.Message, ex);
                 throw;
             }
-            finally
-            {
-                if (userTable != null)
-                {
-                    System.Runtime.InteropServices.Marshal.ReleaseComObject(userTable);
-                }
-            }
+            
         }
 
         /// <summary>
@@ -527,13 +521,7 @@ namespace ContractManagementAddon.DataAccess
                 Logger.Error("Error registering Contract UDO: " + ex.Message, ex);
                 throw;
             }
-            finally
-            {
-                if (userTable != null)
-                {
-                    System.Runtime.InteropServices.Marshal.ReleaseComObject(userTable);
-                }
-            }
+            
         }
 
         /// <summary>
@@ -576,13 +564,7 @@ namespace ContractManagementAddon.DataAccess
                 Logger.Error("Error registering IPC UDO: " + ex.Message, ex);
                 throw;
             }
-            finally
-            {
-                if (userTable != null)
-                {
-                    System.Runtime.InteropServices.Marshal.ReleaseComObject(userTable);
-                }
-            }
+            
         }
 
         /// <summary>
@@ -625,13 +607,7 @@ namespace ContractManagementAddon.DataAccess
                 Logger.Error("Error registering Change Order UDO: " + ex.Message, ex);
                 throw;
             }
-            finally
-            {
-                if (userTable != null)
-                {
-                    System.Runtime.InteropServices.Marshal.ReleaseComObject(userTable);
-                }
-            }
+            
         }
 
         /// <summary>
@@ -1267,7 +1243,7 @@ namespace ContractManagementAddon.DataAccess
 
                 if (!DatabaseHelper.UserTableExists(_company, "CM_DEFERRED_REV"))
                 {
-                    UserTablesMD userTable = (UserTablesMD)_company.GetBusinessObject(BoObjectTypes.oUserTables);
+                    userTable = (UserTablesMD)_company.GetBusinessObject(BoObjectTypes.oUserTables);
                     userTable.TableName = "CM_DEFERRED_REV";
                     userTable.TableDescription = "Deferred Revenue";
                     userTable.TableType = BoUTBTableType.bott_NoObject;
@@ -1324,7 +1300,7 @@ namespace ContractManagementAddon.DataAccess
 
                 if (!DatabaseHelper.UserTableExists(_company, "CM_CONTRACT_ASSETS"))
                 {
-                    UserTablesMD userTable = (UserTablesMD)_company.GetBusinessObject(BoObjectTypes.oUserTables);
+                    userTable = (UserTablesMD)_company.GetBusinessObject(BoObjectTypes.oUserTables);
                     userTable.TableName = "CM_CONTRACT_ASSETS";
                     userTable.TableDescription = "Contract Assets & Liabilities";
                     userTable.TableType = BoUTBTableType.bott_NoObject;
@@ -1379,7 +1355,7 @@ namespace ContractManagementAddon.DataAccess
 
                 if (!DatabaseHelper.UserTableExists(_company, "CM_REV_LOG"))
                 {
-                    UserTablesMD userTable = (UserTablesMD)_company.GetBusinessObject(BoObjectTypes.oUserTables);
+                    userTable = (UserTablesMD)_company.GetBusinessObject(BoObjectTypes.oUserTables);
                     userTable.TableName = "CM_REV_LOG";
                     userTable.TableDescription = "Revenue Recognition Log";
                     userTable.TableType = BoUTBTableType.bott_NoObject;
@@ -1428,7 +1404,7 @@ namespace ContractManagementAddon.DataAccess
 
                 if (!DatabaseHelper.UserTableExists(_company, "CM_BACKLOG"))
                 {
-                    UserTablesMD userTable = (UserTablesMD)_company.GetBusinessObject(BoObjectTypes.oUserTables);
+                    userTable = (UserTablesMD)_company.GetBusinessObject(BoObjectTypes.oUserTables);
                     userTable.TableName = "CM_BACKLOG";
                     userTable.TableDescription = "Contract Backlog";
                     userTable.TableType = BoUTBTableType.bott_NoObject;
