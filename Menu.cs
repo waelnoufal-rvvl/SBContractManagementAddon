@@ -94,8 +94,8 @@ namespace ContractManagementAddon
                             break;
 
                         case "ContractManagementAddon.Contract":
-                            ContractForm contractForm = new ContractForm(_app);
-                            contractForm.Show();
+                            // Framework-based form - instantiation automatically loads .b1f and calls OnInitializeComponent()
+                            ContractForm contractForm = new ContractForm();
                             break;
 
                         case "ContractManagementAddon.IPC":

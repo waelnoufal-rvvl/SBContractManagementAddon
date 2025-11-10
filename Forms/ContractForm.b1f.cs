@@ -119,7 +119,7 @@ namespace ContractManagementAddon.Forms
 
                 // Initialize contract service
                 // Note: We need access to Company object - will need to refactor Application access
-                SAPbobsCOM.Company company = (SAPbobsCOM.Company)SAPbouiCOM.Framework.SAPbouiCOM.Framework.Application.SBO_Application.Company.GetDICompany();
+                SAPbobsCOM.Company company = (SAPbobsCOM.Company)SAPbouiCOM.Framework.Application.SBO_Application.Company.GetDICompany();
                 _contractService = new ContractService(company);
 
                 // Set default status to Draft if empty
