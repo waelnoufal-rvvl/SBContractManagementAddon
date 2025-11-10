@@ -19,20 +19,8 @@ namespace ContractManagementAddon.Forms
 
         private const string FORM_TYPE = "FRM_CONTRACT_V3"; // Changed to V3 to force fresh form creation with fixed labels
 
-        // Control IDs - MAX 9 characters (SAP B1 limit is 10)
-        private const string BTN_NEW = "btnNew3";
-        private const string BTN_SAVE = "btnSave3";
-        private const string BTN_DELETE = "btnDel3";
-        private const string BTN_FIND = "btnFind3";
-        private const string TXT_CODE = "txtCode3";
-        private const string TXT_CUSTOMER = "txtCust3";
-        private const string TXT_DESC = "txtDesc3";
-        private const string DT_START = "dtStart3";
-        private const string DT_END = "dtEnd3";
-        private const string TXT_VALUE = "txtVal3";
-        private const string CMB_STATUS = "cmbStat3";
-        private const string TXT_RETENTION = "txtRet3";
-        private const string GRID_LINES = "grdLns3";
+        // Control IDs are now defined in the .srf file
+        // All IDs are ≤9 characters to comply with SAP B1 10-character limit
 
         public ContractForm(ContractManagementApplication app)
         {
@@ -47,9 +35,6 @@ namespace ContractManagementAddon.Forms
         {
             try
             {
-                // DEBUG: Show which version is running (v2.4 = DIAGNOSTIC MODE)
-                _app.UIApp.MessageBox($"ContractForm v2.4 - DIAGNOSTIC\nHardcoded label test\nCheck logs for details\nBuild: {System.IO.File.GetLastWriteTime(System.Reflection.Assembly.GetExecutingAssembly().Location)}", 1, "OK", "", "");
-
                 // Check if form already exists - TESTING MODE: Close it to force recreation
                 try
                 {
@@ -92,89 +77,68 @@ namespace ContractManagementAddon.Forms
         }
 
         /// <summary>
-        /// Create form structure
+        /// Create form from .srf file (Form Designer approach)
         /// </summary>
         private void CreateForm()
         {
-            FormCreationParams formParams = (FormCreationParams)_app.UIApp.CreateObject(BoCreatableObjectType.cot_FormCreationParams);
-            formParams.UniqueID = $"{FORM_TYPE}_1";
-            formParams.FormType = FORM_TYPE;
-            formParams.BorderStyle = BoFormBorderStyle.fbs_Sizable;
+            try
+            {
+                // Load form from .srf file
+                string formPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Forms", "SRF", "ContractForm.srf");
 
-            _form = _app.UIApp.Forms.AddEx(formParams);
-            _form.Title = "Contract Management";
-            _form.Width = 800;
-            _form.Height = 600;
-            _form.Left = 200;
-            _form.Top = 100;
+                if (!System.IO.File.Exists(formPath))
+                {
+                    Logger.Error($"Form file not found: {formPath}");
+                    throw new System.IO.FileNotFoundException($"Form file not found: {formPath}");
+                }
+
+                string formXml = System.IO.File.ReadAllText(formPath);
+
+                // Replace placeholder with actual form UID
+                formXml = formXml.Replace("FormUID_Placeholder", $"{FORM_TYPE}_1");
+
+                // Load form into SAP B1
+                _app.UIApp.LoadBatchActions(ref formXml);
+
+                // Get the form instance
+                _form = _app.UIApp.Forms.Item($"{FORM_TYPE}_1");
+
+                Logger.Info($"Form {FORM_TYPE}_1 loaded from .srf file successfully");
+            }
+            catch (Exception ex)
+            {
+                Logger.Error($"Error loading form from .srf: {ex.Message}", ex);
+                throw;
+            }
         }
 
         /// <summary>
-        /// Initialize form controls
+        /// Initialize form controls (controls already exist from .srf file)
         /// </summary>
         private void InitializeControls()
         {
             try
             {
-                int leftMargin = 20;
-                int topPosition = 20;
-                int rowHeight = 25;
-                int labelWidth = 120;
-                int fieldWidth = 200;
+                // Controls are already created by the .srf file
+                // We just need to set initial values and configure behaviors
 
-                // Buttons
-                AddButton(BTN_NEW, "New", 20, 10, 80, 19);
-                AddButton(BTN_SAVE, "Save", 110, 10, 80, 19);
-                AddButton(BTN_DELETE, "Delete", 200, 10, 80, 19);
-                AddButton(BTN_FIND, "Find", 290, 10, 80, 19);
+                // Status combo is already populated in .srf with ValidValues
+                // Set default status to Draft
+                ComboBox cmbStatus = (ComboBox)_form.Items.Item("cmbStat").Specific;
+                if (string.IsNullOrEmpty(cmbStatus.Value))
+                {
+                    cmbStatus.Select("D", BoSearchKey.psk_ByValue);
+                }
 
-                // Contract Code
-                AddLabel("stCode3", "Code:", leftMargin, topPosition, labelWidth, 14);
-                AddTextBox(TXT_CODE, leftMargin + labelWidth + 10, topPosition, fieldWidth, 14);
-                topPosition += rowHeight;
+                // Initialize grid - add one empty row
+                Grid grdLines = (Grid)_form.Items.Item("grdLines").Specific;
+                DataTable dtLines = _form.DataSources.DataTables.Item("DT_LINES");
+                if (dtLines.Rows.Count == 0)
+                {
+                    dtLines.Rows.Add();
+                }
 
-                // Customer
-                AddLabel("stCust3", "Cust:", leftMargin, topPosition, labelWidth, 14);
-                AddTextBox(TXT_CUSTOMER, leftMargin + labelWidth + 10, topPosition, fieldWidth, 14);
-                topPosition += rowHeight;
-
-                // Description
-                AddLabel("stDesc3", "Desc:", leftMargin, topPosition, labelWidth, 14);
-                AddTextBox(TXT_DESC, leftMargin + labelWidth + 10, topPosition, 400, 14);
-                topPosition += rowHeight;
-
-                // Start Date
-                AddLabel("stStart3", "Start:", leftMargin, topPosition, labelWidth, 14);
-                AddEditText(DT_START, leftMargin + labelWidth + 10, topPosition, fieldWidth, 14);
-                topPosition += rowHeight;
-
-                // End Date
-                AddLabel("stEnd3", "End:", leftMargin, topPosition, labelWidth, 14);
-                AddEditText(DT_END, leftMargin + labelWidth + 10, topPosition, fieldWidth, 14);
-                topPosition += rowHeight;
-
-                // Contract Value
-                AddLabel("stVal3", "Value:", leftMargin, topPosition, labelWidth, 14);
-                AddEditText(TXT_VALUE, leftMargin + labelWidth + 10, topPosition, fieldWidth, 14);
-                topPosition += rowHeight;
-
-                // Status
-                AddLabel("stStat3", "Status:", leftMargin, topPosition, labelWidth, 14);
-                AddComboBox(CMB_STATUS, leftMargin + labelWidth + 10, topPosition, fieldWidth, 14);
-                topPosition += rowHeight;
-
-                // Retention %
-                AddLabel("stRet3", "Retent%:", leftMargin, topPosition, labelWidth, 14);
-                AddEditText(TXT_RETENTION, leftMargin + labelWidth + 10, topPosition, fieldWidth, 14);
-                topPosition += rowHeight;
-
-                // Lines Grid
-                topPosition += 10;
-                AddLabel("stLns3", "Lines:", leftMargin, topPosition, labelWidth, 14);
-                topPosition += 20;
-                AddGrid(GRID_LINES, leftMargin, topPosition, 750, 200);
-
-                Logger.Info("Contract form controls initialized");
+                Logger.Info("Contract form controls initialized from .srf");
             }
             catch (Exception ex)
             {
@@ -421,66 +385,6 @@ namespace ContractManagementAddon.Forms
             return "CON-" + DateTime.Now.ToString("yyyyMMddHHmmss");
         }
 
-        // Helper methods for adding controls
-        private void AddButton(string id, string caption, int left, int top, int width, int height)
-        {
-            Item item = _form.Items.Add(id, BoFormItemTypes.it_BUTTON);
-            item.Left = left;
-            item.Top = top;
-            item.Width = width;
-            item.Height = height;
-            ((Button)item.Specific).Caption = caption;
-        }
-
-        private void AddLabel(string id, string caption, int left, int top, int width, int height)
-        {
-            Logger.Info($"AddLabel called: id='{id}', caption='{caption}', length={caption.Length}");
-            Item item = _form.Items.Add(id, BoFormItemTypes.it_STATIC);
-            item.Left = left;
-            item.Top = top;
-            item.Width = width;
-            item.Height = height;
-
-            StaticText label = (StaticText)item.Specific;
-            Logger.Info($"Setting caption for '{id}' to '{caption}'");
-            label.Caption = caption;
-            Logger.Info($"Caption set successfully. Verifying... actual value: '{label.Caption}'");
-        }
-
-        private void AddTextBox(string id, int left, int top, int width, int height)
-        {
-            Item item = _form.Items.Add(id, BoFormItemTypes.it_EDIT);
-            item.Left = left;
-            item.Top = top;
-            item.Width = width;
-            item.Height = height;
-        }
-
-        private void AddEditText(string id, int left, int top, int width, int height)
-        {
-            Item item = _form.Items.Add(id, BoFormItemTypes.it_EDIT);
-            item.Left = left;
-            item.Top = top;
-            item.Width = width;
-            item.Height = height;
-        }
-
-        private void AddComboBox(string id, int left, int top, int width, int height)
-        {
-            Item item = _form.Items.Add(id, BoFormItemTypes.it_COMBO_BOX);
-            item.Left = left;
-            item.Top = top;
-            item.Width = width;
-            item.Height = height;
-        }
-
-        private void AddGrid(string id, int left, int top, int width, int height)
-        {
-            Item item = _form.Items.Add(id, BoFormItemTypes.it_GRID);
-            item.Left = left;
-            item.Top = top;
-            item.Width = width;
-            item.Height = height;
-        }
+        // Helper methods removed - controls are now created from .srf file
     }
 }
