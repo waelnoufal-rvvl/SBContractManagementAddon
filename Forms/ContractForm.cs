@@ -87,8 +87,8 @@ namespace ContractManagementAddon.Forms
         {
             try
             {
-                // Load form from .b1f file (Business One Form - same directory as .exe)
-                string formPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ContractForm.b1f");
+                // Load form from .b1f file (Business One Form - in Forms directory)
+                string formPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Forms", "ContractForm.b1f");
 
                 if (!System.IO.File.Exists(formPath))
                 {
