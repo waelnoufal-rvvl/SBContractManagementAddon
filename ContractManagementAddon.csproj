@@ -209,7 +209,7 @@
     <Compile Include="DataAccess\RevenueRecognitionRepository.cs" />
     <Compile Include="DataAccess\UDOManager.cs" />
     <Compile Include="Forms\ChangeOrderForm.cs" />
-    <Compile Include="Forms\ContractForm.cs" />
+    <Compile Include="Forms\ContractForm.b1f.cs" />
     <Compile Include="Forms\ContractFormLocalized.cs" />
     <Compile Include="Forms\DashboardForm.cs" />
     <Compile Include="Forms\IPCForm.cs" />

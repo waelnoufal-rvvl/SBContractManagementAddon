@@ -2,7 +2,7 @@
 <Application>
   <forms>
     <action type="add">
-      <form FormType="" appformnumber="-1" uid="FormUID_Placeholder" title="Contract Management" visible="1" default_button="1" pane="0" color="0" left="60" top="90" width="750" height="600" client_width="750" client_height="600" AutoManaged="0" SupportedModes="15" mode="0">
+      <form FormType="ContractManagementAddon.Forms.ContractForm" appformnumber="-1" uid="FormUID_Placeholder" title="Contract Management" visible="1" default_button="1" pane="0" color="0" left="60" top="90" width="750" height="600" client_width="750" client_height="600" AutoManaged="0" SupportedModes="15" mode="0">
         <datasources>
           <DataTables>
             <DataTable Uid="DT_HEAD">

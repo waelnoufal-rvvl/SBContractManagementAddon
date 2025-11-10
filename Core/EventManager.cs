@@ -84,25 +84,28 @@ namespace ContractManagementAddon.Core
                     switch (pVal.MenuUID)
                     {
                         case MenuManager.MenuIds.Contracts:
-                            Logger.Info("Opening Contracts form...");
-                            ContractForm contractForm = new ContractForm(_app);
-                            contractForm.Show();
+                            Logger.Info("Opening Contracts form using Framework pattern...");
+                            // Framework-based form - instantiation automatically loads .b1f and calls OnInitializeComponent()
+                            ContractForm contractForm = new ContractForm();
                             break;
 
                         case MenuManager.MenuIds.IPC:
                             Logger.Info("Opening IPC form...");
+                            // TODO: Convert to Framework pattern
                             IPCForm ipcForm = new IPCForm(_app);
                             ipcForm.Show();
                             break;
 
                         case MenuManager.MenuIds.ChangeOrder:
                             Logger.Info("Opening Change Orders form...");
+                            // TODO: Convert to Framework pattern
                             ChangeOrderForm coForm = new ChangeOrderForm(_app);
                             coForm.Show();
                             break;
 
                         case MenuManager.MenuIds.Dashboard:
                             Logger.Info("Opening Dashboard...");
+                            // TODO: Convert to Framework pattern
                             DashboardForm dashForm = new DashboardForm(_app);
                             dashForm.Show();
                             break;
@@ -127,7 +130,7 @@ namespace ContractManagementAddon.Core
             try
             {
                 // Handle global events for our custom forms
-                if (pVal.FormTypeEx == "FRM_CONTRACT" ||
+                if (pVal.FormTypeEx == "ContractManagementAddon.Forms.ContractForm" ||
                     pVal.FormTypeEx == "FRM_IPC" ||
                     pVal.FormTypeEx == "FRM_CO" ||
                     pVal.FormTypeEx == "FRM_DASHBOARD")
