@@ -17,7 +17,7 @@ namespace ContractManagementAddon.Tests.Performance
     /// To run: dotnet run -c Release --filter "*Benchmarks*"
     /// </summary>
     [MemoryDiagnoser]
-    [SimpleJob(launchCount: 1, warmupCount: 3, targetCount: 10)]
+    [SimpleJob(launchCount: 1, warmupCount: 3, iterationCount: 10)]
     public class RevenueRecognitionBenchmarks
     {
         private List<PerformanceObligation> _obligations100;
@@ -84,7 +84,7 @@ namespace ContractManagementAddon.Tests.Performance
     /// Contract creation and calculation benchmarks
     /// </summary>
     [MemoryDiagnoser]
-    [SimpleJob(launchCount: 1, warmupCount: 3, targetCount: 10)]
+    [SimpleJob(launchCount: 1, warmupCount: 3, iterationCount: 10)]
     public class ContractBenchmarks
     {
         private List<Contract> _contracts10;
