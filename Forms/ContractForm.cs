@@ -19,8 +19,12 @@ namespace ContractManagementAddon.Forms
 
         private const string FORM_TYPE = "FRM_CONTRACT_V3"; // Changed to V3 to force fresh form creation with fixed labels
 
-        // Control IDs are now defined in the .srf file
-        // All IDs are ≤9 characters to comply with SAP B1 10-character limit
+        // Control IDs from .srf file (All ≤9 characters)
+        // Standard SAP B1 buttons
+        private const string BTN_OK = "1";          // Standard OK button
+        private const string BTN_CANCEL = "2";      // Standard Cancel button
+        private const string BTN_FIND = "btnFind";  // Find button
+        private const string BTN_CUSTOMER = "btnCust"; // Customer chooser
 
         public ContractForm(ContractManagementApplication app)
         {
@@ -83,12 +87,13 @@ namespace ContractManagementAddon.Forms
         {
             try
             {
-                // Load form from .srf file
-                string formPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Forms", "SRF", "ContractForm.srf");
+                // Load form from .srf file (same directory as .exe)
+                string formPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ContractForm.srf");
 
                 if (!System.IO.File.Exists(formPath))
                 {
                     Logger.Error($"Form file not found: {formPath}");
+                    Logger.Info($"Looking in: {AppDomain.CurrentDomain.BaseDirectory}");
                     throw new System.IO.FileNotFoundException($"Form file not found: {formPath}");
                 }
 
@@ -172,20 +177,19 @@ namespace ContractManagementAddon.Forms
                 {
                     switch (pVal.ItemUID)
                     {
-                        case BTN_NEW:
-                            LoadNewContract();
-                            break;
-
-                        case BTN_SAVE:
+                        case BTN_OK:
+                            // OK button - Save contract
                             SaveContract();
                             break;
 
-                        case BTN_DELETE:
-                            DeleteContract();
+                        case BTN_FIND:
+                            // Find button - Search for contract
+                            FindContract();
                             break;
 
-                        case BTN_FIND:
-                            FindContract();
+                        case BTN_CUSTOMER:
+                            // Customer chooser button
+                            OpenCustomerChooser();
                             break;
                     }
                 }
@@ -375,6 +379,24 @@ namespace ContractManagementAddon.Forms
             // In production, implement search dialog
             _app.UIApp.StatusBar.SetText("Find function - to be implemented",
                 BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Warning);
+        }
+
+        /// <summary>
+        /// Open customer chooser
+        /// </summary>
+        private void OpenCustomerChooser()
+        {
+            try
+            {
+                // Open SAP B1 Business Partner chooser
+                _app.UIApp.ActivateMenuItem("4883"); // Business Partner master data menu
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Error opening customer chooser", ex);
+                _app.UIApp.StatusBar.SetText("Customer chooser - to be implemented",
+                    BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Warning);
+            }
         }
 
         /// <summary>
