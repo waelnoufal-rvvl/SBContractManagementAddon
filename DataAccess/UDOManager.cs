@@ -627,6 +627,8 @@ namespace ContractManagementAddon.DataAccess
         /// </summary>
         private void CreateApprovalWorkflowTables()
         {
+            UserTablesMD userTable = null;
+
             try
             {
                 Logger.Info("Creating approval workflow tables...");
@@ -634,7 +636,7 @@ namespace ContractManagementAddon.DataAccess
                 // Approval Request table
                 if (!DatabaseHelper.UserTableExists(_company, "CM_APPR_REQ"))
                 {
-                    UserTablesMD userTable = (UserTablesMD)_company.GetBusinessObject(BoObjectTypes.oUserTables);
+                    userTable = (UserTablesMD)_company.GetBusinessObject(BoObjectTypes.oUserTables);
                     userTable.TableName = "CM_APPR_REQ";
                     userTable.TableDescription = "Approval Requests";
                     userTable.TableType = BoUTBTableType.bott_NoObject;
@@ -643,6 +645,9 @@ namespace ContractManagementAddon.DataAccess
                     {
                         throw new Exception(_company.GetLastErrorDescription());
                     }
+
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(userTable);
+                    userTable = null;
 
                     AddUserField("CM_APPR_REQ", "DocType", "Document Type", BoFieldTypes.db_Alpha, 20);
                     AddUserField("CM_APPR_REQ", "DocCode", "Document Code", BoFieldTypes.db_Alpha, 50);
@@ -657,7 +662,7 @@ namespace ContractManagementAddon.DataAccess
                 // Approval Stages table
                 if (!DatabaseHelper.UserTableExists(_company, "CM_APPR_STAG"))
                 {
-                    UserTablesMD userTable = (UserTablesMD)_company.GetBusinessObject(BoObjectTypes.oUserTables);
+                    userTable = (UserTablesMD)_company.GetBusinessObject(BoObjectTypes.oUserTables);
                     userTable.TableName = "CM_APPR_STAG";
                     userTable.TableDescription = "Approval Stages";
                     userTable.TableType = BoUTBTableType.bott_NoObject;
@@ -666,6 +671,9 @@ namespace ContractManagementAddon.DataAccess
                     {
                         throw new Exception(_company.GetLastErrorDescription());
                     }
+
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(userTable);
+                    userTable = null;
 
                     AddUserField("CM_APPR_STAG", "RequestID", "Request ID", BoFieldTypes.db_Numeric);
                     AddUserField("CM_APPR_STAG", "StageNum", "Stage Number", BoFieldTypes.db_Numeric);
@@ -678,7 +686,7 @@ namespace ContractManagementAddon.DataAccess
                 // Approval Details table
                 if (!DatabaseHelper.UserTableExists(_company, "CM_APPR_DTLS"))
                 {
-                    UserTablesMD userTable = (UserTablesMD)_company.GetBusinessObject(BoObjectTypes.oUserTables);
+                    userTable = (UserTablesMD)_company.GetBusinessObject(BoObjectTypes.oUserTables);
                     userTable.TableName = "CM_APPR_DTLS";
                     userTable.TableDescription = "Approval Details";
                     userTable.TableType = BoUTBTableType.bott_NoObject;
@@ -687,6 +695,9 @@ namespace ContractManagementAddon.DataAccess
                     {
                         throw new Exception(_company.GetLastErrorDescription());
                     }
+
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(userTable);
+                    userTable = null;
 
                     AddUserField("CM_APPR_DTLS", "RequestID", "Request ID", BoFieldTypes.db_Numeric);
                     AddUserField("CM_APPR_DTLS", "StageNum", "Stage Number", BoFieldTypes.db_Numeric);
@@ -703,6 +714,13 @@ namespace ContractManagementAddon.DataAccess
                 Logger.Error("Error creating approval workflow tables: " + ex.Message, ex);
                 // Don't throw - these are optional tables
             }
+            finally
+            {
+                if (userTable != null)
+                {
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(userTable);
+                }
+            }
         }
 
         /// <summary>
@@ -710,13 +728,15 @@ namespace ContractManagementAddon.DataAccess
         /// </summary>
         private void CreateUserPermissionsTable()
         {
+            UserTablesMD userTable = null;
+
             try
             {
                 Logger.Info("Creating user permissions table...");
 
                 if (!DatabaseHelper.UserTableExists(_company, "CM_USER_PERM"))
                 {
-                    UserTablesMD userTable = (UserTablesMD)_company.GetBusinessObject(BoObjectTypes.oUserTables);
+                    userTable = (UserTablesMD)_company.GetBusinessObject(BoObjectTypes.oUserTables);
                     userTable.TableName = "CM_USER_PERM";
                     userTable.TableDescription = "User Permissions";
                     userTable.TableType = BoUTBTableType.bott_NoObject;
@@ -725,6 +745,9 @@ namespace ContractManagementAddon.DataAccess
                     {
                         throw new Exception(_company.GetLastErrorDescription());
                     }
+
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(userTable);
+                    userTable = null;
 
                     AddUserField("CM_USER_PERM", "UserCode", "User Code", BoFieldTypes.db_Alpha, 50);
                     AddUserField("CM_USER_PERM", "PermissionID", "Permission ID", BoFieldTypes.db_Alpha, 50);
@@ -739,6 +762,13 @@ namespace ContractManagementAddon.DataAccess
                 Logger.Error("Error creating user permissions table: " + ex.Message, ex);
                 // Don't throw - this is an optional table
             }
+            finally
+            {
+                if (userTable != null)
+                {
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(userTable);
+                }
+            }
         }
 
         /// <summary>
@@ -746,13 +776,15 @@ namespace ContractManagementAddon.DataAccess
         /// </summary>
         private void CreateAuditLogTable()
         {
+            UserTablesMD userTable = null;
+
             try
             {
                 Logger.Info("Creating audit log table...");
 
                 if (!DatabaseHelper.UserTableExists(_company, "CM_AUDIT_LOG"))
                 {
-                    UserTablesMD userTable = (UserTablesMD)_company.GetBusinessObject(BoObjectTypes.oUserTables);
+                    userTable = (UserTablesMD)_company.GetBusinessObject(BoObjectTypes.oUserTables);
                     userTable.TableName = "CM_AUDIT_LOG";
                     userTable.TableDescription = "Audit Log";
                     userTable.TableType = BoUTBTableType.bott_NoObject;
@@ -761,6 +793,9 @@ namespace ContractManagementAddon.DataAccess
                     {
                         throw new Exception(_company.GetLastErrorDescription());
                     }
+
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(userTable);
+                    userTable = null;
 
                     AddUserField("CM_AUDIT_LOG", "UserCode", "User Code", BoFieldTypes.db_Alpha, 50);
                     AddUserField("CM_AUDIT_LOG", "Action", "Action", BoFieldTypes.db_Alpha, 50);
@@ -776,6 +811,13 @@ namespace ContractManagementAddon.DataAccess
             {
                 Logger.Error("Error creating audit log table: " + ex.Message, ex);
                 // Don't throw - this is an optional table
+            }
+            finally
+            {
+                if (userTable != null)
+                {
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(userTable);
+                }
             }
         }
 
