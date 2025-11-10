@@ -40,16 +40,19 @@ namespace ContractManagementAddon
                             System.Windows.Forms.MessageBoxButtons.OK,
                             System.Windows.Forms.MessageBoxIcon.Information);
                     }
-                    catch
+                    catch (Exception connEx)
                     {
                         System.Windows.Forms.MessageBox.Show(
-                            "Could not connect to SAP B1. Please ensure:\n\n" +
+                            "Could not connect to SAP B1.\n\n" +
+                            "Error details:\n" + connEx.Message + "\n\n" +
+                            "Please ensure:\n" +
                             "1. SAP Business One is running\n" +
-                            "2. You are logged into a company\n\n" +
-                            "Then run this add-on again.",
-                            "Connection Required",
+                            "2. You are logged into a company\n" +
+                            "3. SAP B1 is the same version as your SDK\n\n" +
+                            "Is SAP Business One currently running and logged in?",
+                            "Connection Failed - Debug Info",
                             System.Windows.Forms.MessageBoxButtons.OK,
-                            System.Windows.Forms.MessageBoxIcon.Warning);
+                            System.Windows.Forms.MessageBoxIcon.Error);
                         return;
                     }
 
