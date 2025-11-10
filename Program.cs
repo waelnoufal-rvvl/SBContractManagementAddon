@@ -23,9 +23,10 @@ namespace ContractManagementAddon
                     System.Windows.Forms.MessageBox.Show(
                         "This add-on must be launched by SAP Business One.\n\n" +
                         "To install and register this add-on:\n" +
-                        "1. Copy the compiled DLL and addon.srf to your addon folder\n" +
+                        "1. Copy the compiled EXE/DLL and ContractManagement.ard to your addon folder\n" +
                         "2. Register in SAP B1: Administration → Add-Ons → Add-On Administration\n" +
-                        "3. Launch SAP B1 and the addon will start automatically\n\n" +
+                        "3. Select the .ard file (not .srf for modern SAP B1 versions)\n" +
+                        "4. Complete registration and restart SAP B1\n\n" +
                         "For development/testing, ensure SAP B1 is running and logged in first.\n" +
                         "The addon will attempt to connect to the running SAP B1 instance...",
                         "Contract Management Add-On",
@@ -53,14 +54,19 @@ namespace ContractManagementAddon
                         "❌ CONNECTION FAILED\n\n" +
                         "This addon cannot run standalone. You must:\n\n" +
                         "OPTION 1 - Register with SAP B1 (Recommended):\n" +
-                        "  1. Build your project\n" +
-                        "  2. Copy DLL and addon.srf to SAP addon folder\n" +
+                        "  1. Build your project in Release mode\n" +
+                        "  2. Copy files to SAP addon folder:\n" +
+                        "     - ContractManagementAddon.exe\n" +
+                        "     - ContractManagement.ard (registration file)\n" +
+                        "     - All DLL dependencies\n" +
                         "  3. Open SAP B1 → Administration → Add-Ons → Add-On Administration\n" +
-                        "  4. Click 'Register Add-On' and select addon.srf\n" +
-                        "  5. Restart SAP B1\n\n" +
-                        "OPTION 2 - Debug Mode:\n" +
+                        "  4. Click 'Register Add-On' and select ContractManagement.ard\n" +
+                        "     Note: Use .ard file for SAP B1 10.0+, .srf for older versions\n" +
+                        "  5. Complete registration wizard\n" +
+                        "  6. Restart SAP B1 - addon will auto-start\n\n" +
+                        "OPTION 2 - Debug Mode (Development):\n" +
                         "  1. Start SAP Business One and log in first\n" +
-                        "  2. Then run/debug your addon\n" +
+                        "  2. Then run/debug your addon from Visual Studio\n" +
                         "  3. The addon will connect to the running SAP B1 instance\n\n" +
                         "Current Error: Cannot find running SAP B1 instance or connection failed.";
                 }
