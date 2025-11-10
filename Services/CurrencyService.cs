@@ -569,8 +569,8 @@ namespace ContractManagementAddon.Services
             try
             {
                 Recordset recordset = (Recordset)_company.GetBusinessObject(BoObjectTypes.BoRecordset);
-                // User field columns in HANA are case-sensitive and need quotes to preserve mixed case
-                string query = @"SELECT * FROM ""@CM_CURRENCY"" WHERE ""U_IsBaseCurrency"" = 'Y'";
+                // HANA requires table alias (T0) for user table queries
+                string query = @"SELECT * FROM ""@CM_CURRENCY"" T0 WHERE T0.""U_IsBaseCurrency"" = 'Y'";
                 recordset.DoQuery(query);
 
                 if (!recordset.EoF)
