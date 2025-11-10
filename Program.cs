@@ -26,14 +26,14 @@ namespace ContractManagementAddon
                         "1. Copy the compiled DLL and addon.srf to your addon folder\n" +
                         "2. Register in SAP B1: Administration → Add-Ons → Add-On Administration\n" +
                         "3. Launch SAP B1 and the addon will start automatically\n\n" +
-                        "For development/testing, ensure SAP B1 is running and logged in.",
+                        "For development/testing, ensure SAP B1 is running and logged in first.\n" +
+                        "The addon will attempt to connect to the running SAP B1 instance...",
                         "Contract Management Add-On",
                         System.Windows.Forms.MessageBoxButtons.OK,
                         System.Windows.Forms.MessageBoxIcon.Information
                     );
 
-                    // Try to connect to running SAP B1 instance anyway (for development)
-                    System.Console.WriteLine("Attempting to connect to running SAP B1 instance...");
+                    System.Console.WriteLine("No connection string provided. Attempting to connect to running SAP B1 instance...");
                 }
 
                 // Use the new ContractManagementApplication class
@@ -47,14 +47,22 @@ namespace ContractManagementAddon
             {
                 string errorMessage = $"Failed to start Contract Management Add-On:\n\n{ex.Message}";
 
-                if (ex.Message.Contains("connection string") || ex.Message.Contains("parameter is incorrect"))
+                if (ex.Message.Contains("connection string") || ex.Message.Contains("parameter is incorrect") || ex.Message.Contains("connect"))
                 {
                     errorMessage += "\n\n" +
-                        "Connection Error - Possible Solutions:\n" +
-                        "1. Ensure SAP Business One is running and you are logged in\n" +
-                        "2. Register this add-on in SAP B1 Add-On Administration\n" +
-                        "3. Restart SAP Business One after registration\n" +
-                        "4. Check that the addon.srf file is in the correct location";
+                        "❌ CONNECTION FAILED\n\n" +
+                        "This addon cannot run standalone. You must:\n\n" +
+                        "OPTION 1 - Register with SAP B1 (Recommended):\n" +
+                        "  1. Build your project\n" +
+                        "  2. Copy DLL and addon.srf to SAP addon folder\n" +
+                        "  3. Open SAP B1 → Administration → Add-Ons → Add-On Administration\n" +
+                        "  4. Click 'Register Add-On' and select addon.srf\n" +
+                        "  5. Restart SAP B1\n\n" +
+                        "OPTION 2 - Debug Mode:\n" +
+                        "  1. Start SAP Business One and log in first\n" +
+                        "  2. Then run/debug your addon\n" +
+                        "  3. The addon will connect to the running SAP B1 instance\n\n" +
+                        "Current Error: Cannot find running SAP B1 instance or connection failed.";
                 }
 
                 System.Windows.Forms.MessageBox.Show(
@@ -66,6 +74,10 @@ namespace ContractManagementAddon
 
                 System.Console.WriteLine(errorMessage);
                 System.Console.WriteLine($"\nStack Trace:\n{ex.StackTrace}");
+
+                // Don't close immediately - let user read the error
+                System.Console.WriteLine("\nPress Enter to exit...");
+                System.Console.ReadLine();
             }
         }
 
