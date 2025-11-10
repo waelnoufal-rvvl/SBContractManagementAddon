@@ -357,13 +357,22 @@ namespace ContractManagementAddon.Services
         {
             try
             {
-                string templateName = objectType.ToUpper() switch
+                string templateName;
+                switch (objectType.ToUpper())
                 {
-                    "CONTRACT" => "CONTRACT_APPR",
-                    "IPC" => "IPC_APPR",
-                    "CHANGEORDER" => "CO_APPR",
-                    _ => "CONTRACT_APPR"
-                };
+                    case "CONTRACT":
+                        templateName = "CONTRACT_APPR";
+                        break;
+                    case "IPC":
+                        templateName = "IPC_APPR";
+                        break;
+                    case "CHANGEORDER":
+                        templateName = "CO_APPR";
+                        break;
+                    default:
+                        templateName = "CONTRACT_APPR";
+                        break;
+                }
 
                 Recordset oRecordset = (Recordset)_company.GetBusinessObject(BoObjectTypes.BoRecordset);
 
@@ -402,13 +411,17 @@ namespace ContractManagementAddon.Services
 
             // Using a workaround: UDO object types start from 1470000000 and are sequential
             // This is a temporary solution - ideally should query from OUDO table
-            return objectType.ToUpper() switch
+            switch (objectType.ToUpper())
             {
-                "CONTRACT" => (BoObjectTypes)1470000001, // Placeholder - should query from OUDO
-                "IPC" => (BoObjectTypes)1470000002,      // Placeholder - should query from OUDO
-                "CHANGEORDER" => (BoObjectTypes)1470000003, // Placeholder - should query from OUDO
-                _ => (BoObjectTypes)1470000001
-            };
+                case "CONTRACT":
+                    return (BoObjectTypes)1470000001; // Placeholder - should query from OUDO
+                case "IPC":
+                    return (BoObjectTypes)1470000002; // Placeholder - should query from OUDO
+                case "CHANGEORDER":
+                    return (BoObjectTypes)1470000003; // Placeholder - should query from OUDO
+                default:
+                    return (BoObjectTypes)1470000001;
+            }
         }
 
         /// <summary>
@@ -477,24 +490,42 @@ namespace ContractManagementAddon.Services
         {
             try
             {
-                string tableName = objectType.ToUpper() switch
+                string tableName;
+                switch (objectType.ToUpper())
                 {
-                    "CONTRACT" => "@CONTRACT_HDR",
-                    "IPC" => "@IPC_HDR",
-                    "CHANGEORDER" => "@CO_HDR",
-                    _ => "@CONTRACT_HDR"
-                };
+                    case "CONTRACT":
+                        tableName = "@CONTRACT_HDR";
+                        break;
+                    case "IPC":
+                        tableName = "@IPC_HDR";
+                        break;
+                    case "CHANGEORDER":
+                        tableName = "@CO_HDR";
+                        break;
+                    default:
+                        tableName = "@CONTRACT_HDR";
+                        break;
+                }
 
                 // Update status using parameterized approach
                 Recordset oRecordset = (Recordset)_company.GetBusinessObject(BoObjectTypes.BoRecordset);
 
-                string statusText = approvalStatus switch
+                string statusText;
+                switch (approvalStatus)
                 {
-                    APPROVAL_STATUS_PENDING => "Pending Approval",
-                    APPROVAL_STATUS_APPROVED => "Approved",
-                    APPROVAL_STATUS_REJECTED => "Rejected",
-                    _ => "Draft"
-                };
+                    case APPROVAL_STATUS_PENDING:
+                        statusText = "Pending Approval";
+                        break;
+                    case APPROVAL_STATUS_APPROVED:
+                        statusText = "Approved";
+                        break;
+                    case APPROVAL_STATUS_REJECTED:
+                        statusText = "Rejected";
+                        break;
+                    default:
+                        statusText = "Draft";
+                        break;
+                }
 
                 string query = $@"
                     UPDATE ""{tableName}""

@@ -6,7 +6,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
-    <LangVersion>8.0</LangVersion>
+    <LangVersion>7.3</LangVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{832D0CCF-0790-483A-B0F4-5705BCD57928}</ProjectGuid>
     <OutputType>WinExe</OutputType>
