@@ -29,13 +29,14 @@ namespace ContractManagementAddon.Services
             {
                 // Get attachments path from SAP B1 administration
                 Recordset oRecordset = (Recordset)_company.GetBusinessObject(BoObjectTypes.BoRecordset);
-                string query = "SELECT \"AttachPath\" FROM OADP WHERE \"AbsEntry\" = (SELECT MIN(\"AbsEntry\") FROM OADP)";
+                // HANA system tables don't use quoted column names
+                string query = "SELECT AttchPath FROM OADP WHERE AbsEntry = (SELECT MIN(AbsEntry) FROM OADP)";
 
                 oRecordset.DoQuery(query);
 
-                if (!oRecordset.EoF && oRecordset.Fields.Item("AttachPath").Value != null)
+                if (!oRecordset.EoF && oRecordset.Fields.Item("AttchPath").Value != null)
                 {
-                    _attachmentsPath = oRecordset.Fields.Item("AttachPath").Value.ToString();
+                    _attachmentsPath = oRecordset.Fields.Item("AttchPath").Value.ToString();
                     Logger.Info($"Attachments path initialized: {_attachmentsPath}");
                 }
                 else

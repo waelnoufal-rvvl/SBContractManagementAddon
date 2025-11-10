@@ -1188,7 +1188,7 @@ namespace ContractManagementAddon.DataAccess
                     userTable = (UserTablesMD)_company.GetBusinessObject(BoObjectTypes.oUserTables);
                     userTable.TableName = "CM_REV_SCHEDULE";
                     userTable.TableDescription = "Revenue Recognition Schedule";
-                    userTable.TableType = BoUTBTableType.bott_NoObject;
+                    userTable.TableType = BoUTBTableType.bott_MasterData;
 
                     if (userTable.Add() != 0)
                     {
@@ -1246,7 +1246,7 @@ namespace ContractManagementAddon.DataAccess
                     userTable = (UserTablesMD)_company.GetBusinessObject(BoObjectTypes.oUserTables);
                     userTable.TableName = "CM_DEFERRED_REV";
                     userTable.TableDescription = "Deferred Revenue";
-                    userTable.TableType = BoUTBTableType.bott_NoObject;
+                    userTable.TableType = BoUTBTableType.bott_MasterData;
 
                     if (userTable.Add() != 0)
                     {

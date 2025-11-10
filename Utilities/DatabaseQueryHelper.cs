@@ -374,12 +374,16 @@ namespace ContractManagementAddon.Utilities
             if (values == null || values.Count == 0)
                 throw new ArgumentException("Values dictionary cannot be empty");
 
+            // System tables (not starting with @) don't use quoted column names in HANA
+            bool isUserTable = tableName.StartsWith("@");
+
             List<string> columns = new List<string>();
             List<string> valueStrings = new List<string>();
 
             foreach (var kvp in values)
             {
-                columns.Add($"\"{kvp.Key}\"");
+                // Quote column names only for user tables
+                columns.Add(isUserTable ? $"\"{kvp.Key}\"" : kvp.Key);
 
                 if (kvp.Value == null)
                 {
@@ -407,8 +411,11 @@ namespace ContractManagementAddon.Utilities
                 }
             }
 
+            // Quote table name only for user tables
+            string formattedTableName = isUserTable ? $"\"{tableName}\"" : tableName;
+
             return $@"
-                INSERT INTO ""{tableName}""
+                INSERT INTO {formattedTableName}
                 ({string.Join(", ", columns)})
                 VALUES
                 ({string.Join(", ", valueStrings)})";

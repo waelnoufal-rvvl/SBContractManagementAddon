@@ -569,7 +569,8 @@ namespace ContractManagementAddon.Services
             try
             {
                 Recordset recordset = (Recordset)_company.GetBusinessObject(BoObjectTypes.BoRecordset);
-                string query = @"SELECT * FROM ""@CM_CURRENCY"" WHERE ""U_IsBaseCurrency"" = 'Y'";
+                // User table queries work without quotes for column names
+                string query = @"SELECT * FROM ""@CM_CURRENCY"" WHERE U_IsBaseCurrency = 'Y'";
                 recordset.DoQuery(query);
 
                 if (!recordset.EoF)
