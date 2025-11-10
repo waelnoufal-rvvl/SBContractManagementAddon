@@ -13,11 +13,36 @@ namespace ContractManagementAddon
         public static SAPbobsCOM.Company company;
         public static SAPbouiCOM.Application app;
         private static MenuManager menuManager;
+        private static SimpleApplicationWrapper appWrapper;
 
         private static string logFilePath = Path.Combine(
             AppDomain.CurrentDomain.BaseDirectory,
             $"ContractManagementAddon_{DateTime.Now:yyyyMMdd}.log"
         );
+        #endregion
+
+        #region Simple Application Wrapper
+
+        /// <summary>
+        /// Simple wrapper to provide forms with what they need
+        /// </summary>
+        private class SimpleApplicationWrapper : ContractManagementApplication
+        {
+            public SimpleApplicationWrapper(SAPbouiCOM.Application uiApp, SAPbobsCOM.Company company)
+            {
+                // Use reflection to set the private fields
+                var uiAppField = typeof(ContractManagementApplication).GetField("_uiApp",
+                    System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                var companyField = typeof(ContractManagementApplication).GetField("_company",
+                    System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+
+                if (uiAppField != null)
+                    uiAppField.SetValue(this, uiApp);
+                if (companyField != null)
+                    companyField.SetValue(this, company);
+            }
+        }
+
         #endregion
 
         #region Main Entry Point
@@ -153,6 +178,10 @@ namespace ContractManagementAddon
                 LogMessage($"   Server: {company.Server}");
                 LogMessage($"   SAP Version: {company.Version}");
 
+                // Create application wrapper for forms
+                appWrapper = new SimpleApplicationWrapper(app, company);
+                LogMessage("✅ Application wrapper created");
+
                 return true;
             }
             catch (Exception ex)
@@ -281,19 +310,59 @@ namespace ContractManagementAddon
                     switch (pVal.MenuUID)
                     {
                         case "CMADDON_CONTRACTS":
-                            app.SetStatusBarMessage("Contracts form - Coming soon!", SAPbouiCOM.BoMessageTime.bmt_Short, false);
+                            LogMessage("Opening Contracts form...");
+                            try
+                            {
+                                Forms.ContractForm contractForm = new Forms.ContractForm(appWrapper);
+                                contractForm.Show();
+                            }
+                            catch (Exception ex)
+                            {
+                                LogException("Failed to open Contracts form", ex);
+                                app.SetStatusBarMessage("Error opening Contracts form - check log", SAPbouiCOM.BoMessageTime.bmt_Short, true);
+                            }
                             break;
 
                         case "CMADDON_IPC":
-                            app.SetStatusBarMessage("IPC form - Coming soon!", SAPbouiCOM.BoMessageTime.bmt_Short, false);
+                            LogMessage("Opening IPC form...");
+                            try
+                            {
+                                Forms.IPCForm ipcForm = new Forms.IPCForm(appWrapper);
+                                ipcForm.Show();
+                            }
+                            catch (Exception ex)
+                            {
+                                LogException("Failed to open IPC form", ex);
+                                app.SetStatusBarMessage("Error opening IPC form - check log", SAPbouiCOM.BoMessageTime.bmt_Short, true);
+                            }
                             break;
 
                         case "CMADDON_CO":
-                            app.SetStatusBarMessage("Change Orders form - Coming soon!", SAPbouiCOM.BoMessageTime.bmt_Short, false);
+                            LogMessage("Opening Change Orders form...");
+                            try
+                            {
+                                Forms.ChangeOrderForm coForm = new Forms.ChangeOrderForm(appWrapper);
+                                coForm.Show();
+                            }
+                            catch (Exception ex)
+                            {
+                                LogException("Failed to open Change Order form", ex);
+                                app.SetStatusBarMessage("Error opening Change Order form - check log", SAPbouiCOM.BoMessageTime.bmt_Short, true);
+                            }
                             break;
 
                         case "CMADDON_DASH":
-                            app.SetStatusBarMessage("Dashboard form - Coming soon!", SAPbouiCOM.BoMessageTime.bmt_Short, false);
+                            LogMessage("Opening Dashboard form...");
+                            try
+                            {
+                                Forms.DashboardForm dashForm = new Forms.DashboardForm(appWrapper);
+                                dashForm.Show();
+                            }
+                            catch (Exception ex)
+                            {
+                                LogException("Failed to open Dashboard form", ex);
+                                app.SetStatusBarMessage("Error opening Dashboard form - check log", SAPbouiCOM.BoMessageTime.bmt_Short, true);
+                            }
                             break;
                     }
                 }
