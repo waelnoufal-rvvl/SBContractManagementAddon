@@ -828,13 +828,15 @@ namespace ContractManagementAddon.DataAccess
         /// </summary>
         private void CreateCurrencyTables()
         {
+            UserTablesMD userTable = null;
+
             try
             {
                 Logger.Info("Creating Currency Master table...");
 
                 if (!DatabaseHelper.UserTableExists(_company, "CM_CURRENCY"))
                 {
-                    UserTablesMD userTable = (UserTablesMD)_company.GetBusinessObject(BoObjectTypes.oUserTables);
+                    userTable = (UserTablesMD)_company.GetBusinessObject(BoObjectTypes.oUserTables);
                     userTable.TableName = "CM_CURRENCY";
                     userTable.TableDescription = "Currency Master";
                     userTable.TableType = BoUTBTableType.bott_MasterData;
@@ -843,6 +845,9 @@ namespace ContractManagementAddon.DataAccess
                     {
                         throw new Exception(_company.GetLastErrorDescription());
                     }
+
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(userTable);
+                    userTable = null;
 
                     // Add fields
                     AddUserField("CM_CURRENCY", "Name", "Currency Name", BoFieldTypes.db_Alpha, 100);
@@ -863,6 +868,13 @@ namespace ContractManagementAddon.DataAccess
                 Logger.Error("Error creating currency table: " + ex.Message, ex);
                 throw;
             }
+            finally
+            {
+                if (userTable != null)
+                {
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(userTable);
+                }
+            }
         }
 
         /// <summary>
@@ -870,13 +882,15 @@ namespace ContractManagementAddon.DataAccess
         /// </summary>
         private void CreateExchangeRateTable()
         {
+            UserTablesMD userTable = null;
+
             try
             {
                 Logger.Info("Creating Exchange Rate table...");
 
                 if (!DatabaseHelper.UserTableExists(_company, "CM_EXCHANGE_RATE"))
                 {
-                    UserTablesMD userTable = (UserTablesMD)_company.GetBusinessObject(BoObjectTypes.oUserTables);
+                    userTable = (UserTablesMD)_company.GetBusinessObject(BoObjectTypes.oUserTables);
                     userTable.TableName = "CM_EXCHANGE_RATE";
                     userTable.TableDescription = "Exchange Rate";
                     userTable.TableType = BoUTBTableType.bott_MasterData;
@@ -885,6 +899,9 @@ namespace ContractManagementAddon.DataAccess
                     {
                         throw new Exception(_company.GetLastErrorDescription());
                     }
+
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(userTable);
+                    userTable = null;
 
                     // Add fields
                     AddUserField("CM_EXCHANGE_RATE", "FromCurrency", "From Currency", BoFieldTypes.db_Alpha, 3);
@@ -904,6 +921,13 @@ namespace ContractManagementAddon.DataAccess
                 Logger.Error("Error creating exchange rate table: " + ex.Message, ex);
                 throw;
             }
+            finally
+            {
+                if (userTable != null)
+                {
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(userTable);
+                }
+            }
         }
 
         /// <summary>
@@ -911,13 +935,15 @@ namespace ContractManagementAddon.DataAccess
         /// </summary>
         private void CreateCurrencyConversionLogTable()
         {
+            UserTablesMD userTable = null;
+
             try
             {
                 Logger.Info("Creating Currency Conversion Log table...");
 
                 if (!DatabaseHelper.UserTableExists(_company, "CM_CURRENCY_LOG"))
                 {
-                    UserTablesMD userTable = (UserTablesMD)_company.GetBusinessObject(BoObjectTypes.oUserTables);
+                    userTable = (UserTablesMD)_company.GetBusinessObject(BoObjectTypes.oUserTables);
                     userTable.TableName = "CM_CURRENCY_LOG";
                     userTable.TableDescription = "Currency Conversion Log";
                     userTable.TableType = BoUTBTableType.bott_NoObject;
@@ -926,6 +952,9 @@ namespace ContractManagementAddon.DataAccess
                     {
                         throw new Exception(_company.GetLastErrorDescription());
                     }
+
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(userTable);
+                    userTable = null;
 
                     // Add fields
                     AddUserField("CM_CURRENCY_LOG", "DocumentType", "Document Type", BoFieldTypes.db_Alpha, 20);
@@ -946,6 +975,13 @@ namespace ContractManagementAddon.DataAccess
             {
                 Logger.Error("Error creating currency conversion log table: " + ex.Message, ex);
                 // Don't throw - this is an optional table
+            }
+            finally
+            {
+                if (userTable != null)
+                {
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(userTable);
+                }
             }
         }
 
