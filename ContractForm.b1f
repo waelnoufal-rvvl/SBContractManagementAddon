@@ -2,7 +2,7 @@
 <Application>
   <forms>
     <action type="add">
-      <form appformnumber="-1" FormType="-1" type="0" borderStyle="0" uid="FormUID_Placeholder" title="Contract Management" visible="1" default_button="1" pane="0" color="0" left="60" top="90" width="750" height="600" client_width="750" client_height="600" AutoManaged="0" SupportedModes="15" ObjectType="">
+      <form FormType="" appformnumber="-1" uid="FormUID_Placeholder" title="Contract Management" visible="1" default_button="1" pane="0" color="0" left="60" top="90" width="750" height="600" client_width="750" client_height="600" AutoManaged="0" SupportedModes="15" mode="0">
         <datasources>
           <DataTables>
             <DataTable Uid="DT_HEAD">
@@ -32,13 +32,13 @@
         </datasources>
         <items>
           <!-- Title -->
-          <item uid="stTitle" type="8" left="10" tab_order="0" width="730" top="5" height="14" visible="1" enabled="1" from_pane="0" to_pane="0" disp_desc="0" right_just="0" description="" linkto="" forecolor="-1" backcolor="-1" text_style="0" font_size="-1" supp_zeros="0" AffectsFormMode="1">
+          <item uid="stTitle" type="8" left="10" tab_order="0" width="730" top="5" height="14" visible="1" enabled="1" from_pane="0" to_pane="0" disp_desc="0" right_just="0" description="" linkto="" forecolor="-1" backcolor="-1" text_style="0" font_size="-1">
             <specific caption="Contract - Header" type="8"/>
           </item>
 
           <!-- Folder Tab Control -->
           <item uid="fldMain" type="113" left="5" tab_order="0" width="740" top="25" height="520" visible="1" enabled="1" from_pane="0" to_pane="0" disp_desc="0" right_just="0" description="" linkto="" forecolor="-1" backcolor="-1" text_style="0" font_size="-1">
-            <specific TabNum="2" type="113" Caption="General" AffectsFormMode="1" Val_off="0" Val_on="1">
+            <specific type="113" Caption="" AffectsFormMode="1">
               <action type="add">
                 <folder uid="fld1" caption="General" pane="1" type="113"/>
               </action>
@@ -55,7 +55,7 @@
             <specific caption="Code:" type="8"/>
           </item>
           <item uid="txtCode" type="16" left="120" tab_order="10" width="150" top="50" height="14" visible="1" enabled="1" from_pane="1" to_pane="1" disp_desc="0" right_just="0" description="" linkto="" forecolor="-1" backcolor="-1" text_style="0" font_size="-1">
-            <specific type="16" TabNum="0">
+            <specific type="16">
               <databind databound="1" table="DT_HEAD" alias="Code"/>
             </specific>
           </item>
@@ -65,7 +65,7 @@
             <specific caption="Customer:" type="8"/>
           </item>
           <item uid="txtCust" type="16" left="120" tab_order="20" width="100" top="70" height="14" visible="1" enabled="1" from_pane="1" to_pane="1" disp_desc="0" right_just="0" description="" linkto="" forecolor="-1" backcolor="-1" text_style="0" font_size="-1">
-            <specific type="16" TabNum="0">
+            <specific type="16">
               <databind databound="1" table="DT_HEAD" alias="Customer"/>
             </specific>
           </item>
@@ -73,7 +73,7 @@
             <specific caption="..." type="4"/>
           </item>
           <item uid="txtCName" type="16" left="250" tab_order="0" width="250" top="70" height="14" visible="1" enabled="0" from_pane="1" to_pane="1" disp_desc="0" right_just="0" description="" linkto="" forecolor="-1" backcolor="-1" text_style="0" font_size="-1">
-            <specific type="16" TabNum="0">
+            <specific type="16">
               <databind databound="1" table="DT_HEAD" alias="CustName"/>
             </specific>
           </item>
@@ -83,7 +83,7 @@
             <specific caption="Desc:" type="8"/>
           </item>
           <item uid="txtDesc" type="16" left="120" tab_order="30" width="600" top="90" height="14" visible="1" enabled="1" from_pane="1" to_pane="1" disp_desc="0" right_just="0" description="" linkto="" forecolor="-1" backcolor="-1" text_style="0" font_size="-1">
-            <specific type="16" TabNum="0">
+            <specific type="16">
               <databind databound="1" table="DT_HEAD" alias="Descript"/>
             </specific>
           </item>
@@ -93,7 +93,7 @@
             <specific caption="Start:" type="8"/>
           </item>
           <item uid="txtStart" type="16" left="120" tab_order="40" width="100" top="110" height="14" visible="1" enabled="1" from_pane="1" to_pane="1" disp_desc="0" right_just="0" description="" linkto="" forecolor="-1" backcolor="-1" text_style="0" font_size="-1">
-            <specific type="16" TabNum="0">
+            <specific type="16">
               <databind databound="1" table="DT_HEAD" alias="StartDate"/>
             </specific>
           </item>
@@ -103,7 +103,7 @@
             <specific caption="End:" type="8"/>
           </item>
           <item uid="txtEnd" type="16" left="360" tab_order="50" width="100" top="110" height="14" visible="1" enabled="1" from_pane="1" to_pane="1" disp_desc="0" right_just="0" description="" linkto="" forecolor="-1" backcolor="-1" text_style="0" font_size="-1">
-            <specific type="16" TabNum="0">
+            <specific type="16">
               <databind databound="1" table="DT_HEAD" alias="EndDate"/>
             </specific>
           </item>
@@ -113,7 +113,7 @@
             <specific caption="Value:" type="8"/>
           </item>
           <item uid="txtValue" type="16" left="120" tab_order="60" width="150" top="130" height="14" visible="1" enabled="1" from_pane="1" to_pane="1" disp_desc="0" right_just="0" description="" linkto="" forecolor="-1" backcolor="-1" text_style="0" font_size="-1">
-            <specific type="16" TabNum="0">
+            <specific type="16">
               <databind databound="1" table="DT_HEAD" alias="Value"/>
             </specific>
           </item>
@@ -123,7 +123,7 @@
             <specific caption="Status:" type="8"/>
           </item>
           <item uid="cmbStat" type="121" left="120" tab_order="70" width="150" top="150" height="14" visible="1" enabled="1" from_pane="1" to_pane="1" disp_desc="0" right_just="0" description="" linkto="" forecolor="-1" backcolor="-1" text_style="0" font_size="-1">
-            <specific type="121" TabNum="0">
+            <specific type="121">
               <databind databound="1" table="DT_HEAD" alias="Status"/>
               <ValidValues>
                 <action type="add">
@@ -147,7 +147,7 @@
             <specific caption="Retent%:" type="8"/>
           </item>
           <item uid="txtRet" type="16" left="120" tab_order="80" width="100" top="170" height="14" visible="1" enabled="1" from_pane="1" to_pane="1" disp_desc="0" right_just="0" description="" linkto="" forecolor="-1" backcolor="-1" text_style="0" font_size="-1">
-            <specific type="16" TabNum="0">
+            <specific type="16">
               <databind databound="1" table="DT_HEAD" alias="Retention"/>
             </specific>
           </item>
@@ -156,36 +156,36 @@
 
           <!-- Lines Grid -->
           <item uid="grdLines" type="128" left="10" tab_order="90" width="720" top="50" height="440" visible="1" enabled="1" from_pane="2" to_pane="2" disp_desc="0" right_just="0" description="" linkto="" forecolor="-1" backcolor="-1" text_style="0" font_size="-1">
-            <specific SelectionMode="0" layout="0" type="128" TabNum="0">
+            <specific SelectionMode="0" layout="0" type="128">
               <databind databound="1" table="DT_LINES"/>
               <Columns>
                 <action type="add">
-                  <Column uid="clNum" type="16" title="#" editable="0" width="30" disp_desc="0" visible="1" AffectsFormMode="1" val_on="Y" val_off="N">
+                  <Column uid="clNum" type="16" title="#" editable="0" width="30" disp_desc="0" visible="1" val_on="Y" val_off="N">
                     <databind databound="1" table="DT_LINES" alias="LineNum"/>
                   </Column>
                 </action>
                 <action type="add">
-                  <Column uid="clItem" type="16" title="Item Code" editable="1" width="100" disp_desc="0" visible="1" AffectsFormMode="1">
+                  <Column uid="clItem" type="16" title="Item Code" editable="1" width="100" disp_desc="0" visible="1">
                     <databind databound="1" table="DT_LINES" alias="ItemCode"/>
                   </Column>
                 </action>
                 <action type="add">
-                  <Column uid="clDesc" type="16" title="Description" editable="1" width="250" disp_desc="0" visible="1" AffectsFormMode="1">
+                  <Column uid="clDesc" type="16" title="Description" editable="1" width="250" disp_desc="0" visible="1">
                     <databind databound="1" table="DT_LINES" alias="Descript"/>
                   </Column>
                 </action>
                 <action type="add">
-                  <Column uid="clQty" type="16" title="Quantity" editable="1" width="80" disp_desc="0" right_just="1" visible="1" AffectsFormMode="1">
+                  <Column uid="clQty" type="16" title="Quantity" editable="1" width="80" disp_desc="0" right_just="1" visible="1">
                     <databind databound="1" table="DT_LINES" alias="Quantity"/>
                   </Column>
                 </action>
                 <action type="add">
-                  <Column uid="clPrice" type="16" title="Price" editable="1" width="100" disp_desc="0" right_just="1" visible="1" AffectsFormMode="1">
+                  <Column uid="clPrice" type="16" title="Price" editable="1" width="100" disp_desc="0" right_just="1" visible="1">
                     <databind databound="1" table="DT_LINES" alias="Price"/>
                   </Column>
                 </action>
                 <action type="add">
-                  <Column uid="clTotal" type="16" title="Total" editable="0" width="120" disp_desc="0" right_just="1" visible="1" AffectsFormMode="1">
+                  <Column uid="clTotal" type="16" title="Total" editable="0" width="120" disp_desc="0" right_just="1" visible="1">
                     <databind databound="1" table="DT_LINES" alias="Total"/>
                   </Column>
                 </action>
