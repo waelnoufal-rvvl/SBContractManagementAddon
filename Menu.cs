@@ -31,9 +31,9 @@ namespace ContractManagementAddon
                 //  If the manu already exists this code will fail
                 oMenus.AddEx(oCreationPackage);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-
+                // Menu item already exists, ignore
             }
 
             try
@@ -48,9 +48,9 @@ namespace ContractManagementAddon
                 oCreationPackage.String = "Form1";
                 oMenus.AddEx(oCreationPackage);
             }
-            catch (Exception er)
-            { //  Menu already exists
-                Application.SBO_Application.SetStatusBarMessage("Menu Already Exists", SAPbouiCOM.BoMessageTime.bmt_Short, true);
+            catch (Exception)
+            {
+                // Menu already exists, ignore
             }
         }
 
@@ -62,8 +62,11 @@ namespace ContractManagementAddon
             {
                 if (pVal.BeforeAction && pVal.MenuUID == "ContractManagementAddon.Form1")
                 {
-                    Form1 activeForm = new Form1();
-                    activeForm.Show();
+                    // TODO: Instantiate ContractForm with ContractManagementApplication instance
+                    // For now, this requires the form to be opened through the application context
+                    // ContractForm contractForm = new ContractForm(_app);
+                    // contractForm.Show();
+                    Application.SBO_Application.SetStatusBarMessage("Contract Management form - to be implemented", SAPbouiCOM.BoMessageTime.bmt_Short, false);
                 }
             }
             catch (Exception ex)
