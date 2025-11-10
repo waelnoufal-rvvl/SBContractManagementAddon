@@ -151,7 +151,7 @@ namespace ContractManagementAddon.Services
                 string query = $@"
                     SELECT COUNT(*) as CNT
                     FROM OWDD
-                    WHERE \"Name\" = {_dbHelper.QuoteString(templateCode)}";
+                    WHERE ""Name"" = {_dbHelper.QuoteString(templateCode)}";
 
                 return _dbHelper.ExecuteCount(query) > 0;
             }
