@@ -91,10 +91,10 @@ namespace ContractManagementAddon.Forms
                 int rowHeight = 25;
 
                 // Title
-                AddLabel("lblTitle", "Change Order", leftMargin, 10, 300, 20);
+                AddLabel("lblTitle", "Change Ord", leftMargin, 10, 300, 20);
 
                 // Contract Code
-                AddLabel("lblContract", "Contract Code:", leftMargin, topPosition, 120, 14);
+                AddLabel("lblContract", "Contract:", leftMargin, topPosition, 120, 14);
                 AddTextBox("txtContract", leftMargin + 130, topPosition, 200, 14);
                 topPosition += rowHeight;
 
@@ -114,7 +114,7 @@ namespace ContractManagementAddon.Forms
                 topPosition += rowHeight;
 
                 // Description
-                AddLabel("lblDesc", "Description:", leftMargin, topPosition, 120, 14);
+                AddLabel("lblDesc", "Desc:", leftMargin, topPosition, 120, 14);
                 AddTextBox("txtDesc", leftMargin + 130, topPosition, 400, 14);
                 topPosition += rowHeight;
 
@@ -124,7 +124,7 @@ namespace ContractManagementAddon.Forms
                 topPosition += rowHeight;
 
                 // Additional Days
-                AddLabel("lblDays", "Additional Days:", leftMargin, topPosition, 120, 14);
+                AddLabel("lblDays", "Add Days:", leftMargin, topPosition, 120, 14);
                 AddEditText("txtDays", leftMargin + 130, topPosition, 100, 14);
                 topPosition += rowHeight;
 
@@ -138,11 +138,11 @@ namespace ContractManagementAddon.Forms
                 AddButton("btnSubmit", "Submit", leftMargin + 90, topPosition, 80, 20);
                 AddButton("btnApprove", "Approve", leftMargin + 180, topPosition, 80, 20);
                 AddButton("btnReject", "Reject", leftMargin + 270, topPosition, 80, 20);
-                AddButton("btnImpact", "Impact Analysis", leftMargin + 360, topPosition, 120, 20);
+                AddButton("btnImpact", "Impact", leftMargin + 360, topPosition, 120, 20);
 
                 // Lines grid
                 topPosition += 30;
-                AddLabel("lblLines", "Change Order Lines:", leftMargin, topPosition, 150, 14);
+                AddLabel("lblLines", "CO Lines:", leftMargin, topPosition, 150, 14);
                 topPosition += 20;
                 AddGrid("gridLines", leftMargin, topPosition, 700, 200);
 

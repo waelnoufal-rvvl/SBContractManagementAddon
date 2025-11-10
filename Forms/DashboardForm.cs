@@ -95,24 +95,24 @@ namespace ContractManagementAddon.Forms
                 topPosition += 30;
 
                 // Summary Cards
-                AddLabel("lblTotalContracts", "Total Contracts:", leftMargin, topPosition, 150, 14);
+                AddLabel("lblTotalContracts", "Total:", leftMargin, topPosition, 150, 14);
                 AddLabel("lblTotalValue", "0", leftMargin + 160, topPosition, colWidth, 14);
                 topPosition += rowHeight;
 
-                AddLabel("lblActiveContracts", "Active Contracts:", leftMargin, topPosition, 150, 14);
+                AddLabel("lblActiveContracts", "Active:", leftMargin, topPosition, 150, 14);
                 AddLabel("lblActiveValue", "0", leftMargin + 160, topPosition, colWidth, 14);
                 topPosition += rowHeight;
 
-                AddLabel("lblTotalIPCs", "Total IPCs:", leftMargin, topPosition, 150, 14);
+                AddLabel("lblTotalIPCs", "IPCs:", leftMargin, topPosition, 150, 14);
                 AddLabel("lblIPCValue", "0", leftMargin + 160, topPosition, colWidth, 14);
                 topPosition += rowHeight;
 
-                AddLabel("lblTotalCOs", "Total Change Orders:", leftMargin, topPosition, 150, 14);
+                AddLabel("lblTotalCOs", "Changes:", leftMargin, topPosition, 150, 14);
                 AddLabel("lblCOValue", "0", leftMargin + 160, topPosition, colWidth, 14);
                 topPosition += 40;
 
                 // Contract List Grid
-                AddLabel("lblContractList", "Active Contracts:", leftMargin, topPosition, 200, 14);
+                AddLabel("lblContractList", "Contracts:", leftMargin, topPosition, 200, 14);
                 topPosition += 20;
                 AddGrid("gridContracts", leftMargin, topPosition, 850, 300);
                 topPosition += 320;

@@ -91,15 +91,15 @@ namespace ContractManagementAddon.Forms
                 int rowHeight = 25;
 
                 // Title label
-                AddLabel("lblTitle", "Interim Payment Certificate", leftMargin, 10, 400, 20);
+                AddLabel("lblTitle", "IPC", leftMargin, 10, 400, 20);
 
                 // Contract selection
-                AddLabel("lblContract", "Contract Code:", leftMargin, topPosition, 120, 14);
+                AddLabel("lblContract", "Contract:", leftMargin, topPosition, 120, 14);
                 AddTextBox("txtContract", leftMargin + 130, topPosition, 200, 14);
                 topPosition += rowHeight;
 
                 // IPC Number
-                AddLabel("lblIPCNum", "IPC Number:", leftMargin, topPosition, 120, 14);
+                AddLabel("lblIPCNum", "IPC #:", leftMargin, topPosition, 120, 14);
                 AddTextBox("txtIPCNum", leftMargin + 130, topPosition, 100, 14);
                 topPosition += rowHeight;
 
@@ -109,7 +109,7 @@ namespace ContractManagementAddon.Forms
                 topPosition += rowHeight;
 
                 // Gross Amount
-                AddLabel("lblGross", "Gross Amount:", leftMargin, topPosition, 120, 14);
+                AddLabel("lblGross", "Gross:", leftMargin, topPosition, 120, 14);
                 AddEditText("txtGross", leftMargin + 130, topPosition, 150, 14);
                 topPosition += rowHeight;
 
@@ -119,7 +119,7 @@ namespace ContractManagementAddon.Forms
                 topPosition += rowHeight;
 
                 // Net Amount
-                AddLabel("lblNet", "Net Amount:", leftMargin, topPosition, 120, 14);
+                AddLabel("lblNet", "Net:", leftMargin, topPosition, 120, 14);
                 AddEditText("txtNet", leftMargin + 130, topPosition, 150, 14);
                 topPosition += rowHeight;
 

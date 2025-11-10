@@ -113,7 +113,7 @@ namespace ContractManagementAddon.Forms
                 AddButton(BTN_FIND, "Find", 290, 10, 80, 19);
 
                 // Contract Code
-                AddLabel("lblCode", "Contract Code:", leftMargin, topPosition, labelWidth, 14);
+                AddLabel("lblCode", "Code:", leftMargin, topPosition, labelWidth, 14);
                 AddTextBox(TXT_CODE, leftMargin + labelWidth + 10, topPosition, fieldWidth, 14);
                 topPosition += rowHeight;
 
@@ -123,12 +123,12 @@ namespace ContractManagementAddon.Forms
                 topPosition += rowHeight;
 
                 // Description
-                AddLabel("lblDesc", "Description:", leftMargin, topPosition, labelWidth, 14);
+                AddLabel("lblDesc", "Desc:", leftMargin, topPosition, labelWidth, 14);
                 AddTextBox(TXT_DESC, leftMargin + labelWidth + 10, topPosition, 400, 14);
                 topPosition += rowHeight;
 
                 // Start Date
-                AddLabel("lblStart", "Start Date:", leftMargin, topPosition, labelWidth, 14);
+                AddLabel("lblStart", "Start:", leftMargin, topPosition, labelWidth, 14);
                 AddEditText(DT_START, leftMargin + labelWidth + 10, topPosition, fieldWidth, 14);
                 topPosition += rowHeight;
 
@@ -138,7 +138,7 @@ namespace ContractManagementAddon.Forms
                 topPosition += rowHeight;
 
                 // Contract Value
-                AddLabel("lblValue", "Contract Value:", leftMargin, topPosition, labelWidth, 14);
+                AddLabel("lblValue", "Value:", leftMargin, topPosition, labelWidth, 14);
                 AddEditText(TXT_VALUE, leftMargin + labelWidth + 10, topPosition, fieldWidth, 14);
                 topPosition += rowHeight;
 
@@ -148,13 +148,13 @@ namespace ContractManagementAddon.Forms
                 topPosition += rowHeight;
 
                 // Retention %
-                AddLabel("lblRetention", "Retention %:", leftMargin, topPosition, labelWidth, 14);
+                AddLabel("lblRetention", "Retention:", leftMargin, topPosition, labelWidth, 14);
                 AddEditText(TXT_RETENTION, leftMargin + labelWidth + 10, topPosition, fieldWidth, 14);
                 topPosition += rowHeight;
 
                 // Lines Grid
                 topPosition += 10;
-                AddLabel("lblLines", "Contract Lines:", leftMargin, topPosition, labelWidth, 14);
+                AddLabel("lblLines", "Lines:", leftMargin, topPosition, labelWidth, 14);
                 topPosition += 20;
                 AddGrid(GRID_LINES, leftMargin, topPosition, 750, 200);
 
