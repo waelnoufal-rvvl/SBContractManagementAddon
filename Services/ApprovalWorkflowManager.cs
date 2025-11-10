@@ -61,7 +61,7 @@ namespace ContractManagementAddon.Services
                 // Create approval template using SAP B1 Approval Templates
                 // Note: This requires OWTM (Approval Templates) and WTM1 (Approval Template Stages)
                 string query = $@"
-                    INSERT INTO OWTM (""WtmCode"", ""Descript"", ""IsActive"")
+                    INSERT INTO OWTM (""WtmCode"", ""Description"", ""IsActive"")
                     VALUES ('{TEMPLATE_CONTRACT}', 'Contract Approval Workflow', 'Y')";
 
                 Recordset oRecordset = (Recordset)_company.GetBusinessObject(BoObjectTypes.BoRecordset);
@@ -89,7 +89,7 @@ namespace ContractManagementAddon.Services
                 }
 
                 string query = $@"
-                    INSERT INTO OWTM (""WtmCode"", ""Descript"", ""IsActive"")
+                    INSERT INTO OWTM (""WtmCode"", ""Description"", ""IsActive"")
                     VALUES ('{TEMPLATE_IPC}', 'IPC Approval Workflow', 'Y')";
 
                 Recordset oRecordset = (Recordset)_company.GetBusinessObject(BoObjectTypes.BoRecordset);
@@ -117,7 +117,7 @@ namespace ContractManagementAddon.Services
                 }
 
                 string query = $@"
-                    INSERT INTO OWTM (""WtmCode"", ""Descript"", ""IsActive"")
+                    INSERT INTO OWTM (""WtmCode"", ""Description"", ""IsActive"")
                     VALUES ('{TEMPLATE_CHANGEORDER}', 'Change Order Approval Workflow', 'Y')";
 
                 Recordset oRecordset = (Recordset)_company.GetBusinessObject(BoObjectTypes.BoRecordset);

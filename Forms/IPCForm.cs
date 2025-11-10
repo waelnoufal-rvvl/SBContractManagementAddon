@@ -114,7 +114,7 @@ namespace ContractManagementAddon.Forms
                 topPosition += rowHeight;
 
                 // Retention
-                AddLabel("lblRetention", "Retention:", leftMargin, topPosition, 120, 14);
+                AddLabel("lblReten", "Retention:", leftMargin, topPosition, 120, 14);
                 AddEditText("txtRetention", leftMargin + 130, topPosition, 150, 14);
                 topPosition += rowHeight;
 

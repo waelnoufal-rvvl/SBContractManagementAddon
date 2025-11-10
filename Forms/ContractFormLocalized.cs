@@ -193,7 +193,7 @@ namespace ContractManagementAddon.Forms
             SetLabelText("lblGenInfo", "Section_GeneralInformation");
             SetLabelText("lblCode", "Contract_Code");
             SetLabelText("lblName", "Contract_Name");
-            SetLabelText("lblCustomer", "Contract_Customer");
+            SetLabelText("lblCust", "Contract_Customer");
             SetLabelText("lblContact", "Contract_ContactPerson");
             SetLabelText("lblEmail", "Contract_Email");
             SetLabelText("lblPhone", "Contract_Phone");

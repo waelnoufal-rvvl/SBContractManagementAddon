@@ -29,7 +29,7 @@ namespace ContractManagementAddon.Services
             {
                 // Get attachments path from SAP B1 administration
                 Recordset oRecordset = (Recordset)_company.GetBusinessObject(BoObjectTypes.BoRecordset);
-                string query = "SELECT \"AttachPath\" FROM OADP WHERE \"AbsEntry\" = (SELECT MIN(\"AbsEntry\") FROM OADP)";
+                string query = "SELECT \"AttachPath\" FROM OADP WHERE \"ABS_ENTRY\" = (SELECT MIN(\"ABS_ENTRY\") FROM OADP)";
 
                 oRecordset.DoQuery(query);
 
