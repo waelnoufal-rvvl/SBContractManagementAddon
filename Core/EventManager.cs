@@ -86,7 +86,7 @@ namespace ContractManagementAddon.Core
                         case MenuManager.MenuIds.Contracts:
                             Logger.Info("Opening Contracts form using Framework pattern...");
                             // Framework-based form - instantiation automatically loads .b1f and calls OnInitializeComponent()
-                            ContractForm contractForm = new ContractForm();
+                            Contract contractForm = new Contract();
                             break;
 
                         case MenuManager.MenuIds.IPC:
@@ -130,7 +130,7 @@ namespace ContractManagementAddon.Core
             try
             {
                 // Handle global events for our custom forms
-                if (pVal.FormTypeEx == "ContractManagementAddon.Forms.ContractForm" ||
+                if (pVal.FormTypeEx == "ContractManagementAddon.Forms.Contract" ||
                     pVal.FormTypeEx == "FRM_IPC" ||
                     pVal.FormTypeEx == "FRM_CO" ||
                     pVal.FormTypeEx == "FRM_DASHBOARD")

@@ -212,7 +212,6 @@
     <Compile Include="Forms\Contract.b1f.cs">
       <DependentUpon>Contract.b1f</DependentUpon>
     </Compile>
-    <Compile Include="Forms\ContractForm.b1f.cs" />
     <Compile Include="Forms\ContractFormLocalized.cs" />
     <Compile Include="Forms\DashboardForm.cs" />
     <Compile Include="Forms\IPCForm.cs" />
@@ -266,10 +265,6 @@
     <Content Include="Queries\RevenueRecognitionQueries.sql" />
     <Content Include="SAP\addon.srf" />
     <Content Include="SAP\addon.xml" />
-    <Content Include="Forms\ContractForm.b1f">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <FormCategory>UserForm</FormCategory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
