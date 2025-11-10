@@ -853,17 +853,23 @@ namespace ContractManagementAddon.DataAccess
                     System.Runtime.InteropServices.Marshal.ReleaseComObject(userTable);
                     userTable = null;
 
-                    // Add fields
-                    AddUserField("CM_CURRENCY", "Name", "Currency Name", BoFieldTypes.db_Alpha, 100);
-                    AddUserField("CM_CURRENCY", "Symbol", "Currency Symbol", BoFieldTypes.db_Alpha, 10);
-                    AddUserField("CM_CURRENCY", "DecimalPlaces", "Decimal Places", BoFieldTypes.db_Numeric, 0);
-                    AddUserField("CM_CURRENCY", "IsActive", "Is Active", BoFieldTypes.db_Alpha, 1);
-                    AddUserField("CM_CURRENCY", "IsBaseCurrency", "Is Base Currency", BoFieldTypes.db_Alpha, 1);
-                    AddUserField("CM_CURRENCY", "CreateDate", "Create Date", BoFieldTypes.db_Date);
-                    AddUserField("CM_CURRENCY", "CreateUser", "Create User", BoFieldTypes.db_Alpha, 50);
-                    AddUserField("CM_CURRENCY", "ModifyDate", "Modify Date", BoFieldTypes.db_Date);
-                    AddUserField("CM_CURRENCY", "ModifyUser", "Modify User", BoFieldTypes.db_Alpha, 50);
+                    Logger.Info("Currency Master table created");
                 }
+                else
+                {
+                    Logger.Info("Currency Master table already exists");
+                }
+
+                // Add fields (will skip if they already exist)
+                AddUserField("CM_CURRENCY", "Name", "Currency Name", BoFieldTypes.db_Alpha, 100);
+                AddUserField("CM_CURRENCY", "Symbol", "Currency Symbol", BoFieldTypes.db_Alpha, 10);
+                AddUserField("CM_CURRENCY", "DecimalPlaces", "Decimal Places", BoFieldTypes.db_Numeric, 0);
+                AddUserField("CM_CURRENCY", "IsActive", "Is Active", BoFieldTypes.db_Alpha, 1);
+                AddUserField("CM_CURRENCY", "IsBaseCurrency", "Is Base Currency", BoFieldTypes.db_Alpha, 1);
+                AddUserField("CM_CURRENCY", "CreateDate", "Create Date", BoFieldTypes.db_Date);
+                AddUserField("CM_CURRENCY", "CreateUser", "Create User", BoFieldTypes.db_Alpha, 50);
+                AddUserField("CM_CURRENCY", "ModifyDate", "Modify Date", BoFieldTypes.db_Date);
+                AddUserField("CM_CURRENCY", "ModifyUser", "Modify User", BoFieldTypes.db_Alpha, 50);
 
                 Logger.Info("Currency Master table created successfully");
             }
