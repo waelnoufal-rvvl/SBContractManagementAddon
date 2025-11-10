@@ -1173,13 +1173,15 @@ namespace ContractManagementAddon.DataAccess
         /// </summary>
         private void CreateRevenueScheduleTable()
         {
+            UserTablesMD userTable = null;
+
             try
             {
                 Logger.Info("Creating Revenue Recognition Schedule table...");
 
                 if (!DatabaseHelper.UserTableExists(_company, "CM_REV_SCHEDULE"))
                 {
-                    UserTablesMD userTable = (UserTablesMD)_company.GetBusinessObject(BoObjectTypes.oUserTables);
+                    userTable = (UserTablesMD)_company.GetBusinessObject(BoObjectTypes.oUserTables);
                     userTable.TableName = "CM_REV_SCHEDULE";
                     userTable.TableDescription = "Revenue Recognition Schedule";
                     userTable.TableType = BoUTBTableType.bott_NoObject;
@@ -1188,6 +1190,9 @@ namespace ContractManagementAddon.DataAccess
                     {
                         throw new Exception(_company.GetLastErrorDescription());
                     }
+
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(userTable);
+                    userTable = null;
 
                     // Add fields
                     AddUserField("CM_REV_SCHEDULE", "ContractCode", "Contract Code", BoFieldTypes.db_Alpha, 20);
@@ -1211,6 +1216,13 @@ namespace ContractManagementAddon.DataAccess
             {
                 Logger.Error("Error creating Revenue Schedule table: " + ex.Message, ex);
                 throw;
+            }
+            finally
+            {
+                if (userTable != null)
+                {
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(userTable);
+                }
             }
         }
 
