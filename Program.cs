@@ -1,6 +1,8 @@
 using SAPbouiCOM.Framework;
 using System;
 using System.IO;
+using ContractManagementAddon.Core;
+using ContractManagementAddon.DataAccess;
 
 namespace ContractManagementAddon
 {
@@ -10,6 +12,7 @@ namespace ContractManagementAddon
 
         public static SAPbobsCOM.Company company;
         public static SAPbouiCOM.Application app;
+        private static MenuManager menuManager;
 
         private static string logFilePath = Path.Combine(
             AppDomain.CurrentDomain.BaseDirectory,
@@ -45,20 +48,23 @@ namespace ContractManagementAddon
                     return;
                 }
 
-                // ✅ 3. Setup menu
+                // ✅ 3. Initialize UDO (User Defined Objects)
+                InitializeUDOs();
+
+                // ✅ 4. Setup menu using MenuManager
                 if (!SetupMenu())
                 {
                     LogError("Failed to setup menu");
                     ShowWarning("Menu setup failed. Check log file for details.");
                 }
 
-                // ✅ 4. Register event handlers
+                // ✅ 5. Register event handlers
                 RegisterEventHandlers(oApp);
 
                 LogMessage("✅ Contract Management Add-On started successfully!");
                 ShowSuccess("Contract Management Add-On loaded successfully!");
 
-                // ✅ 5. Run application
+                // ✅ 6. Run application
                 oApp.Run();
             }
             catch (Exception ex)
@@ -156,14 +162,32 @@ namespace ContractManagementAddon
             }
         }
 
+        private static void InitializeUDOs()
+        {
+            try
+            {
+                LogMessage("Initializing User Defined Objects...");
+
+                UDOManager udoManager = new UDOManager(company);
+                udoManager.CreateUDOs();
+
+                LogMessage("✅ UDOs initialized successfully");
+            }
+            catch (Exception ex)
+            {
+                LogException("Failed to initialize UDOs", ex);
+                ShowWarning("UDO initialization failed. Some features may not work. Check log file.");
+            }
+        }
+
         private static bool SetupMenu()
         {
             try
             {
-                LogMessage("Setting up menu...");
+                LogMessage("Setting up menu using MenuManager...");
 
-                Menu myMenu = new Menu();
-                myMenu.AddMenuItems();
+                menuManager = new MenuManager(app);
+                menuManager.AddMenuItems();
 
                 LogMessage("✅ Menu setup completed");
                 return true;
@@ -181,13 +205,13 @@ namespace ContractManagementAddon
             {
                 LogMessage("Registering event handlers...");
 
-                // Menu events
-                Menu myMenu = new Menu();
-                oApp.RegisterMenuEventHandler(myMenu.SBO_Application_MenuEvent);
-
                 // Application events
                 Application.SBO_Application.AppEvent +=
                     new SAPbouiCOM._IApplicationEvents_AppEventEventHandler(SBO_Application_AppEvent);
+
+                // Menu events
+                Application.SBO_Application.MenuEvent +=
+                    new SAPbouiCOM._IApplicationEvents_MenuEventEventHandler(SBO_Application_MenuEvent);
 
                 LogMessage("✅ Event handlers registered");
             }
@@ -241,6 +265,43 @@ namespace ContractManagementAddon
             catch (Exception ex)
             {
                 LogException($"Error handling AppEvent: {EventType}", ex);
+            }
+        }
+
+        static void SBO_Application_MenuEvent(ref SAPbouiCOM.MenuEvent pVal, out bool BubbleEvent)
+        {
+            BubbleEvent = true;
+
+            try
+            {
+                if (pVal.BeforeAction)
+                {
+                    LogMessage($"Menu clicked: {pVal.MenuUID}");
+
+                    switch (pVal.MenuUID)
+                    {
+                        case "CMADDON_CONTRACTS":
+                            app.SetStatusBarMessage("Contracts form - Coming soon!", SAPbouiCOM.BoMessageTime.bmt_Short, false);
+                            break;
+
+                        case "CMADDON_IPC":
+                            app.SetStatusBarMessage("IPC form - Coming soon!", SAPbouiCOM.BoMessageTime.bmt_Short, false);
+                            break;
+
+                        case "CMADDON_CO":
+                            app.SetStatusBarMessage("Change Orders form - Coming soon!", SAPbouiCOM.BoMessageTime.bmt_Short, false);
+                            break;
+
+                        case "CMADDON_DASH":
+                            app.SetStatusBarMessage("Dashboard form - Coming soon!", SAPbouiCOM.BoMessageTime.bmt_Short, false);
+                            break;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                LogException("Error in MenuEvent", ex);
+                app.MessageBox(ex.Message, 1, "OK", "", "");
             }
         }
 
