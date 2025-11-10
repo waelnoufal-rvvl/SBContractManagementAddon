@@ -17,7 +17,7 @@ namespace ContractManagementAddon.Forms
         private IPCService _ipcService;
         // Note: _currentIPC removed as it was not being used
 
-        private const string FORM_TYPE = "FRM_IPC";
+        private const string FORM_TYPE = "FRM_IPC_V2"; // Versioned to force fresh form creation
 
         public IPCForm(ContractManagementApplication app)
         {

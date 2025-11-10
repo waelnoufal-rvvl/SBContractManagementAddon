@@ -17,7 +17,7 @@ namespace ContractManagementAddon.Forms
         private ContractService _contractService;
         private Contract _currentContract;
 
-        private const string FORM_TYPE = "FRM_CONTRACT_V2"; // Changed to force new form creation
+        private const string FORM_TYPE = "FRM_CONTRACT_V3"; // Changed to V3 to force fresh form creation with fixed labels
 
         // Control IDs
         private const string BTN_NEW = "btnNew";

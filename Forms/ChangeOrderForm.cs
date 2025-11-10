@@ -17,7 +17,7 @@ namespace ContractManagementAddon.Forms
         private ChangeOrderService _coService;
         // Note: _currentCO removed as it was not being used
 
-        private const string FORM_TYPE = "FRM_CO";
+        private const string FORM_TYPE = "FRM_CO_V2"; // Versioned to force fresh form creation
 
         public ChangeOrderForm(ContractManagementApplication app)
         {

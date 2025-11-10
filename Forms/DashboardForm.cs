@@ -15,7 +15,7 @@ namespace ContractManagementAddon.Forms
         private SAPbouiCOM.Form _form;
         private ContractService _contractService;
 
-        private const string FORM_TYPE = "FRM_DASHBOARD";
+        private const string FORM_TYPE = "FRM_DASHBOARD_V2"; // Versioned to force fresh form creation
 
         public DashboardForm(ContractManagementApplication app)
         {
