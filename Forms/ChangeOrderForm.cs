@@ -91,15 +91,15 @@ namespace ContractManagementAddon.Forms
                 int rowHeight = 25;
 
                 // Title
-                AddLabel("lblTitle", "Change Ord", leftMargin, 10, 300, 20);
+                AddLabel("lblTitle", "ChgOrder", leftMargin, 10, 300, 20);
 
                 // Contract Code
-                AddLabel("lblContract", "Contract:", leftMargin, topPosition, 120, 14);
+                AddLabel("lblContract", "Cntrct:", leftMargin, topPosition, 120, 14);
                 AddTextBox("txtContract", leftMargin + 130, topPosition, 200, 14);
                 topPosition += rowHeight;
 
                 // CO Number
-                AddLabel("lblCONum", "CO Number:", leftMargin, topPosition, 120, 14);
+                AddLabel("lblCONum", "CO Num:", leftMargin, topPosition, 120, 14);
                 AddTextBox("txtCONum", leftMargin + 130, topPosition, 100, 14);
                 topPosition += rowHeight;
 
@@ -124,7 +124,7 @@ namespace ContractManagementAddon.Forms
                 topPosition += rowHeight;
 
                 // Additional Days
-                AddLabel("lblDays", "Add Days:", leftMargin, topPosition, 120, 14);
+                AddLabel("lblDays", "Days:", leftMargin, topPosition, 120, 14);
                 AddEditText("txtDays", leftMargin + 130, topPosition, 100, 14);
                 topPosition += rowHeight;
 
@@ -142,7 +142,7 @@ namespace ContractManagementAddon.Forms
 
                 // Lines grid
                 topPosition += 30;
-                AddLabel("lblLines", "CO Lines:", leftMargin, topPosition, 150, 14);
+                AddLabel("lblLines", "Lines:", leftMargin, topPosition, 150, 14);
                 topPosition += 20;
                 AddGrid("gridLines", leftMargin, topPosition, 700, 200);
 

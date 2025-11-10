@@ -91,7 +91,7 @@ namespace ContractManagementAddon.Forms
                 int rowHeight = 30;
 
                 // Title
-                AddLabel("lblTitle", "Contract Management Dashboard", leftMargin, topPosition, 400, 20);
+                AddLabel("lblTitle", "ContMgmt", leftMargin, topPosition, 400, 20);
                 topPosition += 30;
 
                 // Summary Cards
@@ -112,7 +112,7 @@ namespace ContractManagementAddon.Forms
                 topPosition += 40;
 
                 // Contract List Grid
-                AddLabel("lblContractList", "Contracts:", leftMargin, topPosition, 200, 14);
+                AddLabel("lblContractList", "Cntrcts:", leftMargin, topPosition, 200, 14);
                 topPosition += 20;
                 AddGrid("gridContracts", leftMargin, topPosition, 850, 300);
                 topPosition += 320;

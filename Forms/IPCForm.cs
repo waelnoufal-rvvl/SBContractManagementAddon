@@ -94,7 +94,7 @@ namespace ContractManagementAddon.Forms
                 AddLabel("lblTitle", "IPC", leftMargin, 10, 400, 20);
 
                 // Contract selection
-                AddLabel("lblContract", "Contract:", leftMargin, topPosition, 120, 14);
+                AddLabel("lblContract", "Cntrct:", leftMargin, topPosition, 120, 14);
                 AddTextBox("txtContract", leftMargin + 130, topPosition, 200, 14);
                 topPosition += rowHeight;
 
@@ -104,7 +104,7 @@ namespace ContractManagementAddon.Forms
                 topPosition += rowHeight;
 
                 // IPC Date
-                AddLabel("lblIPCDate", "IPC Date:", leftMargin, topPosition, 120, 14);
+                AddLabel("lblIPCDate", "Date:", leftMargin, topPosition, 120, 14);
                 AddEditText("txtIPCDate", leftMargin + 130, topPosition, 150, 14);
                 topPosition += rowHeight;
 
@@ -114,7 +114,7 @@ namespace ContractManagementAddon.Forms
                 topPosition += rowHeight;
 
                 // Retention
-                AddLabel("lblRetention", "Retention:", leftMargin, topPosition, 120, 14);
+                AddLabel("lblRetention", "Retent:", leftMargin, topPosition, 120, 14);
                 AddEditText("txtRetention", leftMargin + 130, topPosition, 150, 14);
                 topPosition += rowHeight;
 
@@ -136,7 +136,7 @@ namespace ContractManagementAddon.Forms
 
                 // Lines grid
                 topPosition += 30;
-                AddLabel("lblLines", "IPC Lines:", leftMargin, topPosition, 120, 14);
+                AddLabel("lblLines", "Lines:", leftMargin, topPosition, 120, 14);
                 topPosition += 20;
                 AddGrid("gridLines", leftMargin, topPosition, 750, 250);
 

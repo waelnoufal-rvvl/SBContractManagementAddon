@@ -118,7 +118,7 @@ namespace ContractManagementAddon.Forms
                 topPosition += rowHeight;
 
                 // Customer
-                AddLabel("lblCustomer", "Customer:", leftMargin, topPosition, labelWidth, 14);
+                AddLabel("lblCustomer", "Cust:", leftMargin, topPosition, labelWidth, 14);
                 AddTextBox(TXT_CUSTOMER, leftMargin + labelWidth + 10, topPosition, fieldWidth, 14);
                 topPosition += rowHeight;
 
@@ -133,7 +133,7 @@ namespace ContractManagementAddon.Forms
                 topPosition += rowHeight;
 
                 // End Date
-                AddLabel("lblEnd", "End Date:", leftMargin, topPosition, labelWidth, 14);
+                AddLabel("lblEnd", "End:", leftMargin, topPosition, labelWidth, 14);
                 AddEditText(DT_END, leftMargin + labelWidth + 10, topPosition, fieldWidth, 14);
                 topPosition += rowHeight;
 
@@ -148,7 +148,7 @@ namespace ContractManagementAddon.Forms
                 topPosition += rowHeight;
 
                 // Retention %
-                AddLabel("lblRetention", "Retention:", leftMargin, topPosition, labelWidth, 14);
+                AddLabel("lblRetention", "Retent%:", leftMargin, topPosition, labelWidth, 14);
                 AddEditText(TXT_RETENTION, leftMargin + labelWidth + 10, topPosition, fieldWidth, 14);
                 topPosition += rowHeight;
 
