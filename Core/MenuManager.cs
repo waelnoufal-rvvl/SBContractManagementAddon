@@ -45,7 +45,7 @@ namespace ContractManagementAddon.Core
                 menuCreationParams = (MenuCreationParams)_uiApp.CreateObject(BoCreatableObjectType.cot_MenuCreationParams);
                 menuCreationParams.Type = BoMenuType.mt_POPUP;
                 menuCreationParams.UniqueID = MENU_ID_MAIN;
-                menuCreationParams.String = "★ Contract Mgmt"; // Added star icon to verify version
+                menuCreationParams.String = "★ Contract v2.1"; // Version 2.1 = All fixes applied
                 menuCreationParams.Position = 15;
 
                 modulesMenu.SubMenus.AddEx(menuCreationParams);
