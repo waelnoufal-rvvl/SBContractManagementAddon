@@ -80,6 +80,8 @@ namespace ContractManagementAddon.DataAccess
         /// </summary>
         private void CreateContractTable()
         {
+            UserTablesMD userTable = null;
+
             try
             {
                 Logger.Info("Creating Contract table...");
@@ -88,21 +90,25 @@ namespace ContractManagementAddon.DataAccess
                 if (DatabaseHelper.UserTableExists(_company, "CONTRACT_HDR"))
                 {
                     Logger.Info("Contract table already exists");
-                    return;
                 }
-
-                // Create header table
-                UserTablesMD userTable = (UserTablesMD)_company.GetBusinessObject(BoObjectTypes.oUserTables);
-                userTable.TableName = "CONTRACT_HDR";
-                userTable.TableDescription = "Contract Header";
-                userTable.TableType = BoUTBTableType.bott_MasterData;
-
-                if (userTable.Add() != 0)
+                else
                 {
-                    throw new Exception(_company.GetLastErrorDescription());
-                }
+                    // Create header table
+                    userTable = (UserTablesMD)_company.GetBusinessObject(BoObjectTypes.oUserTables);
+                    userTable.TableName = "CONTRACT_HDR";
+                    userTable.TableDescription = "Contract Header";
+                    userTable.TableType = BoUTBTableType.bott_MasterData;
 
-                Logger.Info("Contract header table created");
+                    if (userTable.Add() != 0)
+                    {
+                        throw new Exception(_company.GetLastErrorDescription());
+                    }
+
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(userTable);
+                    userTable = null;
+
+                    Logger.Info("Contract header table created");
+                }
 
                 // Create lines table
                 if (!DatabaseHelper.UserTableExists(_company, "CONTRACT_LNS"))
@@ -116,6 +122,9 @@ namespace ContractManagementAddon.DataAccess
                     {
                         throw new Exception(_company.GetLastErrorDescription());
                     }
+
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(userTable);
+                    userTable = null;
 
                     Logger.Info("Contract lines table created");
                 }
@@ -133,6 +142,13 @@ namespace ContractManagementAddon.DataAccess
             {
                 Logger.Error("Error creating Contract table: " + ex.Message, ex);
                 throw;
+            }
+            finally
+            {
+                if (userTable != null)
+                {
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(userTable);
+                }
             }
         }
 
@@ -182,6 +198,8 @@ namespace ContractManagementAddon.DataAccess
         /// </summary>
         private void CreateIPCTable()
         {
+            UserTablesMD userTable = null;
+
             try
             {
                 Logger.Info("Creating IPC table...");
@@ -189,18 +207,24 @@ namespace ContractManagementAddon.DataAccess
                 if (DatabaseHelper.UserTableExists(_company, "IPC_HDR"))
                 {
                     Logger.Info("IPC table already exists");
-                    return;
                 }
-
-                // Create header table
-                UserTablesMD userTable = (UserTablesMD)_company.GetBusinessObject(BoObjectTypes.oUserTables);
-                userTable.TableName = "IPC_HDR";
-                userTable.TableDescription = "IPC Header";
-                userTable.TableType = BoUTBTableType.bott_Document;
-
-                if (userTable.Add() != 0)
+                else
                 {
-                    throw new Exception(_company.GetLastErrorDescription());
+                    // Create header table
+                    userTable = (UserTablesMD)_company.GetBusinessObject(BoObjectTypes.oUserTables);
+                    userTable.TableName = "IPC_HDR";
+                    userTable.TableDescription = "IPC Header";
+                    userTable.TableType = BoUTBTableType.bott_Document;
+
+                    if (userTable.Add() != 0)
+                    {
+                        throw new Exception(_company.GetLastErrorDescription());
+                    }
+
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(userTable);
+                    userTable = null;
+
+                    Logger.Info("IPC header table created");
                 }
 
                 // Create lines table
@@ -215,6 +239,9 @@ namespace ContractManagementAddon.DataAccess
                     {
                         throw new Exception(_company.GetLastErrorDescription());
                     }
+
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(userTable);
+                    userTable = null;
 
                     Logger.Info("IPC lines table created");
                 }
@@ -231,6 +258,13 @@ namespace ContractManagementAddon.DataAccess
             {
                 Logger.Error("Error creating IPC table: " + ex.Message, ex);
                 throw;
+            }
+            finally
+            {
+                if (userTable != null)
+                {
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(userTable);
+                }
             }
         }
 
@@ -279,6 +313,8 @@ namespace ContractManagementAddon.DataAccess
         /// </summary>
         private void CreateChangeOrderTable()
         {
+            UserTablesMD userTable = null;
+
             try
             {
                 Logger.Info("Creating Change Order table...");
@@ -286,18 +322,24 @@ namespace ContractManagementAddon.DataAccess
                 if (DatabaseHelper.UserTableExists(_company, "CO_HDR"))
                 {
                     Logger.Info("Change Order table already exists");
-                    return;
                 }
-
-                // Create header table
-                UserTablesMD userTable = (UserTablesMD)_company.GetBusinessObject(BoObjectTypes.oUserTables);
-                userTable.TableName = "CO_HDR";
-                userTable.TableDescription = "Change Order Header";
-                userTable.TableType = BoUTBTableType.bott_Document;
-
-                if (userTable.Add() != 0)
+                else
                 {
-                    throw new Exception(_company.GetLastErrorDescription());
+                    // Create header table
+                    userTable = (UserTablesMD)_company.GetBusinessObject(BoObjectTypes.oUserTables);
+                    userTable.TableName = "CO_HDR";
+                    userTable.TableDescription = "Change Order Header";
+                    userTable.TableType = BoUTBTableType.bott_Document;
+
+                    if (userTable.Add() != 0)
+                    {
+                        throw new Exception(_company.GetLastErrorDescription());
+                    }
+
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(userTable);
+                    userTable = null;
+
+                    Logger.Info("Change Order header table created");
                 }
 
                 // Create lines table
@@ -312,6 +354,9 @@ namespace ContractManagementAddon.DataAccess
                     {
                         throw new Exception(_company.GetLastErrorDescription());
                     }
+
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(userTable);
+                    userTable = null;
 
                     Logger.Info("Change Order lines table created");
                 }
@@ -328,6 +373,13 @@ namespace ContractManagementAddon.DataAccess
             {
                 Logger.Error("Error creating Change Order table: " + ex.Message, ex);
                 throw;
+            }
+            finally
+            {
+                if (userTable != null)
+                {
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(userTable);
+                }
             }
         }
 
@@ -376,6 +428,8 @@ namespace ContractManagementAddon.DataAccess
         private void AddUserField(string tableName, string fieldName, string description,
             BoFieldTypes fieldType, int size = 0, BoFldSubTypes subType = BoFldSubTypes.st_None)
         {
+            UserFieldsMD userField = null;
+
             try
             {
                 // Check if field already exists
@@ -385,7 +439,7 @@ namespace ContractManagementAddon.DataAccess
                     return;
                 }
 
-                UserFieldsMD userField = (UserFieldsMD)_company.GetBusinessObject(BoObjectTypes.oUserFields);
+                userField = (UserFieldsMD)_company.GetBusinessObject(BoObjectTypes.oUserFields);
                 userField.TableName = tableName;
                 userField.Name = fieldName;
                 userField.Description = description;
@@ -412,6 +466,14 @@ namespace ContractManagementAddon.DataAccess
             {
                 Logger.Error($"Error creating field {tableName}.{fieldName}: " + ex.Message, ex);
                 throw;
+            }
+            finally
+            {
+                // Always release COM object to prevent reference count issues
+                if (userField != null)
+                {
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(userField);
+                }
             }
         }
 
