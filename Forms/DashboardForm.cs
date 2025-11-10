@@ -97,35 +97,35 @@ namespace ContractManagementAddon.Forms
                 int rowHeight = 30;
 
                 // Title
-                AddLabel("lblTitle_v2", "ContMgmt", leftMargin, topPosition, 400, 20);
+                AddLabel("stTitl2", "ContMgmt", leftMargin, topPosition, 400, 20);
                 topPosition += 30;
 
                 // Summary Cards
-                AddLabel("lblTotalContracts_v2", "Total:", leftMargin, topPosition, 150, 14);
-                AddLabel("lblTotalValue_v2", "0", leftMargin + 160, topPosition, colWidth, 14);
+                AddLabel("stTotC2", "Total:", leftMargin, topPosition, 150, 14);
+                AddLabel("stTotV2", "0", leftMargin + 160, topPosition, colWidth, 14);
                 topPosition += rowHeight;
 
-                AddLabel("lblActiveContracts_v2", "Active:", leftMargin, topPosition, 150, 14);
-                AddLabel("lblActiveValue_v2", "0", leftMargin + 160, topPosition, colWidth, 14);
+                AddLabel("stActC2", "Active:", leftMargin, topPosition, 150, 14);
+                AddLabel("stActV2", "0", leftMargin + 160, topPosition, colWidth, 14);
                 topPosition += rowHeight;
 
-                AddLabel("lblTotalIPCs_v2", "IPCs:", leftMargin, topPosition, 150, 14);
-                AddLabel("lblIPCValue_v2", "0", leftMargin + 160, topPosition, colWidth, 14);
+                AddLabel("stTotI2", "IPCs:", leftMargin, topPosition, 150, 14);
+                AddLabel("stIPCV2", "0", leftMargin + 160, topPosition, colWidth, 14);
                 topPosition += rowHeight;
 
-                AddLabel("lblTotalCOs_v2", "Changes:", leftMargin, topPosition, 150, 14);
-                AddLabel("lblCOValue_v2", "0", leftMargin + 160, topPosition, colWidth, 14);
+                AddLabel("stTotO2", "Changes:", leftMargin, topPosition, 150, 14);
+                AddLabel("stCOV2", "0", leftMargin + 160, topPosition, colWidth, 14);
                 topPosition += 40;
 
                 // Contract List Grid
-                AddLabel("lblContractList_v2", "Cntrcts:", leftMargin, topPosition, 200, 14);
+                AddLabel("stList2", "Cntrcts:", leftMargin, topPosition, 200, 14);
                 topPosition += 20;
-                AddGrid("gridContracts_v2", leftMargin, topPosition, 850, 300);
+                AddGrid("grdCnt2", leftMargin, topPosition, 850, 300);
                 topPosition += 320;
 
                 // Refresh button
-                AddButton("btnRefresh_v2", "Refresh", leftMargin, topPosition, 100, 20);
-                AddButton("btnExport_v2", "Export", leftMargin + 110, topPosition, 100, 20);
+                AddButton("btnRef2", "Refresh", leftMargin, topPosition, 100, 20);
+                AddButton("btnExp2", "Export", leftMargin + 110, topPosition, 100, 20);
 
                 Logger.Info("Dashboard form controls initialized");
             }
@@ -166,9 +166,9 @@ namespace ContractManagementAddon.Forms
                 }
 
                 // Update summary labels
-                ((StaticText)_form.Items.Item("lblTotalValue_v2").Specific).Caption =
+                ((StaticText)_form.Items.Item("stTotV2").Specific).Caption =
                     $"{totalContracts} contracts - {FormatterHelper.FormatCurrency(totalValue)}";
-                ((StaticText)_form.Items.Item("lblActiveValue_v2").Specific).Caption =
+                ((StaticText)_form.Items.Item("stActV2").Specific).Caption =
                     $"{activeContracts} contracts - {FormatterHelper.FormatCurrency(activeValue)}";
 
                 // Load contracts to grid
@@ -190,7 +190,7 @@ namespace ContractManagementAddon.Forms
         {
             try
             {
-                Grid grid = (Grid)_form.Items.Item("gridContracts_v2").Specific;
+                Grid grid = (Grid)_form.Items.Item("grdCnt2").Specific;
                 grid.DataTable = _form.DataSources.DataTables.Add("DT_CONTRACTS");
 
                 // Add columns

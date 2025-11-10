@@ -97,60 +97,60 @@ namespace ContractManagementAddon.Forms
                 int rowHeight = 25;
 
                 // Title
-                AddLabel("lblTitle_v2", "ChgOrder", leftMargin, 10, 300, 20);
+                AddLabel("stTitl2", "ChgOrder", leftMargin, 10, 300, 20);
 
                 // Contract Code
-                AddLabel("lblContract_v2", "Cntrct:", leftMargin, topPosition, 120, 14);
-                AddTextBox("txtContract_v2", leftMargin + 130, topPosition, 200, 14);
+                AddLabel("stCntr2", "Cntrct:", leftMargin, topPosition, 120, 14);
+                AddTextBox("txtCntr2", leftMargin + 130, topPosition, 200, 14);
                 topPosition += rowHeight;
 
                 // CO Number
-                AddLabel("lblCONum_v2", "CO Num:", leftMargin, topPosition, 120, 14);
-                AddTextBox("txtCONum_v2", leftMargin + 130, topPosition, 100, 14);
+                AddLabel("stCO2", "CO Num:", leftMargin, topPosition, 120, 14);
+                AddTextBox("txtCO2", leftMargin + 130, topPosition, 100, 14);
                 topPosition += rowHeight;
 
                 // CO Date
-                AddLabel("lblCODate_v2", "CO Date:", leftMargin, topPosition, 120, 14);
-                AddEditText("txtCODate_v2", leftMargin + 130, topPosition, 150, 14);
+                AddLabel("stDate2", "CO Date:", leftMargin, topPosition, 120, 14);
+                AddEditText("txtDate2", leftMargin + 130, topPosition, 150, 14);
                 topPosition += rowHeight;
 
                 // Type
-                AddLabel("lblType_v2", "Type:", leftMargin, topPosition, 120, 14);
-                AddComboBox("cmbType_v2", leftMargin + 130, topPosition, 150, 14);
+                AddLabel("stType2", "Type:", leftMargin, topPosition, 120, 14);
+                AddComboBox("cmbType2", leftMargin + 130, topPosition, 150, 14);
                 topPosition += rowHeight;
 
                 // Description
-                AddLabel("lblDesc_v2", "Desc:", leftMargin, topPosition, 120, 14);
-                AddTextBox("txtDesc_v2", leftMargin + 130, topPosition, 400, 14);
+                AddLabel("stDesc2", "Desc:", leftMargin, topPosition, 120, 14);
+                AddTextBox("txtDesc2", leftMargin + 130, topPosition, 400, 14);
                 topPosition += rowHeight;
 
                 // Amount
-                AddLabel("lblAmount_v2", "Amount:", leftMargin, topPosition, 120, 14);
-                AddEditText("txtAmount_v2", leftMargin + 130, topPosition, 150, 14);
+                AddLabel("stAmt2", "Amount:", leftMargin, topPosition, 120, 14);
+                AddEditText("txtAmt2", leftMargin + 130, topPosition, 150, 14);
                 topPosition += rowHeight;
 
                 // Additional Days
-                AddLabel("lblDays_v2", "Days:", leftMargin, topPosition, 120, 14);
-                AddEditText("txtDays_v2", leftMargin + 130, topPosition, 100, 14);
+                AddLabel("stDays2", "Days:", leftMargin, topPosition, 120, 14);
+                AddEditText("txtDays2", leftMargin + 130, topPosition, 100, 14);
                 topPosition += rowHeight;
 
                 // Status
-                AddLabel("lblStatus_v2", "Status:", leftMargin, topPosition, 120, 14);
-                AddComboBox("cmbStatus_v2", leftMargin + 130, topPosition, 150, 14);
+                AddLabel("stStat2", "Status:", leftMargin, topPosition, 120, 14);
+                AddComboBox("cmbStat2", leftMargin + 130, topPosition, 150, 14);
                 topPosition += rowHeight + 20;
 
                 // Buttons
-                AddButton("btnSave_v2", "Save", leftMargin, topPosition, 80, 20);
-                AddButton("btnSubmit_v2", "Submit", leftMargin + 90, topPosition, 80, 20);
-                AddButton("btnApprove_v2", "Approve", leftMargin + 180, topPosition, 80, 20);
-                AddButton("btnReject_v2", "Reject", leftMargin + 270, topPosition, 80, 20);
-                AddButton("btnImpact_v2", "Impact", leftMargin + 360, topPosition, 120, 20);
+                AddButton("btnSav2", "Save", leftMargin, topPosition, 80, 20);
+                AddButton("btnSub2", "Submit", leftMargin + 90, topPosition, 80, 20);
+                AddButton("btnApp2", "Approve", leftMargin + 180, topPosition, 80, 20);
+                AddButton("btnRej2", "Reject", leftMargin + 270, topPosition, 80, 20);
+                AddButton("btnImp2", "Impact", leftMargin + 360, topPosition, 120, 20);
 
                 // Lines grid
                 topPosition += 30;
-                AddLabel("lblLines_v2", "Lines:", leftMargin, topPosition, 150, 14);
+                AddLabel("stLns2", "Lines:", leftMargin, topPosition, 150, 14);
                 topPosition += 20;
-                AddGrid("gridLines_v2", leftMargin, topPosition, 700, 200);
+                AddGrid("grdLns2", leftMargin, topPosition, 700, 200);
 
                 Logger.Info("Change Order form controls initialized");
             }
@@ -209,13 +209,13 @@ namespace ContractManagementAddon.Forms
             item.Height = height;
 
             ComboBox combo = (ComboBox)item.Specific;
-            if (id == "cmbType_v2")
+            if (id == "cmbType2")
             {
                 combo.ValidValues.Add("Addition", "Addition");
                 combo.ValidValues.Add("Deduction", "Deduction");
                 combo.ValidValues.Add("TimeExtension", "Time Extension");
             }
-            else if (id == "cmbStatus_v2")
+            else if (id == "cmbStat2")
             {
                 combo.ValidValues.Add("Draft", "Draft");
                 combo.ValidValues.Add("Submitted", "Submitted");

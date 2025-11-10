@@ -97,54 +97,54 @@ namespace ContractManagementAddon.Forms
                 int rowHeight = 25;
 
                 // Title label
-                AddLabel("lblTitle_v2", "IPC", leftMargin, 10, 400, 20);
+                AddLabel("stTitl2", "IPC", leftMargin, 10, 400, 20);
 
                 // Contract selection
-                AddLabel("lblContract_v2", "Cntrct:", leftMargin, topPosition, 120, 14);
-                AddTextBox("txtContract_v2", leftMargin + 130, topPosition, 200, 14);
+                AddLabel("stCntr2", "Cntrct:", leftMargin, topPosition, 120, 14);
+                AddTextBox("txtCntr2", leftMargin + 130, topPosition, 200, 14);
                 topPosition += rowHeight;
 
                 // IPC Number
-                AddLabel("lblIPCNum_v2", "IPC #:", leftMargin, topPosition, 120, 14);
-                AddTextBox("txtIPCNum_v2", leftMargin + 130, topPosition, 100, 14);
+                AddLabel("stIPC2", "IPC #:", leftMargin, topPosition, 120, 14);
+                AddTextBox("txtIPC2", leftMargin + 130, topPosition, 100, 14);
                 topPosition += rowHeight;
 
                 // IPC Date
-                AddLabel("lblIPCDate_v2", "Date:", leftMargin, topPosition, 120, 14);
-                AddEditText("txtIPCDate_v2", leftMargin + 130, topPosition, 150, 14);
+                AddLabel("stDate2", "Date:", leftMargin, topPosition, 120, 14);
+                AddEditText("txtDate2", leftMargin + 130, topPosition, 150, 14);
                 topPosition += rowHeight;
 
                 // Gross Amount
-                AddLabel("lblGross_v2", "Gross:", leftMargin, topPosition, 120, 14);
-                AddEditText("txtGross_v2", leftMargin + 130, topPosition, 150, 14);
+                AddLabel("stGros2", "Gross:", leftMargin, topPosition, 120, 14);
+                AddEditText("txtGros2", leftMargin + 130, topPosition, 150, 14);
                 topPosition += rowHeight;
 
                 // Retention
-                AddLabel("lblRetent_v2", "Retent:", leftMargin, topPosition, 120, 14);
-                AddEditText("txtRetent_v2", leftMargin + 130, topPosition, 150, 14);
+                AddLabel("stRet2", "Retent:", leftMargin, topPosition, 120, 14);
+                AddEditText("txtRet2", leftMargin + 130, topPosition, 150, 14);
                 topPosition += rowHeight;
 
                 // Net Amount
-                AddLabel("lblNet_v2", "Net:", leftMargin, topPosition, 120, 14);
-                AddEditText("txtNet_v2", leftMargin + 130, topPosition, 150, 14);
+                AddLabel("stNet2", "Net:", leftMargin, topPosition, 120, 14);
+                AddEditText("txtNet2", leftMargin + 130, topPosition, 150, 14);
                 topPosition += rowHeight;
 
                 // Status
-                AddLabel("lblStatus_v2", "Status:", leftMargin, topPosition, 120, 14);
-                AddComboBox("cmbStatus_v2", leftMargin + 130, topPosition, 150, 14);
+                AddLabel("stStat2", "Status:", leftMargin, topPosition, 120, 14);
+                AddComboBox("cmbStat2", leftMargin + 130, topPosition, 150, 14);
                 topPosition += rowHeight + 20;
 
                 // Buttons
-                AddButton("btnSave_v2", "Save", leftMargin, topPosition, 80, 20);
-                AddButton("btnSubmit_v2", "Submit", leftMargin + 90, topPosition, 80, 20);
-                AddButton("btnApprove_v2", "Approve", leftMargin + 180, topPosition, 80, 20);
-                AddButton("btnInvoice_v2", "Create Invoice", leftMargin + 270, topPosition, 100, 20);
+                AddButton("btnSav2", "Save", leftMargin, topPosition, 80, 20);
+                AddButton("btnSub2", "Submit", leftMargin + 90, topPosition, 80, 20);
+                AddButton("btnApp2", "Approve", leftMargin + 180, topPosition, 80, 20);
+                AddButton("btnInv2", "Create Invoice", leftMargin + 270, topPosition, 100, 20);
 
                 // Lines grid
                 topPosition += 30;
-                AddLabel("lblLines_v2", "Lines:", leftMargin, topPosition, 120, 14);
+                AddLabel("stLns2", "Lines:", leftMargin, topPosition, 120, 14);
                 topPosition += 20;
-                AddGrid("gridLines_v2", leftMargin, topPosition, 750, 250);
+                AddGrid("grdLns2", leftMargin, topPosition, 750, 250);
 
                 Logger.Info("IPC form controls initialized");
             }

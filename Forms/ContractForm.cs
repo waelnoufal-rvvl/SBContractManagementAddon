@@ -19,20 +19,20 @@ namespace ContractManagementAddon.Forms
 
         private const string FORM_TYPE = "FRM_CONTRACT_V3"; // Changed to V3 to force fresh form creation with fixed labels
 
-        // Control IDs - Made unique to avoid SAP B1 caching issues
-        private const string BTN_NEW = "btnNew_v3";
-        private const string BTN_SAVE = "btnSave_v3";
-        private const string BTN_DELETE = "btnDelete_v3";
-        private const string BTN_FIND = "btnFind_v3";
-        private const string TXT_CODE = "txtCode_v3";
-        private const string TXT_CUSTOMER = "txtCustomer_v3";
-        private const string TXT_DESC = "txtDesc_v3";
-        private const string DT_START = "dtStart_v3";
-        private const string DT_END = "dtEnd_v3";
-        private const string TXT_VALUE = "txtValue_v3";
-        private const string CMB_STATUS = "cmbStatus_v3";
-        private const string TXT_RETENTION = "txtRetention_v3";
-        private const string GRID_LINES = "gridLines_v3";
+        // Control IDs - MAX 9 characters (SAP B1 limit is 10)
+        private const string BTN_NEW = "btnNew3";
+        private const string BTN_SAVE = "btnSave3";
+        private const string BTN_DELETE = "btnDel3";
+        private const string BTN_FIND = "btnFind3";
+        private const string TXT_CODE = "txtCode3";
+        private const string TXT_CUSTOMER = "txtCust3";
+        private const string TXT_DESC = "txtDesc3";
+        private const string DT_START = "dtStart3";
+        private const string DT_END = "dtEnd3";
+        private const string TXT_VALUE = "txtVal3";
+        private const string CMB_STATUS = "cmbStat3";
+        private const string TXT_RETENTION = "txtRet3";
+        private const string GRID_LINES = "grdLns3";
 
         public ContractForm(ContractManagementApplication app)
         {
@@ -129,48 +129,48 @@ namespace ContractManagementAddon.Forms
                 AddButton(BTN_FIND, "Find", 290, 10, 80, 19);
 
                 // Contract Code
-                AddLabel("lblCode_v3", "Code:", leftMargin, topPosition, labelWidth, 14);
+                AddLabel("stCode3", "Code:", leftMargin, topPosition, labelWidth, 14);
                 AddTextBox(TXT_CODE, leftMargin + labelWidth + 10, topPosition, fieldWidth, 14);
                 topPosition += rowHeight;
 
                 // Customer
-                AddLabel("lblCust_v3", "Cust:", leftMargin, topPosition, labelWidth, 14);
+                AddLabel("stCust3", "Cust:", leftMargin, topPosition, labelWidth, 14);
                 AddTextBox(TXT_CUSTOMER, leftMargin + labelWidth + 10, topPosition, fieldWidth, 14);
                 topPosition += rowHeight;
 
                 // Description
-                AddLabel("lblDesc_v3", "Desc:", leftMargin, topPosition, labelWidth, 14);
+                AddLabel("stDesc3", "Desc:", leftMargin, topPosition, labelWidth, 14);
                 AddTextBox(TXT_DESC, leftMargin + labelWidth + 10, topPosition, 400, 14);
                 topPosition += rowHeight;
 
                 // Start Date
-                AddLabel("lblStart_v3", "Start:", leftMargin, topPosition, labelWidth, 14);
+                AddLabel("stStart3", "Start:", leftMargin, topPosition, labelWidth, 14);
                 AddEditText(DT_START, leftMargin + labelWidth + 10, topPosition, fieldWidth, 14);
                 topPosition += rowHeight;
 
                 // End Date
-                AddLabel("lblEnd_v3", "End:", leftMargin, topPosition, labelWidth, 14);
+                AddLabel("stEnd3", "End:", leftMargin, topPosition, labelWidth, 14);
                 AddEditText(DT_END, leftMargin + labelWidth + 10, topPosition, fieldWidth, 14);
                 topPosition += rowHeight;
 
                 // Contract Value
-                AddLabel("lblValue_v3", "Value:", leftMargin, topPosition, labelWidth, 14);
+                AddLabel("stVal3", "Value:", leftMargin, topPosition, labelWidth, 14);
                 AddEditText(TXT_VALUE, leftMargin + labelWidth + 10, topPosition, fieldWidth, 14);
                 topPosition += rowHeight;
 
                 // Status
-                AddLabel("lblStatus_v3", "Status:", leftMargin, topPosition, labelWidth, 14);
+                AddLabel("stStat3", "Status:", leftMargin, topPosition, labelWidth, 14);
                 AddComboBox(CMB_STATUS, leftMargin + labelWidth + 10, topPosition, fieldWidth, 14);
                 topPosition += rowHeight;
 
                 // Retention %
-                AddLabel("lblRetent_v3", "Retent%:", leftMargin, topPosition, labelWidth, 14);
+                AddLabel("stRet3", "Retent%:", leftMargin, topPosition, labelWidth, 14);
                 AddEditText(TXT_RETENTION, leftMargin + labelWidth + 10, topPosition, fieldWidth, 14);
                 topPosition += rowHeight;
 
                 // Lines Grid
                 topPosition += 10;
-                AddLabel("lblLines_v3", "Lines:", leftMargin, topPosition, labelWidth, 14);
+                AddLabel("stLns3", "Lines:", leftMargin, topPosition, labelWidth, 14);
                 topPosition += 20;
                 AddGrid(GRID_LINES, leftMargin, topPosition, 750, 200);
 
