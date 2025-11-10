@@ -29,8 +29,8 @@ namespace ContractManagementAddon.Services
             {
                 // Get attachments path from SAP B1 administration
                 Recordset oRecordset = (Recordset)_company.GetBusinessObject(BoObjectTypes.BoRecordset);
-                // HANA system tables use uppercase column names
-                string query = "SELECT ATTCHPATH FROM OADP WHERE ABSENTRY = (SELECT MIN(ABSENTRY) FROM OADP)";
+                // SAP HANA system tables use PascalCase column names
+                string query = "SELECT AttchPath FROM OADP WHERE AbsEntry = (SELECT MIN(AbsEntry) FROM OADP)";
 
                 oRecordset.DoQuery(query);
 
