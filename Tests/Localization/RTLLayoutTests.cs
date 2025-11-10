@@ -468,15 +468,4 @@ namespace ContractManagementAddon.Tests.Localization
         }
     }
 
-    #region Test Enums (for alignment testing)
-
-    // Mock SAP B1 text alignment enum for testing
-    public enum BoTextAlignments
-    {
-        ta_Left,
-        ta_Center,
-        ta_Right
-    }
-
-    #endregion
 }

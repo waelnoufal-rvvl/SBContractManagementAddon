@@ -354,9 +354,9 @@ namespace ContractManagementAddon.Localization
         /// Get default text alignment for current language
         /// </summary>
         /// <returns>Text alignment value</returns>
-        public string GetDefaultTextAlignment()
+        public BoTextAlignments GetDefaultTextAlignment()
         {
-            return IsRightToLeft ? "Right" : "Left";
+            return IsRightToLeft ? BoTextAlignments.ta_Right : BoTextAlignments.ta_Left;
         }
 
         /// <summary>
@@ -602,6 +602,17 @@ namespace ContractManagementAddon.Localization
     {
         English,
         Arabic
+    }
+
+    /// <summary>
+    /// Text alignment options for UI controls
+    /// Matches SAP Business One text alignment values
+    /// </summary>
+    public enum BoTextAlignments
+    {
+        ta_Left,
+        ta_Center,
+        ta_Right
     }
 
     #endregion
