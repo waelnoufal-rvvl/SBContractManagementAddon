@@ -1,170 +1,393 @@
-﻿using SAPbouiCOM.Framework;
+using SAPbouiCOM.Framework;
 using System;
-using System.Collections.Generic;
+using System.IO;
 
 namespace ContractManagementAddon
 {
     class Program
     {
-        private static SAPbobsCOM.Company company;
-        private static SAPbouiCOM.Application app;
+        #region Properties
 
-        /// <summary>
-        /// The main entry point for the application.
-        /// </summary>
+        public static SAPbobsCOM.Company company;
+        public static SAPbouiCOM.Application app;
+
+        private static string logFilePath = Path.Combine(
+            AppDomain.CurrentDomain.BaseDirectory,
+            $"ContractManagementAddon_{DateTime.Now:yyyyMMdd}.log"
+        );
+        #endregion
+
+        #region Main Entry Point
+
         [STAThread]
         static void Main(string[] args)
         {
+            Application oApp = null;
+
             try
             {
-                SAPbouiCOM.SboGuiApi sboGuiApi = null;
-                Application oApp = null;
+                LogMessage("========================================");
+                LogMessage("Contract Management Add-On Starting...");
+                LogMessage($"Start Time: {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
+                LogMessage("========================================");
 
-                // Method 1: Try connecting using SboGuiApi directly (for development)
-                if (args.Length < 1)
+                // ✅ 1. Initialize SAP Application
+                if (!InitializeApplication(args, out oApp))
                 {
-                    string connectionResult = "";
-
-                    try
-                    {
-                        // Try Method A: Connect with empty string
-                        try
-                        {
-                            sboGuiApi = new SAPbouiCOM.SboGuiApi();
-                            sboGuiApi.Connect("");
-                            app = sboGuiApi.GetApplication();
-                            connectionResult = "Method A: Empty string - SUCCESS";
-                        }
-                        catch (Exception ex1)
-                        {
-                            connectionResult = "Method A failed: " + ex1.Message;
-
-                            // Try Method B: Connect with 0:1
-                            try
-                            {
-                                sboGuiApi = new SAPbouiCOM.SboGuiApi();
-                                sboGuiApi.Connect("0:1");
-                                app = sboGuiApi.GetApplication();
-                                connectionResult += "\nMethod B: 0:1 - SUCCESS";
-                            }
-                            catch (Exception ex2)
-                            {
-                                connectionResult += "\nMethod B failed: " + ex2.Message;
-
-                                // Try Method C: Use GetActiveObject (COM)
-                                try
-                                {
-                                    app = (SAPbouiCOM.Application)System.Runtime.InteropServices.Marshal.GetActiveObject("SAPbouiCOM.Application");
-                                    connectionResult += "\nMethod C: GetActiveObject - SUCCESS";
-                                }
-                                catch (Exception ex3)
-                                {
-                                    connectionResult += "\nMethod C failed: " + ex3.Message;
-                                    throw new Exception("All connection methods failed:\n" + connectionResult);
-                                }
-                            }
-                        }
-
-                        System.Windows.Forms.MessageBox.Show(
-                            "Successfully connected to SAP B1!\n\n" + connectionResult,
-                            "Contract Management Add-On",
-                            System.Windows.Forms.MessageBoxButtons.OK,
-                            System.Windows.Forms.MessageBoxIcon.Information);
-                    }
-                    catch (Exception connEx)
-                    {
-                        System.Windows.Forms.MessageBox.Show(
-                            "Could not connect to SAP B1.\n\n" +
-                            connectionResult + "\n\n" +
-                            "This add-on requires SAP B1 to be running.\n\n" +
-                            "Please:\n" +
-                            "1. Start SAP Business One\n" +
-                            "2. Log into a company\n" +
-                            "3. Run this add-on again\n\n" +
-                            "OR register this add-on in SAP B1 Add-On Administration.",
-                            "Connection Failed",
-                            System.Windows.Forms.MessageBoxButtons.OK,
-                            System.Windows.Forms.MessageBoxIcon.Error);
-                        return;
-                    }
-
-                    // Create Application wrapper
-                    oApp = new Application();
-                }
-                else
-                {
-                    // Method 2: Normal connection with connection string (from SAP B1)
-                    oApp = new Application(args[0]);
+                    LogError("Failed to initialize SAP Application");
+                    return;
                 }
 
-                // Connect to SAP B1 and get company object
-                ConnectToSAP();
+                // ✅ 2. Get Company and Application objects
+                if (!ConnectToSAP())
+                {
+                    LogError("Failed to connect to SAP");
+                    return;
+                }
 
-                // Setup menu
-                Menu MyMenu = new Menu();
-                MyMenu.AddMenuItems();
-                oApp.RegisterMenuEventHandler(MyMenu.SBO_Application_MenuEvent);
-                Application.SBO_Application.AppEvent += new SAPbouiCOM._IApplicationEvents_AppEventEventHandler(SBO_Application_AppEvent);
+                // ✅ 3. Setup menu
+                if (!SetupMenu())
+                {
+                    LogError("Failed to setup menu");
+                    ShowWarning("Menu setup failed. Check log file for details.");
+                }
 
+                // ✅ 4. Register event handlers
+                RegisterEventHandlers(oApp);
+
+                LogMessage("✅ Contract Management Add-On started successfully!");
+                ShowSuccess("Contract Management Add-On loaded successfully!");
+
+                // ✅ 5. Run application
                 oApp.Run();
             }
             catch (Exception ex)
             {
-                string errorMsg = "Failed to start Contract Management Add-On:\n\n" + ex.Message + "\n\n" + ex.StackTrace;
-                System.Windows.Forms.MessageBox.Show(errorMsg, "Startup Error",
-                    System.Windows.Forms.MessageBoxButtons.OK,
-                    System.Windows.Forms.MessageBoxIcon.Error);
+                LogException("Critical error in Main", ex);
+                ShowError($"Critical Error:\n{ex.Message}\n\nCheck log file:\n{logFilePath}");
+            }
+            finally
+            {
+                CleanupResources();
+                LogMessage("Application terminated.");
             }
         }
+        #endregion
 
-        /// <summary>
-        /// Connect to SAP Business One and retrieve company object
-        /// </summary>
-        private static void ConnectToSAP()
+        #region Initialization Methods
+
+        private static bool InitializeApplication(string[] args, out Application oApp)
         {
             try
             {
-                // Get the DI Company object from the running SAP B1 instance
-                company = (SAPbobsCOM.Company)Application.SBO_Application.Company.GetDICompany();
+                LogMessage("Initializing SAP Application Framework...");
 
-                // Get the UI Application object
-                app = (SAPbouiCOM.Application)Application.SBO_Application;
-
-                if (company != null && company.Connected)
+                if (args.Length < 1)
                 {
-                    string message = $"Connected to SAP B1 - Company: {company.CompanyName}, DB: {company.CompanyDB}";
-                    Application.SBO_Application.SetStatusBarMessage(message, SAPbouiCOM.BoMessageTime.bmt_Short, false);
+                    LogMessage("No connection string provided - attempting to connect to running SAP B1 instance");
+                    oApp = new Application();
                 }
                 else
                 {
-                    throw new Exception("Failed to connect to SAP Business One");
+                    LogMessage($"Using connection string from SAP B1");
+                    // If you want to use an add-on identifier for the development license:
+                    // oApp = new Application(args[0], "YOUR_ADDON_IDENTIFIER");
+                    oApp = new Application(args[0]);
+                }
+
+                LogMessage("✅ SAP Application Framework initialized");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                oApp = null;
+                LogException("Failed to initialize Application", ex);
+                ShowError($"Failed to initialize SAP Application Framework.\n\n" +
+                         $"Please ensure:\n" +
+                         $"1. SAP Business One is running\n" +
+                         $"2. You are logged into a company\n" +
+                         $"3. Or register this add-on in Add-On Administration\n\n" +
+                         $"Error: {ex.Message}");
+                return false;
+            }
+        }
+
+        private static bool ConnectToSAP()
+        {
+            try
+            {
+                LogMessage("Connecting to SAP Business One...");
+
+                // Get DI Company object
+                company = (SAPbobsCOM.Company)Application.SBO_Application.Company.GetDICompany();
+
+                if (company == null)
+                {
+                    LogError("Failed to get DI Company object");
+                    return false;
+                }
+
+                if (!company.Connected)
+                {
+                    LogError("DI Company is not connected");
+                    return false;
+                }
+
+                // Get UI Application object
+                app = (SAPbouiCOM.Application)Application.SBO_Application;
+
+                if (app == null)
+                {
+                    LogError("Failed to get UI Application object");
+                    return false;
+                }
+
+                LogMessage($"✅ Connected to SAP - Company: {company.CompanyName}");
+                LogMessage($"   Database: {company.CompanyDB}");
+                LogMessage($"   Server: {company.Server}");
+                LogMessage($"   SAP Version: {company.Version}");
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                LogException("Failed to connect to SAP", ex);
+                return false;
+            }
+        }
+
+        private static bool SetupMenu()
+        {
+            try
+            {
+                LogMessage("Setting up menu...");
+
+                Menu myMenu = new Menu();
+                myMenu.AddMenuItems();
+
+                LogMessage("✅ Menu setup completed");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                LogException("Failed to setup menu", ex);
+                return false;
+            }
+        }
+
+        private static void RegisterEventHandlers(Application oApp)
+        {
+            try
+            {
+                LogMessage("Registering event handlers...");
+
+                // Menu events
+                Menu myMenu = new Menu();
+                oApp.RegisterMenuEventHandler(myMenu.SBO_Application_MenuEvent);
+
+                // Application events
+                Application.SBO_Application.AppEvent +=
+                    new SAPbouiCOM._IApplicationEvents_AppEventEventHandler(SBO_Application_AppEvent);
+
+                LogMessage("✅ Event handlers registered");
+            }
+            catch (Exception ex)
+            {
+                LogException("Failed to register event handlers", ex);
+            }
+        }
+
+        #endregion
+
+        #region Application Events
+
+        static void SBO_Application_AppEvent(SAPbouiCOM.BoAppEventTypes EventType)
+        {
+            try
+            {
+                switch (EventType)
+                {
+                    case SAPbouiCOM.BoAppEventTypes.aet_ShutDown:
+                        LogMessage("Shutdown event received");
+                        CleanupResources();
+                        System.Windows.Forms.Application.Exit();
+                        break;
+
+                    case SAPbouiCOM.BoAppEventTypes.aet_CompanyChanged:
+                        LogMessage("Company changed event received");
+                        // Reinitialize company object
+                        company = (SAPbobsCOM.Company)Application.SBO_Application.Company.GetDICompany();
+                        LogMessage($"New company: {company?.CompanyName}");
+                        break;
+
+                    case SAPbouiCOM.BoAppEventTypes.aet_FontChanged:
+                        LogMessage("Font changed event received");
+                        break;
+
+                    case SAPbouiCOM.BoAppEventTypes.aet_LanguageChanged:
+                        LogMessage("Language changed event received");
+                        break;
+
+                    case SAPbouiCOM.BoAppEventTypes.aet_ServerTerminition:
+                        LogMessage("Server termination event received");
+                        CleanupResources();
+                        System.Windows.Forms.Application.Exit();
+                        break;
+
+                    default:
+                        break;
                 }
             }
             catch (Exception ex)
             {
-                throw new Exception($"Connection error: {ex.Message}");
+                LogException($"Error handling AppEvent: {EventType}", ex);
             }
         }
 
-        static void SBO_Application_AppEvent(SAPbouiCOM.BoAppEventTypes EventType)
+        #endregion
+
+        #region Cleanup
+
+        private static void CleanupResources()
         {
-            switch (EventType)
+            try
             {
-                case SAPbouiCOM.BoAppEventTypes.aet_ShutDown:
-                    //Exit Add-On
-                    System.Windows.Forms.Application.Exit();
-                    break;
-                case SAPbouiCOM.BoAppEventTypes.aet_CompanyChanged:
-                    break;
-                case SAPbouiCOM.BoAppEventTypes.aet_FontChanged:
-                    break;
-                case SAPbouiCOM.BoAppEventTypes.aet_LanguageChanged:
-                    break;
-                case SAPbouiCOM.BoAppEventTypes.aet_ServerTerminition:
-                    break;
-                default:
-                    break;
+                LogMessage("Cleaning up resources...");
+
+                if (company != null && company.Connected)
+                {
+                    try
+                    {
+                        // Note: Usually you don't disconnect the company object
+                        // as it's managed by SAP, but we release the COM object
+                        System.Runtime.InteropServices.Marshal.ReleaseComObject(company);
+                        company = null;
+                        LogMessage("✅ Company object released");
+                    }
+                    catch (Exception ex)
+                    {
+                        LogException("Error releasing company object", ex);
+                    }
+                }
+
+                LogMessage("✅ Cleanup completed");
+            }
+            catch (Exception ex)
+            {
+                LogException("Error in CleanupResources", ex);
             }
         }
+
+        #endregion
+
+        #region Logging Methods
+
+        private static void LogMessage(string message)
+        {
+            try
+            {
+                string logEntry = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] {message}";
+                File.AppendAllText(logFilePath, logEntry + Environment.NewLine);
+
+                // Also write to debug output
+                System.Diagnostics.Debug.WriteLine(logEntry);
+            }
+            catch
+            {
+                // Ignore logging errors to prevent infinite loops
+            }
+        }
+
+        private static void LogError(string message)
+        {
+            LogMessage($"❌ ERROR: {message}");
+        }
+
+        private static void LogException(string context, Exception ex)
+        {
+            LogMessage("========================================");
+            LogMessage($"❌ EXCEPTION: {context}");
+            LogMessage($"Message: {ex.Message}");
+            LogMessage($"Type: {ex.GetType().FullName}");
+            LogMessage($"Stack Trace:\n{ex.StackTrace}");
+
+            if (ex.InnerException != null)
+            {
+                LogMessage($"Inner Exception: {ex.InnerException.Message}");
+                LogMessage($"Inner Stack Trace:\n{ex.InnerException.StackTrace}");
+            }
+
+            LogMessage("========================================");
+        }
+
+        #endregion
+
+        #region UI Helper Methods
+
+        private static void ShowError(string message)
+        {
+            try
+            {
+                if (app != null)
+                {
+                    app.MessageBox(message, 1, "OK", "", "");
+                    app.SetStatusBarMessage(message, SAPbouiCOM.BoMessageTime.bmt_Short, true);
+                }
+                else
+                {
+                    System.Windows.Forms.MessageBox.Show(
+                        message,
+                        "Error",
+                        System.Windows.Forms.MessageBoxButtons.OK,
+                        System.Windows.Forms.MessageBoxIcon.Error
+                    );
+                }
+            }
+            catch
+            {
+                System.Windows.Forms.MessageBox.Show(message, "Error");
+            }
+        }
+
+        private static void ShowWarning(string message)
+        {
+            try
+            {
+                if (app != null)
+                {
+                    app.SetStatusBarMessage(message, SAPbouiCOM.BoMessageTime.bmt_Medium, false);
+                }
+                else
+                {
+                    System.Windows.Forms.MessageBox.Show(
+                        message,
+                        "Warning",
+                        System.Windows.Forms.MessageBoxButtons.OK,
+                        System.Windows.Forms.MessageBoxIcon.Warning
+                    );
+                }
+            }
+            catch
+            {
+                System.Windows.Forms.MessageBox.Show(message, "Warning");
+            }
+        }
+
+        private static void ShowSuccess(string message)
+        {
+            try
+            {
+                if (app != null)
+                {
+                    app.SetStatusBarMessage(message, SAPbouiCOM.BoMessageTime.bmt_Short, false);
+                }
+            }
+            catch
+            {
+                // Ignore
+            }
+        }
+
+        #endregion
     }
 }
