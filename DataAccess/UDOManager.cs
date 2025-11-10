@@ -73,6 +73,13 @@ namespace ContractManagementAddon.DataAccess
                 Logger.Error("Failed to create UDOs: " + ex.Message, ex);
                 throw;
             }
+            finally
+            {
+                if (userTable != null)
+                {
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(userTable);
+                }
+            }
         }
 
         /// <summary>
@@ -520,6 +527,13 @@ namespace ContractManagementAddon.DataAccess
                 Logger.Error("Error registering Contract UDO: " + ex.Message, ex);
                 throw;
             }
+            finally
+            {
+                if (userTable != null)
+                {
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(userTable);
+                }
+            }
         }
 
         /// <summary>
@@ -562,6 +576,13 @@ namespace ContractManagementAddon.DataAccess
                 Logger.Error("Error registering IPC UDO: " + ex.Message, ex);
                 throw;
             }
+            finally
+            {
+                if (userTable != null)
+                {
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(userTable);
+                }
+            }
         }
 
         /// <summary>
@@ -603,6 +624,13 @@ namespace ContractManagementAddon.DataAccess
             {
                 Logger.Error("Error registering Change Order UDO: " + ex.Message, ex);
                 throw;
+            }
+            finally
+            {
+                if (userTable != null)
+                {
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(userTable);
+                }
             }
         }
 
@@ -1231,6 +1259,8 @@ namespace ContractManagementAddon.DataAccess
         /// </summary>
         private void CreateDeferredRevenueTable()
         {
+            UserTablesMD userTable = null;
+
             try
             {
                 Logger.Info("Creating Deferred Revenue table...");
@@ -1246,6 +1276,10 @@ namespace ContractManagementAddon.DataAccess
                     {
                         throw new Exception(_company.GetLastErrorDescription());
                     }
+
+                    
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(userTable);
+                    userTable = null;
 
                     // Add fields
                     AddUserField("CM_DEFERRED_REV", "ContractCode", "Contract Code", BoFieldTypes.db_Alpha, 20);
@@ -1268,6 +1302,13 @@ namespace ContractManagementAddon.DataAccess
                 Logger.Error("Error creating Deferred Revenue table: " + ex.Message, ex);
                 throw;
             }
+            finally
+            {
+                if (userTable != null)
+                {
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(userTable);
+                }
+            }
         }
 
         /// <summary>
@@ -1275,6 +1316,8 @@ namespace ContractManagementAddon.DataAccess
         /// </summary>
         private void CreateContractAssetsTable()
         {
+            UserTablesMD userTable = null;
+
             try
             {
                 Logger.Info("Creating Contract Assets table...");
@@ -1290,6 +1333,10 @@ namespace ContractManagementAddon.DataAccess
                     {
                         throw new Exception(_company.GetLastErrorDescription());
                     }
+
+                    
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(userTable);
+                    userTable = null;
 
                     // Add fields
                     AddUserField("CM_CONTRACT_ASSETS", "ContractCode", "Contract Code", BoFieldTypes.db_Alpha, 20);
@@ -1310,6 +1357,13 @@ namespace ContractManagementAddon.DataAccess
                 Logger.Error("Error creating Contract Assets table: " + ex.Message, ex);
                 throw;
             }
+            finally
+            {
+                if (userTable != null)
+                {
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(userTable);
+                }
+            }
         }
 
         /// <summary>
@@ -1317,6 +1371,8 @@ namespace ContractManagementAddon.DataAccess
         /// </summary>
         private void CreateRevenueLogTable()
         {
+            UserTablesMD userTable = null;
+
             try
             {
                 Logger.Info("Creating Revenue Recognition Log table...");
@@ -1332,6 +1388,10 @@ namespace ContractManagementAddon.DataAccess
                     {
                         throw new Exception(_company.GetLastErrorDescription());
                     }
+
+                    
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(userTable);
+                    userTable = null;
 
                     // Add fields
                     AddUserField("CM_REV_LOG", "ContractCode", "Contract Code", BoFieldTypes.db_Alpha, 20);
@@ -1360,6 +1420,8 @@ namespace ContractManagementAddon.DataAccess
         /// </summary>
         private void CreateBacklogTable()
         {
+            UserTablesMD userTable = null;
+
             try
             {
                 Logger.Info("Creating Contract Backlog table...");
@@ -1375,6 +1437,10 @@ namespace ContractManagementAddon.DataAccess
                     {
                         throw new Exception(_company.GetLastErrorDescription());
                     }
+
+                    
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(userTable);
+                    userTable = null;
 
                     // Add fields
                     AddUserField("CM_BACKLOG", "ContractCode", "Contract Code", BoFieldTypes.db_Alpha, 20);
