@@ -47,8 +47,8 @@ namespace ContractManagementAddon.Forms
         {
             try
             {
-                // DEBUG: Show which version is running (v2.3 = Fixed form caching + labels)
-                _app.UIApp.MessageBox($"ContractForm v2.3 - Label FIXED\nCust: (5 chars)\nBuild: {System.IO.File.GetLastWriteTime(System.Reflection.Assembly.GetExecutingAssembly().Location)}", 1, "OK", "", "");
+                // DEBUG: Show which version is running (v2.4 = DIAGNOSTIC MODE)
+                _app.UIApp.MessageBox($"ContractForm v2.4 - DIAGNOSTIC\nHardcoded label test\nCheck logs for details\nBuild: {System.IO.File.GetLastWriteTime(System.Reflection.Assembly.GetExecutingAssembly().Location)}", 1, "OK", "", "");
 
                 // Check if form already exists
                 try
@@ -120,8 +120,19 @@ namespace ContractManagementAddon.Forms
                 AddTextBox(TXT_CODE, leftMargin + labelWidth + 10, topPosition, fieldWidth, 14);
                 topPosition += rowHeight;
 
-                // Customer
-                AddLabel("lblCustomer", "Cust:", leftMargin, topPosition, labelWidth, 14);
+                // Customer - HARDCODED TEST VALUE
+                try
+                {
+                    string customerLabel = "Cust:"; // FIXED: 5 characters only
+                    Logger.Info($"Creating lblCustomer with caption: '{customerLabel}' (Length: {customerLabel.Length})");
+                    AddLabel("lblCustomer", customerLabel, leftMargin, topPosition, labelWidth, 14);
+                    Logger.Info("lblCustomer created successfully");
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error($"FAILED to create lblCustomer: {ex.Message}", ex);
+                    _app.UIApp.StatusBar.SetText($"Label creation failed: {ex.Message}", BoMessageTime.bmt_Long, BoStatusBarMessageType.smt_Error);
+                }
                 AddTextBox(TXT_CUSTOMER, leftMargin + labelWidth + 10, topPosition, fieldWidth, 14);
                 topPosition += rowHeight;
 
@@ -421,12 +432,17 @@ namespace ContractManagementAddon.Forms
 
         private void AddLabel(string id, string caption, int left, int top, int width, int height)
         {
+            Logger.Info($"AddLabel called: id='{id}', caption='{caption}', length={caption.Length}");
             Item item = _form.Items.Add(id, BoFormItemTypes.it_STATIC);
             item.Left = left;
             item.Top = top;
             item.Width = width;
             item.Height = height;
-            ((StaticText)item.Specific).Caption = caption;
+
+            StaticText label = (StaticText)item.Specific;
+            Logger.Info($"Setting caption for '{id}' to '{caption}'");
+            label.Caption = caption;
+            Logger.Info($"Caption set successfully. Verifying... actual value: '{label.Caption}'");
         }
 
         private void AddTextBox(string id, int left, int top, int width, int height)
