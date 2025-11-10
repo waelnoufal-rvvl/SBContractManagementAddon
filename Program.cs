@@ -23,19 +23,50 @@ namespace ContractManagementAddon
                 // Method 1: Try connecting using SboGuiApi directly (for development)
                 if (args.Length < 1)
                 {
+                    string connectionResult = "";
+
                     try
                     {
-                        // Use SboGuiApi to connect to running SAP B1 instance
-                        sboGuiApi = new SAPbouiCOM.SboGuiApi();
+                        // Try Method A: Connect with empty string
+                        try
+                        {
+                            sboGuiApi = new SAPbouiCOM.SboGuiApi();
+                            sboGuiApi.Connect("");
+                            app = sboGuiApi.GetApplication();
+                            connectionResult = "Method A: Empty string - SUCCESS";
+                        }
+                        catch (Exception ex1)
+                        {
+                            connectionResult = "Method A failed: " + ex1.Message;
 
-                        // Try to connect without connection string (attaches to running instance)
-                        sboGuiApi.Connect("");
+                            // Try Method B: Connect with 0:1
+                            try
+                            {
+                                sboGuiApi = new SAPbouiCOM.SboGuiApi();
+                                sboGuiApi.Connect("0:1");
+                                app = sboGuiApi.GetApplication();
+                                connectionResult += "\nMethod B: 0:1 - SUCCESS";
+                            }
+                            catch (Exception ex2)
+                            {
+                                connectionResult += "\nMethod B failed: " + ex2.Message;
 
-                        // Get the application
-                        app = sboGuiApi.GetApplication();
+                                // Try Method C: Use GetActiveObject (COM)
+                                try
+                                {
+                                    app = (SAPbouiCOM.Application)System.Runtime.InteropServices.Marshal.GetActiveObject("SAPbouiCOM.Application");
+                                    connectionResult += "\nMethod C: GetActiveObject - SUCCESS";
+                                }
+                                catch (Exception ex3)
+                                {
+                                    connectionResult += "\nMethod C failed: " + ex3.Message;
+                                    throw new Exception("All connection methods failed:\n" + connectionResult);
+                                }
+                            }
+                        }
 
                         System.Windows.Forms.MessageBox.Show(
-                            "Successfully connected to running SAP B1 instance!",
+                            "Successfully connected to SAP B1!\n\n" + connectionResult,
                             "Contract Management Add-On",
                             System.Windows.Forms.MessageBoxButtons.OK,
                             System.Windows.Forms.MessageBoxIcon.Information);
@@ -44,13 +75,14 @@ namespace ContractManagementAddon
                     {
                         System.Windows.Forms.MessageBox.Show(
                             "Could not connect to SAP B1.\n\n" +
-                            "Error details:\n" + connEx.Message + "\n\n" +
-                            "Please ensure:\n" +
-                            "1. SAP Business One is running\n" +
-                            "2. You are logged into a company\n" +
-                            "3. SAP B1 is the same version as your SDK\n\n" +
-                            "Is SAP Business One currently running and logged in?",
-                            "Connection Failed - Debug Info",
+                            connectionResult + "\n\n" +
+                            "This add-on requires SAP B1 to be running.\n\n" +
+                            "Please:\n" +
+                            "1. Start SAP Business One\n" +
+                            "2. Log into a company\n" +
+                            "3. Run this add-on again\n\n" +
+                            "OR register this add-on in SAP B1 Add-On Administration.",
+                            "Connection Failed",
                             System.Windows.Forms.MessageBoxButtons.OK,
                             System.Windows.Forms.MessageBoxIcon.Error);
                         return;
