@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-16"?>
+<AddOnRegPackage>
+    <AddOnIdentifier>
+        <AddonName>ContractManagementAddon</AddonName>
+        <AddonType>0</AddonType>
+        <AddonVersion>1.0</AddonVersion>
+    </AddOnIdentifier>
+    <Managed>0</Managed>
+    <Development>1</Development>
+    <AutoStart>1</AutoStart>
+    <DeleteOnStop>1</DeleteOnStop>
+    <AddOnApplication>ContractManagementAddon.exe</AddOnApplication>
+</AddOnRegPackage>
