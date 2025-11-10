@@ -47,8 +47,8 @@ namespace ContractManagementAddon.Forms
         {
             try
             {
-                // DEBUG: Show which version is running
-                _app.UIApp.MessageBox($"ContractForm Version: FIXED (Cust: label)\nBuild: {System.IO.File.GetLastWriteTime(System.Reflection.Assembly.GetExecutingAssembly().Location)}", 1, "OK", "", "");
+                // DEBUG: Show which version is running (v2.3 = Fixed form caching + labels)
+                _app.UIApp.MessageBox($"ContractForm v2.3 - Label FIXED\nCust: (5 chars)\nBuild: {System.IO.File.GetLastWriteTime(System.Reflection.Assembly.GetExecutingAssembly().Location)}", 1, "OK", "", "");
 
                 // Check if form already exists
                 try

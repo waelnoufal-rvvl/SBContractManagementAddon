@@ -45,7 +45,7 @@ namespace ContractManagementAddon.Core
                 menuCreationParams = (MenuCreationParams)_uiApp.CreateObject(BoCreatableObjectType.cot_MenuCreationParams);
                 menuCreationParams.Type = BoMenuType.mt_POPUP;
                 menuCreationParams.UniqueID = MENU_ID_MAIN;
-                menuCreationParams.String = "★ Contract v2.2"; // Version 2.2 = Fixed form caching issue
+                menuCreationParams.String = "★ Contract v2.3"; // Version 2.3 = Force rebuild to fix labels
                 menuCreationParams.Position = 15;
 
                 modulesMenu.SubMenus.AddEx(menuCreationParams);
