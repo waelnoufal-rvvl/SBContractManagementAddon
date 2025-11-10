@@ -133,17 +133,18 @@ namespace ContractManagementAddon.Forms
                 AddTextBox(TXT_CODE, leftMargin + labelWidth + 10, topPosition, fieldWidth, 14);
                 topPosition += rowHeight;
 
-                // Customer - HARDCODED TEST VALUE
+                // Customer - HARDCODED TEST VALUE WITH UNIQUE ID
                 try
                 {
                     string customerLabel = "Cust:"; // FIXED: 5 characters only
-                    Logger.Info($"Creating lblCustomer with caption: '{customerLabel}' (Length: {customerLabel.Length})");
-                    AddLabel("lblCustomer", customerLabel, leftMargin, topPosition, labelWidth, 14);
-                    Logger.Info("lblCustomer created successfully");
+                    string uniqueItemId = "stCust_v3"; // Changed from lblCustomer to avoid any SAP B1 caching
+                    Logger.Info($"Creating customer label with ID '{uniqueItemId}', caption: '{customerLabel}' (Length: {customerLabel.Length})");
+                    AddLabel(uniqueItemId, customerLabel, leftMargin, topPosition, labelWidth, 14);
+                    Logger.Info($"Customer label '{uniqueItemId}' created successfully");
                 }
                 catch (Exception ex)
                 {
-                    Logger.Error($"FAILED to create lblCustomer: {ex.Message}", ex);
+                    Logger.Error($"FAILED to create customer label: {ex.Message}", ex);
                     _app.UIApp.StatusBar.SetText($"Label creation failed: {ex.Message}", BoMessageTime.bmt_Long, BoStatusBarMessageType.smt_Error);
                 }
                 AddTextBox(TXT_CUSTOMER, leftMargin + labelWidth + 10, topPosition, fieldWidth, 14);
