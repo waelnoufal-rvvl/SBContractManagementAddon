@@ -15,34 +15,46 @@ namespace ContractManagementAddon
         [STAThread]
         static void Main(string[] args)
         {
+            Application oApp = null;
+
             try
             {
-                // Check if launched by SAP Business One
+                // ✅ 1. Initialize SAP Application Framework
                 if (args.Length < 1)
                 {
+                    // No connection string - running standalone for development
+                    oApp = new Application();
+
                     System.Windows.Forms.MessageBox.Show(
-                        "This add-on must be launched by SAP Business One.\n\n" +
-                        "To install and register this add-on:\n" +
+                        "⚠️ Running in development mode (no connection string)\n\n" +
+                        "For production deployment:\n" +
                         "1. Copy the compiled EXE/DLL and ContractManagement.ard to your addon folder\n" +
                         "2. Register in SAP B1: Administration → Add-Ons → Add-On Administration\n" +
                         "3. Select the .ard file (not .srf for modern SAP B1 versions)\n" +
                         "4. Complete registration and restart SAP B1\n\n" +
-                        "For development/testing, ensure SAP B1 is running and logged in first.\n" +
-                        "The addon will attempt to connect to the running SAP B1 instance...",
+                        "Attempting to connect to running SAP B1 instance...",
                         "Contract Management Add-On",
                         System.Windows.Forms.MessageBoxButtons.OK,
                         System.Windows.Forms.MessageBoxIcon.Information
                     );
-
-                    System.Console.WriteLine("No connection string provided. Attempting to connect to running SAP B1 instance...");
+                }
+                else
+                {
+                    // Connection string provided by SAP B1
+                    // If you want to use an add-on identifier for development license:
+                    // oApp = new Application(args[0], "YOUR_ADDON_IDENTIFIER");
+                    oApp = new Application(args[0]);
                 }
 
-                // Use the new ContractManagementApplication class
+                // ✅ 2. Initialize and run the Contract Management Application
                 _app = new ContractManagementApplication();
                 _app.Run();
 
-                // Register app event handler
+                // ✅ 3. Register event handlers
                 Application.SBO_Application.AppEvent += new SAPbouiCOM._IApplicationEvents_AppEventEventHandler(SBO_Application_AppEvent);
+
+                // ✅ 4. Run the SAP Framework application
+                oApp.Run();
             }
             catch (Exception ex)
             {

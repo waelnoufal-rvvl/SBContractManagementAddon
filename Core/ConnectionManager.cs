@@ -10,16 +10,16 @@ namespace ContractManagementAddon.Core
 {
     /// <summary>
     /// Manages connection to SAP Business One UI and DI APIs
+    /// Uses the simplified connection pattern from SAP Framework
     /// </summary>
     public class ConnectionManager
     {
         private SAPbouiCOM.Application _uiApp;
         private SAPbobsCOM.Company _company;
-        private string _connectionString;
         private OdbcConnection _odbcConnection;
 
         /// <summary>
-        /// Get UI Application (connects if not already connected)
+        /// Get UI Application (gets from SAP Framework)
         /// </summary>
         public SAPbouiCOM.Application GetUIApplication()
         {
@@ -27,53 +27,21 @@ namespace ContractManagementAddon.Core
             {
                 try
                 {
-                    Logger.Info("Connecting to SAP Business One UI API...");
+                    Logger.Info("Getting SAP Business One UI Application from Framework...");
 
-                    SAPbouiCOM.SboGuiApi sboGuiApi = new SAPbouiCOM.SboGuiApi();
+                    // ✅ Use SAP Framework's Application object (simpler and more reliable)
+                    _uiApp = (SAPbouiCOM.Application)SAPbouiCOM.Framework.Application.SBO_Application;
 
-                    // Get connection string from environment or command line
-                    _connectionString = Environment.GetCommandLineArgs().Length > 1
-                        ? Environment.GetCommandLineArgs()[1]
-                        : GetConnectionString();
-
-                    if (string.IsNullOrEmpty(_connectionString))
+                    if (_uiApp == null)
                     {
-                        Logger.Info("No connection string found, attempting to connect to running SAP B1 instance...");
-
-                        // Try to connect to already running SAP B1 instance
-                        try
-                        {
-                            // Method 1: Try using GetApplication directly (works if SAP B1 is running)
-                            _uiApp = (SAPbouiCOM.Application)Marshal.GetActiveObject("SAPbouiCOM.Application");
-                            Logger.Info("Successfully connected to running SAP B1 instance (direct method)");
-                            return _uiApp;
-                        }
-                        catch
-                        {
-                            // Method 2: Try empty connection string (sometimes works)
-                            Logger.Info("Direct connection failed, trying empty connection string...");
-                            try
-                            {
-                                sboGuiApi.Connect("");
-                                _uiApp = sboGuiApi.GetApplication();
-                                Logger.Info("Successfully connected with empty connection string");
-                                return _uiApp;
-                            }
-                            catch
-                            {
-                                throw new Exception("Connection string not found and could not connect to running SAP B1 instance. Please ensure SAP B1 is running and logged in, or register this add-on with SAP B1.");
-                            }
-                        }
+                        throw new Exception("Failed to get UI Application from SAP Framework. Ensure SAP B1 is running and addon is launched by SAP B1.");
                     }
 
-                    sboGuiApi.Connect(_connectionString);
-                    _uiApp = sboGuiApi.GetApplication();
-
-                    Logger.Info("Successfully connected to UI API");
+                    Logger.Info("✅ Successfully got UI Application from Framework");
                 }
                 catch (Exception ex)
                 {
-                    Logger.Error("Failed to connect to UI API: " + ex.Message, ex);
+                    Logger.Error("Failed to get UI Application: " + ex.Message, ex);
                     throw;
                 }
             }
@@ -82,7 +50,7 @@ namespace ContractManagementAddon.Core
         }
 
         /// <summary>
-        /// Get DI Company (connects if not already connected)
+        /// Get DI Company (gets from SAP Framework using GetDICompany)
         /// </summary>
         public SAPbobsCOM.Company GetCompany()
         {
@@ -90,39 +58,30 @@ namespace ContractManagementAddon.Core
             {
                 try
                 {
-                    Logger.Info("Connecting to SAP Business One DI API...");
+                    Logger.Info("Getting SAP Business One DI Company from Framework...");
 
-                    _company = new SAPbobsCOM.Company();
+                    // ✅ Use SAP Framework's GetDICompany method (simpler and more reliable)
+                    _company = (SAPbobsCOM.Company)SAPbouiCOM.Framework.Application.SBO_Application.Company.GetDICompany();
 
-                    // Get connection context from UI Application
-                    if (_uiApp != null)
+                    if (_company == null)
                     {
-                        string contextCookie = _company.GetContextCookie();
-                        string sConnectionContext = _uiApp.Company.GetConnectionContext(contextCookie);
-
-                        if (_company.SetSboLoginContext(sConnectionContext) != 0)
-                        {
-                            throw new Exception("Failed to set login context: " + _company.GetLastErrorDescription());
-                        }
-
-                        if (_company.Connect() != 0)
-                        {
-                            int errCode = _company.GetLastErrorCode();
-                            string errMsg = _company.GetLastErrorDescription();
-                            throw new Exception($"Failed to connect to company (Code: {errCode}): {errMsg}");
-                        }
-
-                        Logger.Info("Successfully connected to DI API");
-                        Logger.Info($"Company: {_company.CompanyName}, DB: {_company.CompanyDB}");
+                        throw new Exception("Failed to get DI Company from SAP Framework");
                     }
-                    else
+
+                    if (!_company.Connected)
                     {
-                        throw new Exception("UI Application not initialized");
+                        throw new Exception("DI Company is not connected to SAP B1");
                     }
+
+                    Logger.Info("✅ Successfully got DI Company from Framework");
+                    Logger.Info($"   Company: {_company.CompanyName}");
+                    Logger.Info($"   Database: {_company.CompanyDB}");
+                    Logger.Info($"   Server: {_company.Server}");
+                    Logger.Info($"   SAP Version: {_company.Version}");
                 }
                 catch (Exception ex)
                 {
-                    Logger.Error("Failed to connect to DI API: " + ex.Message, ex);
+                    Logger.Error("Failed to get DI Company: " + ex.Message, ex);
                     throw;
                 }
             }
@@ -130,31 +89,6 @@ namespace ContractManagementAddon.Core
             return _company;
         }
 
-        /// <summary>
-        /// Get connection string from registry or environment
-        /// </summary>
-        private string GetConnectionString()
-        {
-            try
-            {
-                // Try to get from environment variable
-                string connStr = Environment.GetEnvironmentVariable("B1_CONNECTION_STRING");
-
-                if (!string.IsNullOrEmpty(connStr))
-                {
-                    return connStr;
-                }
-
-                // Try to construct from available information
-                Logger.Warning("Connection string not found, attempting alternate connection method");
-                return string.Empty;
-            }
-            catch (Exception ex)
-            {
-                Logger.Error("Error getting connection string: " + ex.Message, ex);
-                return string.Empty;
-            }
-        }
 
         /// <summary>
         /// Test if company is connected
@@ -274,6 +208,7 @@ namespace ContractManagementAddon.Core
 
         /// <summary>
         /// Disconnect from company and close ODBC connection
+        /// Note: Company object is managed by SAP, so we just release the COM reference
         /// </summary>
         public void Disconnect()
         {
@@ -289,17 +224,39 @@ namespace ContractManagementAddon.Core
                     }
                     _odbcConnection.Dispose();
                     _odbcConnection = null;
-                    Logger.Info("ODBC connection closed");
+                    Logger.Info("✅ ODBC connection closed");
                 }
 
-                // Disconnect from SAP DI API
-                if (_company != null && _company.Connected)
+                // Release DI Company COM object
+                // Note: We don't call Disconnect() as SAP Framework manages the connection
+                if (_company != null)
                 {
-                    Logger.Info("Disconnecting from company...");
-                    _company.Disconnect();
-                    Marshal.ReleaseComObject(_company);
-                    _company = null;
-                    Logger.Info("Disconnected successfully");
+                    try
+                    {
+                        Logger.Info("Releasing DI Company COM object...");
+                        Marshal.ReleaseComObject(_company);
+                        _company = null;
+                        Logger.Info("✅ DI Company object released");
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Error("Error releasing company object: " + ex.Message, ex);
+                    }
+                }
+
+                // Release UI Application COM object
+                if (_uiApp != null)
+                {
+                    try
+                    {
+                        Marshal.ReleaseComObject(_uiApp);
+                        _uiApp = null;
+                        Logger.Info("✅ UI Application object released");
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Error("Error releasing UI application object: " + ex.Message, ex);
+                    }
                 }
             }
             catch (Exception ex)
