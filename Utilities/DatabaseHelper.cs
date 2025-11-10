@@ -127,7 +127,8 @@ namespace ContractManagementAddon.Utilities
                 // Remove @ prefix if present
                 string cleanTableName = tableName.TrimStart('@');
 
-                string query = $"SELECT COUNT(*) FROM CUFD WHERE TableID = '{cleanTableName}'";
+                // Check if the user table exists in OUTB (User Tables)
+                string query = $"SELECT COUNT(*) FROM OUTB WHERE TableName = '{cleanTableName}'";
                 object result = ExecuteScalar(company, query);
 
                 return Convert.ToInt32(result) > 0;
@@ -150,7 +151,8 @@ namespace ContractManagementAddon.Utilities
                 string cleanTableName = tableName.TrimStart('@');
                 string cleanFieldName = fieldName.Replace("U_", "");
 
-                string query = $"SELECT COUNT(*) FROM CUFD WHERE TableID = '{cleanTableName}' AND AliasID = '{cleanFieldName}'";
+                // Check in CUFD (Custom User Field Definitions) using TableName column
+                string query = $"SELECT COUNT(*) FROM CUFD WHERE \"TableID\" = '@{cleanTableName}' AND \"AliasID\" = '{cleanFieldName}'";
                 object result = ExecuteScalar(company, query);
 
                 return Convert.ToInt32(result) > 0;
