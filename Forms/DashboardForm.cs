@@ -34,12 +34,17 @@ namespace ContractManagementAddon.Forms
                 try
                 {
                     _form = _app.UIApp.Forms.Item($"{FORM_TYPE}_1");
-                    _form.Select();
-                    return;
+                    if (_form != null)
+                    {
+                        Logger.Info($"Form {FORM_TYPE}_1 already exists, selecting it");
+                        _form.Select();
+                        return;
+                    }
+                    Logger.Info($"Form {FORM_TYPE}_1 does not exist, creating new one");
                 }
-                catch
+                catch (Exception ex)
                 {
-                    // Form doesn't exist, create new one
+                    Logger.Info($"Exception checking for existing form: {ex.Message}. Creating new one.");
                 }
 
                 CreateForm();
