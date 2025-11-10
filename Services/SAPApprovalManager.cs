@@ -95,33 +95,35 @@ namespace ContractManagementAddon.Services
                 int nextCode = GetNextApprovalTemplateCode();
 
                 // Insert into OWDD (Approval Template Definition) - Safe query building
+                // HANA system tables use uppercase column names
                 Dictionary<string, object> templateValues = new Dictionary<string, object>
                 {
-                    { "Code", nextCode },
-                    { "Name", templateCode },
-                    { "Descrip", templateName },
-                    { "IsActive", "Y" },
-                    { "CreateDate", DateTime.Now },
-                    { "CreateTime", DateTime.Now.Hour * 100 + DateTime.Now.Minute },
-                    { "UserSign", GetUserIDFromUserCode(_company.UserName) }
+                    { "CODE", nextCode },
+                    { "NAME", templateCode },
+                    { "DESCRIP", templateName },
+                    { "ISACTIVE", "Y" },
+                    { "CREATEDATE", DateTime.Now },
+                    { "CREATETIME", DateTime.Now.Hour * 100 + DateTime.Now.Minute },
+                    { "USERSIGN", GetUserIDFromUserCode(_company.UserName) }
                 };
 
                 string insertTemplate = _dbHelper.BuildInsertQuery("OWDD", templateValues);
                 _dbHelper.ExecuteQuery(insertTemplate);
 
                 // Insert stages into WDD1 (Template Stages)
+                // HANA system tables use uppercase column names
                 foreach (var stage in stages)
                 {
                     Dictionary<string, object> stageValues = new Dictionary<string, object>
                     {
-                        { "Code", nextCode },
-                        { "LineNum", stage.StageNumber - 1 },
-                        { "StepName", stage.StageName },
-                        { "ApprovalType", stage.AuthorizerType },
-                        { "MinAmnt", stage.MinAmount },
-                        { "MaxAmnt", stage.MaxAmount },
-                        { "UserID", GetUserIDFromUserCode(_company.UserName) },
-                        { "IsActive", "Y" }
+                        { "CODE", nextCode },
+                        { "LINENUM", stage.StageNumber - 1 },
+                        { "STEPNAME", stage.StageName },
+                        { "APPROVALTYPE", stage.AuthorizerType },
+                        { "MINAMNT", stage.MinAmount },
+                        { "MAXAMNT", stage.MaxAmount },
+                        { "USERID", GetUserIDFromUserCode(_company.UserName) },
+                        { "ISACTIVE", "Y" }
                     };
 
                     string insertStage = _dbHelper.BuildInsertQuery("WDD1", stageValues);
@@ -145,10 +147,11 @@ namespace ContractManagementAddon.Services
         {
             try
             {
+                // HANA system tables use uppercase column names
                 string query = $@"
                     SELECT COUNT(*) as CNT
                     FROM OWDD
-                    WHERE ""Name"" = {_dbHelper.QuoteString(templateCode)}";
+                    WHERE NAME = {_dbHelper.QuoteString(templateCode)}";
 
                 return _dbHelper.ExecuteCount(query) > 0;
             }
@@ -168,7 +171,8 @@ namespace ContractManagementAddon.Services
             try
             {
                 // Use COALESCE instead of ISNULL for HANA compatibility
-                string query = $"SELECT {_dbHelper.GetMaxWithDefault("\"Code\"", "0")} + 1 as NextCode FROM OWDD";
+                // HANA system tables use uppercase column names
+                string query = $"SELECT {_dbHelper.GetMaxWithDefault("CODE", "0")} + 1 as NextCode FROM OWDD";
 
                 return _dbHelper.ExecuteScalar<int>(query, "NextCode");
             }
