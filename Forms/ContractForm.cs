@@ -50,15 +50,16 @@ namespace ContractManagementAddon.Forms
                 // DEBUG: Show which version is running (v2.4 = DIAGNOSTIC MODE)
                 _app.UIApp.MessageBox($"ContractForm v2.4 - DIAGNOSTIC\nHardcoded label test\nCheck logs for details\nBuild: {System.IO.File.GetLastWriteTime(System.Reflection.Assembly.GetExecutingAssembly().Location)}", 1, "OK", "", "");
 
-                // Check if form already exists
+                // Check if form already exists - TESTING MODE: Close it to force recreation
                 try
                 {
                     _form = _app.UIApp.Forms.Item($"{FORM_TYPE}_1");
                     if (_form != null)
                     {
-                        Logger.Info($"Form {FORM_TYPE}_1 already exists, selecting it");
-                        _form.Select();
-                        return;
+                        Logger.Info($"Form {FORM_TYPE}_1 already exists - CLOSING IT to force recreation with updated labels");
+                        _form.Close();
+                        _form = null;
+                        System.Threading.Thread.Sleep(500); // Give SAP B1 time to fully close the form
                     }
                     Logger.Info($"Form {FORM_TYPE}_1 does not exist, creating new one");
                 }

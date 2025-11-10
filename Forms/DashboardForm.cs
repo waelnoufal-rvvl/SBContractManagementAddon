@@ -30,15 +30,16 @@ namespace ContractManagementAddon.Forms
         {
             try
             {
-                // Check if form already exists
+                // Check if form already exists - TESTING MODE: Close it to force recreation
                 try
                 {
                     _form = _app.UIApp.Forms.Item($"{FORM_TYPE}_1");
                     if (_form != null)
                     {
-                        Logger.Info($"Form {FORM_TYPE}_1 already exists, selecting it");
-                        _form.Select();
-                        return;
+                        Logger.Info($"Form {FORM_TYPE}_1 already exists - CLOSING IT to force recreation");
+                        _form.Close();
+                        _form = null;
+                        System.Threading.Thread.Sleep(500);
                     }
                     Logger.Info($"Form {FORM_TYPE}_1 does not exist, creating new one");
                 }
