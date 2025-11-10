@@ -3,8 +3,11 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using ContractManagementAddon.Tests.Utilities;
-using NBomber.Contracts;
-using NBomber.CSharp;
+// NOTE: NBomber package is required for load testing
+// Install via: dotnet add package NBomber
+// After installation, uncomment the following lines:
+// using NBomber.Contracts;
+// using NBomber.CSharp;
 
 namespace ContractManagementAddon.Tests.Load
 {
@@ -12,14 +15,18 @@ namespace ContractManagementAddon.Tests.Load
     /// Load testing scenarios using NBomber
     /// Tests system behavior under concurrent load
     ///
-    /// IMPORTANT: These tests should be run on a dedicated test environment
+    /// IMPORTANT: These tests require the NBomber NuGet package to be installed.
+    /// Install NBomber before using these tests: dotnet add package NBomber
+    ///
+    /// These tests should be run on a dedicated test environment.
     /// Do NOT run against production database!
     /// </summary>
     [TestFixture]
     [Category("Load")]
-    [Explicit("Run manually - requires test environment")]
+    [Explicit("Run manually - requires NBomber package and test environment")]
     public class LoadTestScenarios
     {
+#if false // Set to true after installing NBomber package: dotnet add package NBomber
         #region Light Load Tests (10 users)
 
         [Test]
@@ -400,5 +407,6 @@ namespace ContractManagementAddon.Tests.Load
         }
 
         #endregion
+#endif // NBOMBER
     }
 }
