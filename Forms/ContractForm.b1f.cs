@@ -11,17 +11,16 @@ using FrameworkApp = SAPbouiCOM.Framework.Application;
 
 namespace ContractManagementAddon.Forms
 {
-    /// <summary>
-    /// Contract management form using SAP B1 SDK Framework pattern
-    /// </summary>
     [FormAttribute("ContractManagementAddon.Forms.ContractForm", "Forms/ContractForm.b1f")]
     class ContractForm : UserFormBase
     {
         private ContractService _contractService;
         private Contract _currentContract;
 
-        // Control declarations (from ContractForm.b1f)
+        // Control declarations
         private StaticText stTitle;
+        private Folder fldGeneral;
+        private Folder fldLines;
         private StaticText stCode;
         private EditText txtCode;
         private StaticText stCust;
@@ -49,15 +48,12 @@ namespace ContractManagementAddon.Forms
         private DataTable dtHead;
         private DataTable dtLines;
 
-        /// <summary>
-        /// Parameterless constructor required by Framework
-        /// </summary>
         public ContractForm()
         {
         }
 
         /// <summary>
-        /// Initialize component - called by Framework after form is loaded
+        /// Initialize components. Called by framework after form created.
         /// </summary>
         public override void OnInitializeComponent()
         {
@@ -65,43 +61,37 @@ namespace ContractManagementAddon.Forms
             {
                 Logger.Info("OnInitializeComponent started");
 
-                // Get controls from framework-loaded form
-                this.stTitle = ((StaticText)(this.GetItem("stTitle").Specific));
-                this.stCode = ((StaticText)(this.GetItem("stCode").Specific));
-                this.txtCode = ((EditText)(this.GetItem("txtCode").Specific));
-                this.stCust = ((StaticText)(this.GetItem("stCust").Specific));
-                this.txtCust = ((EditText)(this.GetItem("txtCust").Specific));
-                this.btnCust = ((Button)(this.GetItem("btnCust").Specific));
-                this.txtCName = ((EditText)(this.GetItem("txtCName").Specific));
-                this.stDesc = ((StaticText)(this.GetItem("stDesc").Specific));
-                this.txtDesc = ((EditText)(this.GetItem("txtDesc").Specific));
-                this.stStart = ((StaticText)(this.GetItem("stStart").Specific));
-                this.txtStart = ((EditText)(this.GetItem("txtStart").Specific));
-                this.stEnd = ((StaticText)(this.GetItem("stEnd").Specific));
-                this.txtEnd = ((EditText)(this.GetItem("txtEnd").Specific));
-                this.stValue = ((StaticText)(this.GetItem("stValue").Specific));
-                this.txtValue = ((EditText)(this.GetItem("txtValue").Specific));
-                this.stStatus = ((StaticText)(this.GetItem("stStatus").Specific));
-                this.cmbStat = ((ComboBox)(this.GetItem("cmbStat").Specific));
-                this.stRet = ((StaticText)(this.GetItem("stRet").Specific));
-                this.txtRet = ((EditText)(this.GetItem("txtRet").Specific));
-                this.grdLines = ((Grid)(this.GetItem("grdLines").Specific));
-                this.btnOK = ((Button)(this.GetItem("1").Specific));
-                this.btnCancel = ((Button)(this.GetItem("2").Specific));
-                this.btnFind = ((Button)(this.GetItem("btnFind").Specific));
+                // Create data sources
+                this.dtHead = this.UIAPIRawForm.DataSources.DataTables.Add("DT_HEAD");
+                this.dtLines = this.UIAPIRawForm.DataSources.DataTables.Add("DT_LINES");
 
-                // Get data sources
-                this.dtHead = this.UIAPIRawForm.DataSources.DataTables.Item("DT_HEAD");
-                this.dtLines = this.UIAPIRawForm.DataSources.DataTables.Item("DT_LINES");
+                // Add columns to dtHead
+                this.dtHead.Columns.Add("Code", BoFieldsType.ft_AlphaNumeric, 50);
+                this.dtHead.Columns.Add("Customer", BoFieldsType.ft_AlphaNumeric, 50);
+                this.dtHead.Columns.Add("CustName", BoFieldsType.ft_AlphaNumeric, 100);
+                this.dtHead.Columns.Add("Descript", BoFieldsType.ft_AlphaNumeric, 254);
+                this.dtHead.Columns.Add("StartDate", BoFieldsType.ft_Date);
+                this.dtHead.Columns.Add("EndDate", BoFieldsType.ft_Date);
+                this.dtHead.Columns.Add("Value", BoFieldsType.ft_Sum);
+                this.dtHead.Columns.Add("Status", BoFieldsType.ft_AlphaNumeric, 1);
+                this.dtHead.Columns.Add("Retention", BoFieldsType.ft_Sum);
 
-                // Attach event handlers
-                this.btnOK.ClickBefore += new _IButtonEvents_ClickBeforeEventHandler(this.btnOK_ClickBefore);
-                this.btnFind.ClickBefore += new _IButtonEvents_ClickBeforeEventHandler(this.btnFind_ClickBefore);
-                this.btnCust.ClickBefore += new _IButtonEvents_ClickBeforeEventHandler(this.btnCust_ClickBefore);
+                // Add columns to dtLines
+                this.dtLines.Columns.Add("LineNum", BoFieldsType.ft_AlphaNumeric, 10);
+                this.dtLines.Columns.Add("ItemCode", BoFieldsType.ft_AlphaNumeric, 50);
+                this.dtLines.Columns.Add("Descript", BoFieldsType.ft_AlphaNumeric, 254);
+                this.dtLines.Columns.Add("Quantity", BoFieldsType.ft_Quantity);
+                this.dtLines.Columns.Add("Price", BoFieldsType.ft_Price);
+                this.dtLines.Columns.Add("Total", BoFieldsType.ft_Sum);
+
+                // Create form items (controls)
+                CreateFormItems();
+
+                // Get references to created controls
+                InitializeControlReferences();
 
                 Logger.Info("OnInitializeComponent completed");
 
-                // Call custom initialization
                 this.OnCustomInitialize();
             }
             catch (Exception ex)
@@ -112,7 +102,347 @@ namespace ContractManagementAddon.Forms
         }
 
         /// <summary>
-        /// Custom initialization logic
+        /// Initialize form event handlers. Called by framework before form creation.
+        /// </summary>
+        public override void OnInitializeFormEvents()
+        {
+            this.ClickAfter += new ClickAfterHandler(this.Form_ClickAfter);
+        }
+
+        /// <summary>
+        /// Create all form items (controls)
+        /// </summary>
+        private void CreateFormItems()
+        {
+            Item oItem = null;
+            StaticText oStatic = null;
+            EditText oEdit = null;
+            Button oButton = null;
+            ComboBox oCombo = null;
+            Folder oFolder = null;
+            Grid oGrid = null;
+
+            try
+            {
+                // Title
+                oItem = this.UIAPIRawForm.Items.Add("stTitle", BoFormItemTypes.it_STATIC);
+                oItem.Left = 10;
+                oItem.Top = 5;
+                oItem.Width = 730;
+                oItem.Height = 14;
+                oItem.FromPane = 0;
+                oItem.ToPane = 0;
+                oStatic = (StaticText)oItem.Specific;
+                oStatic.Caption = "Contract - Header";
+
+                // Folder tabs
+                oItem = this.UIAPIRawForm.Items.Add("fldGen", BoFormItemTypes.it_FOLDER);
+                oItem.Left = 5;
+                oItem.Top = 25;
+                oItem.Width = 80;
+                oItem.Height = 14;
+                oFolder = (Folder)oItem.Specific;
+                oFolder.Caption = "General";
+                oFolder.GroupWith("fldLines");
+                oFolder.Pane = 1;
+
+                oItem = this.UIAPIRawForm.Items.Add("fldLines", BoFormItemTypes.it_FOLDER);
+                oItem.Left = 90;
+                oItem.Top = 25;
+                oItem.Width = 80;
+                oItem.Height = 14;
+                oFolder = (Folder)oItem.Specific;
+                oFolder.Caption = "Lines";
+                oFolder.Pane = 2;
+
+                // === PANE 1: GENERAL TAB ===
+
+                // Code label
+                oItem = this.UIAPIRawForm.Items.Add("stCode", BoFormItemTypes.it_STATIC);
+                oItem.Left = 10;
+                oItem.Top = 50;
+                oItem.Width = 100;
+                oItem.Height = 14;
+                oItem.FromPane = 1;
+                oItem.ToPane = 1;
+                oStatic = (StaticText)oItem.Specific;
+                oStatic.Caption = "Code:";
+
+                // Code text
+                oItem = this.UIAPIRawForm.Items.Add("txtCode", BoFormItemTypes.it_EDIT);
+                oItem.Left = 120;
+                oItem.Top = 50;
+                oItem.Width = 150;
+                oItem.Height = 14;
+                oItem.FromPane = 1;
+                oItem.ToPane = 1;
+                oEdit = (EditText)oItem.Specific;
+                oEdit.DataBind.SetBound(true, "", "DT_HEAD", "Code");
+
+                // Customer label
+                oItem = this.UIAPIRawForm.Items.Add("stCust", BoFormItemTypes.it_STATIC);
+                oItem.Left = 10;
+                oItem.Top = 70;
+                oItem.Width = 100;
+                oItem.Height = 14;
+                oItem.FromPane = 1;
+                oItem.ToPane = 1;
+                oStatic = (StaticText)oItem.Specific;
+                oStatic.Caption = "Customer:";
+
+                // Customer text
+                oItem = this.UIAPIRawForm.Items.Add("txtCust", BoFormItemTypes.it_EDIT);
+                oItem.Left = 120;
+                oItem.Top = 70;
+                oItem.Width = 100;
+                oItem.Height = 14;
+                oItem.FromPane = 1;
+                oItem.ToPane = 1;
+                oEdit = (EditText)oItem.Specific;
+                oEdit.DataBind.SetBound(true, "", "DT_HEAD", "Customer");
+
+                // Customer chooser button
+                oItem = this.UIAPIRawForm.Items.Add("btnCust", BoFormItemTypes.it_BUTTON);
+                oItem.Left = 225;
+                oItem.Top = 70;
+                oItem.Width = 20;
+                oItem.Height = 14;
+                oItem.FromPane = 1;
+                oItem.ToPane = 1;
+                oButton = (Button)oItem.Specific;
+                oButton.Caption = "...";
+
+                // Customer name text (read-only)
+                oItem = this.UIAPIRawForm.Items.Add("txtCName", BoFormItemTypes.it_EDIT);
+                oItem.Left = 250;
+                oItem.Top = 70;
+                oItem.Width = 250;
+                oItem.Height = 14;
+                oItem.FromPane = 1;
+                oItem.ToPane = 1;
+                oItem.Enabled = false;
+                oEdit = (EditText)oItem.Specific;
+                oEdit.DataBind.SetBound(true, "", "DT_HEAD", "CustName");
+
+                // Description label
+                oItem = this.UIAPIRawForm.Items.Add("stDesc", BoFormItemTypes.it_STATIC);
+                oItem.Left = 10;
+                oItem.Top = 90;
+                oItem.Width = 100;
+                oItem.Height = 14;
+                oItem.FromPane = 1;
+                oItem.ToPane = 1;
+                oStatic = (StaticText)oItem.Specific;
+                oStatic.Caption = "Desc:";
+
+                // Description text
+                oItem = this.UIAPIRawForm.Items.Add("txtDesc", BoFormItemTypes.it_EDIT);
+                oItem.Left = 120;
+                oItem.Top = 90;
+                oItem.Width = 600;
+                oItem.Height = 14;
+                oItem.FromPane = 1;
+                oItem.ToPane = 1;
+                oEdit = (EditText)oItem.Specific;
+                oEdit.DataBind.SetBound(true, "", "DT_HEAD", "Descript");
+
+                // Start Date label
+                oItem = this.UIAPIRawForm.Items.Add("stStart", BoFormItemTypes.it_STATIC);
+                oItem.Left = 10;
+                oItem.Top = 110;
+                oItem.Width = 100;
+                oItem.Height = 14;
+                oItem.FromPane = 1;
+                oItem.ToPane = 1;
+                oStatic = (StaticText)oItem.Specific;
+                oStatic.Caption = "Start:";
+
+                // Start Date text
+                oItem = this.UIAPIRawForm.Items.Add("txtStart", BoFormItemTypes.it_EDIT);
+                oItem.Left = 120;
+                oItem.Top = 110;
+                oItem.Width = 100;
+                oItem.Height = 14;
+                oItem.FromPane = 1;
+                oItem.ToPane = 1;
+                oEdit = (EditText)oItem.Specific;
+                oEdit.DataBind.SetBound(true, "", "DT_HEAD", "StartDate");
+
+                // End Date label
+                oItem = this.UIAPIRawForm.Items.Add("stEnd", BoFormItemTypes.it_STATIC);
+                oItem.Left = 250;
+                oItem.Top = 110;
+                oItem.Width = 100;
+                oItem.Height = 14;
+                oItem.FromPane = 1;
+                oItem.ToPane = 1;
+                oStatic = (StaticText)oItem.Specific;
+                oStatic.Caption = "End:";
+
+                // End Date text
+                oItem = this.UIAPIRawForm.Items.Add("txtEnd", BoFormItemTypes.it_EDIT);
+                oItem.Left = 360;
+                oItem.Top = 110;
+                oItem.Width = 100;
+                oItem.Height = 14;
+                oItem.FromPane = 1;
+                oItem.ToPane = 1;
+                oEdit = (EditText)oItem.Specific;
+                oEdit.DataBind.SetBound(true, "", "DT_HEAD", "EndDate");
+
+                // Value label
+                oItem = this.UIAPIRawForm.Items.Add("stValue", BoFormItemTypes.it_STATIC);
+                oItem.Left = 10;
+                oItem.Top = 130;
+                oItem.Width = 100;
+                oItem.Height = 14;
+                oItem.FromPane = 1;
+                oItem.ToPane = 1;
+                oStatic = (StaticText)oItem.Specific;
+                oStatic.Caption = "Value:";
+
+                // Value text
+                oItem = this.UIAPIRawForm.Items.Add("txtValue", BoFormItemTypes.it_EDIT);
+                oItem.Left = 120;
+                oItem.Top = 130;
+                oItem.Width = 150;
+                oItem.Height = 14;
+                oItem.FromPane = 1;
+                oItem.ToPane = 1;
+                oEdit = (EditText)oItem.Specific;
+                oEdit.DataBind.SetBound(true, "", "DT_HEAD", "Value");
+
+                // Status label
+                oItem = this.UIAPIRawForm.Items.Add("stStatus", BoFormItemTypes.it_STATIC);
+                oItem.Left = 10;
+                oItem.Top = 150;
+                oItem.Width = 100;
+                oItem.Height = 14;
+                oItem.FromPane = 1;
+                oItem.ToPane = 1;
+                oStatic = (StaticText)oItem.Specific;
+                oStatic.Caption = "Status:";
+
+                // Status combo
+                oItem = this.UIAPIRawForm.Items.Add("cmbStat", BoFormItemTypes.it_COMBO_BOX);
+                oItem.Left = 120;
+                oItem.Top = 150;
+                oItem.Width = 150;
+                oItem.Height = 14;
+                oItem.FromPane = 1;
+                oItem.ToPane = 1;
+                oCombo = (ComboBox)oItem.Specific;
+                oCombo.DataBind.SetBound(true, "", "DT_HEAD", "Status");
+                oCombo.ValidValues.Add("D", "Draft");
+                oCombo.ValidValues.Add("A", "Active");
+                oCombo.ValidValues.Add("C", "Closed");
+                oCombo.ValidValues.Add("X", "Cancelled");
+
+                // Retention label
+                oItem = this.UIAPIRawForm.Items.Add("stRet", BoFormItemTypes.it_STATIC);
+                oItem.Left = 10;
+                oItem.Top = 170;
+                oItem.Width = 100;
+                oItem.Height = 14;
+                oItem.FromPane = 1;
+                oItem.ToPane = 1;
+                oStatic = (StaticText)oItem.Specific;
+                oStatic.Caption = "Retent%:";
+
+                // Retention text
+                oItem = this.UIAPIRawForm.Items.Add("txtRet", BoFormItemTypes.it_EDIT);
+                oItem.Left = 120;
+                oItem.Top = 170;
+                oItem.Width = 100;
+                oItem.Height = 14;
+                oItem.FromPane = 1;
+                oItem.ToPane = 1;
+                oEdit = (EditText)oItem.Specific;
+                oEdit.DataBind.SetBound(true, "", "DT_HEAD", "Retention");
+
+                // === PANE 2: LINES TAB ===
+
+                // Lines Grid
+                oItem = this.UIAPIRawForm.Items.Add("grdLines", BoFormItemTypes.it_GRID);
+                oItem.Left = 10;
+                oItem.Top = 50;
+                oItem.Width = 720;
+                oItem.Height = 440;
+                oItem.FromPane = 2;
+                oItem.ToPane = 2;
+                oGrid = (Grid)oItem.Specific;
+                oGrid.DataTable = this.dtLines;
+
+                // === BUTTONS ===
+
+                // OK Button
+                oItem = this.UIAPIRawForm.Items.Add("1", BoFormItemTypes.it_BUTTON);
+                oItem.Left = 10;
+                oItem.Top = 555;
+                oItem.Width = 65;
+                oItem.Height = 19;
+                oButton = (Button)oItem.Specific;
+                oButton.Caption = "OK";
+
+                // Cancel Button
+                oItem = this.UIAPIRawForm.Items.Add("2", BoFormItemTypes.it_BUTTON);
+                oItem.Left = 80;
+                oItem.Top = 555;
+                oItem.Width = 65;
+                oItem.Height = 19;
+                oButton = (Button)oItem.Specific;
+                oButton.Caption = "Cancel";
+
+                // Find Button
+                oItem = this.UIAPIRawForm.Items.Add("btnFind", BoFormItemTypes.it_BUTTON);
+                oItem.Left = 150;
+                oItem.Top = 555;
+                oItem.Width = 65;
+                oItem.Height = 19;
+                oButton = (Button)oItem.Specific;
+                oButton.Caption = "Find";
+
+                Logger.Info("Form items created successfully");
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Error creating form items", ex);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Initialize control references
+        /// </summary>
+        private void InitializeControlReferences()
+        {
+            this.stTitle = (StaticText)this.GetItem("stTitle").Specific;
+            this.stCode = (StaticText)this.GetItem("stCode").Specific;
+            this.txtCode = (EditText)this.GetItem("txtCode").Specific;
+            this.stCust = (StaticText)this.GetItem("stCust").Specific;
+            this.txtCust = (EditText)this.GetItem("txtCust").Specific;
+            this.btnCust = (Button)this.GetItem("btnCust").Specific;
+            this.txtCName = (EditText)this.GetItem("txtCName").Specific;
+            this.stDesc = (StaticText)this.GetItem("stDesc").Specific;
+            this.txtDesc = (EditText)this.GetItem("txtDesc").Specific;
+            this.stStart = (StaticText)this.GetItem("stStart").Specific;
+            this.txtStart = (EditText)this.GetItem("txtStart").Specific;
+            this.stEnd = (StaticText)this.GetItem("stEnd").Specific;
+            this.txtEnd = (EditText)this.GetItem("txtEnd").Specific;
+            this.stValue = (StaticText)this.GetItem("stValue").Specific;
+            this.txtValue = (EditText)this.GetItem("txtValue").Specific;
+            this.stStatus = (StaticText)this.GetItem("stStatus").Specific;
+            this.cmbStat = (ComboBox)this.GetItem("cmbStat").Specific;
+            this.stRet = (StaticText)this.GetItem("stRet").Specific;
+            this.txtRet = (EditText)this.GetItem("txtRet").Specific;
+            this.grdLines = (Grid)this.GetItem("grdLines").Specific;
+            this.btnOK = (Button)this.GetItem("1").Specific;
+            this.btnCancel = (Button)this.GetItem("2").Specific;
+            this.btnFind = (Button)this.GetItem("btnFind").Specific;
+        }
+
+        /// <summary>
+        /// Custom initialization
         /// </summary>
         private void OnCustomInitialize()
         {
@@ -121,17 +451,16 @@ namespace ContractManagementAddon.Forms
                 Logger.Info("OnCustomInitialize started");
 
                 // Initialize contract service
-                // Note: We need access to Company object - will need to refactor Application access
                 SAPbobsCOM.Company company = (SAPbobsCOM.Company)FrameworkApp.SBO_Application.Company.GetDICompany();
                 _contractService = new ContractService(company);
 
-                // Set default status to Draft if empty
+                // Set default status to Draft
                 if (string.IsNullOrEmpty(cmbStat.Value))
                 {
                     cmbStat.Select("D", BoSearchKey.psk_ByValue);
                 }
 
-                // Initialize grid - add one empty row if needed
+                // Initialize grid - add one empty row
                 if (dtLines.Rows.Count == 0)
                 {
                     dtLines.Rows.Add();
@@ -151,62 +480,35 @@ namespace ContractManagementAddon.Forms
         }
 
         /// <summary>
-        /// OK button click handler
+        /// Form click event handler
         /// </summary>
-        private void btnOK_ClickBefore(object sboObject, SBOItemEventArg pVal, out bool BubbleEvent)
+        private void Form_ClickAfter(ref ItemEvent pVal, out bool BubbleEvent)
         {
             BubbleEvent = true;
 
             try
             {
-                Logger.Info("OK button clicked - saving contract");
-                SaveContract();
+                switch (pVal.ItemUID)
+                {
+                    case "1": // OK button
+                        Logger.Info("OK button clicked - saving contract");
+                        SaveContract();
+                        break;
+
+                    case "btnFind":
+                        Logger.Info("Find button clicked");
+                        FindContract();
+                        break;
+
+                    case "btnCust":
+                        Logger.Info("Customer chooser button clicked");
+                        OpenCustomerChooser();
+                        break;
+                }
             }
             catch (Exception ex)
             {
-                Logger.Error("Error in btnOK_ClickBefore", ex);
-                FrameworkApp.SBO_Application.StatusBar.SetText($"Error: {ex.Message}",
-                    BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Error);
-                BubbleEvent = false;
-            }
-        }
-
-        /// <summary>
-        /// Find button click handler
-        /// </summary>
-        private void btnFind_ClickBefore(object sboObject, SBOItemEventArg pVal, out bool BubbleEvent)
-        {
-            BubbleEvent = true;
-
-            try
-            {
-                Logger.Info("Find button clicked");
-                FindContract();
-            }
-            catch (Exception ex)
-            {
-                Logger.Error("Error in btnFind_ClickBefore", ex);
-                FrameworkApp.SBO_Application.StatusBar.SetText($"Error: {ex.Message}",
-                    BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Error);
-                BubbleEvent = false;
-            }
-        }
-
-        /// <summary>
-        /// Customer chooser button click handler
-        /// </summary>
-        private void btnCust_ClickBefore(object sboObject, SBOItemEventArg pVal, out bool BubbleEvent)
-        {
-            BubbleEvent = true;
-
-            try
-            {
-                Logger.Info("Customer chooser button clicked");
-                OpenCustomerChooser();
-            }
-            catch (Exception ex)
-            {
-                Logger.Error("Error in btnCust_ClickBefore", ex);
+                Logger.Error("Error in Form_ClickAfter", ex);
                 FrameworkApp.SBO_Application.StatusBar.SetText($"Error: {ex.Message}",
                     BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Error);
                 BubbleEvent = false;
@@ -246,13 +548,12 @@ namespace ContractManagementAddon.Forms
         {
             try
             {
-                // Load header data using DataTable
                 dtHead.Rows.Clear();
                 dtHead.Rows.Add();
 
                 dtHead.SetValue("Code", 0, contract.Code ?? "");
                 dtHead.SetValue("Customer", 0, contract.CustomerCode ?? "");
-                dtHead.SetValue("CustName", 0, ""); // Will be populated by customer chooser
+                dtHead.SetValue("CustName", 0, "");
                 dtHead.SetValue("Descript", 0, contract.Description ?? "");
                 dtHead.SetValue("StartDate", 0, contract.StartDate);
                 dtHead.SetValue("EndDate", 0, contract.EndDate);
@@ -260,7 +561,6 @@ namespace ContractManagementAddon.Forms
                 dtHead.SetValue("Status", 0, contract.Status ?? "D");
                 dtHead.SetValue("Retention", 0, contract.RetentionPercentage);
 
-                // Load lines if any
                 if (contract.Lines != null && contract.Lines.Count > 0)
                 {
                     LoadLinesToGrid(contract.Lines);
@@ -316,20 +616,16 @@ namespace ContractManagementAddon.Forms
         {
             try
             {
-                // Get data from form
                 Contract contract = GetContractFromForm();
 
-                // Save
                 if (string.IsNullOrEmpty(_currentContract?.Code) || _currentContract.Code != contract.Code)
                 {
-                    // Create new
                     _contractService.CreateContract(contract);
                     FrameworkApp.SBO_Application.StatusBar.SetText($"Contract {contract.Code} created successfully",
                         BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Success);
                 }
                 else
                 {
-                    // Update existing
                     _contractService.UpdateContract(contract);
                     FrameworkApp.SBO_Application.StatusBar.SetText($"Contract {contract.Code} updated successfully",
                         BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Success);
@@ -366,7 +662,6 @@ namespace ContractManagementAddon.Forms
                     Status = dtHead.GetValue("Status", 0).ToString()
                 };
 
-                // Get lines from grid
                 contract.Lines = new System.Collections.Generic.List<ContractLine>();
                 for (int i = 0; i < dtLines.Rows.Count; i++)
                 {
@@ -400,7 +695,6 @@ namespace ContractManagementAddon.Forms
         /// </summary>
         private void FindContract()
         {
-            // In production, implement search dialog
             FrameworkApp.SBO_Application.StatusBar.SetText("Find function - to be implemented",
                 BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Warning);
             Logger.Info("Find function called - to be implemented");
@@ -413,8 +707,7 @@ namespace ContractManagementAddon.Forms
         {
             try
             {
-                // Open SAP B1 Business Partner chooser
-                FrameworkApp.SBO_Application.ActivateMenuItem("4883"); // Business Partner master data menu
+                FrameworkApp.SBO_Application.ActivateMenuItem("4883");
                 Logger.Info("Customer chooser opened");
             }
             catch (Exception ex)
