@@ -17,6 +17,25 @@ namespace ContractManagementAddon
         {
             try
             {
+                // Check if launched by SAP Business One
+                if (args.Length < 1)
+                {
+                    System.Windows.Forms.MessageBox.Show(
+                        "This add-on must be launched by SAP Business One.\n\n" +
+                        "To install and register this add-on:\n" +
+                        "1. Copy the compiled DLL and addon.srf to your addon folder\n" +
+                        "2. Register in SAP B1: Administration → Add-Ons → Add-On Administration\n" +
+                        "3. Launch SAP B1 and the addon will start automatically\n\n" +
+                        "For development/testing, ensure SAP B1 is running and logged in.",
+                        "Contract Management Add-On",
+                        System.Windows.Forms.MessageBoxButtons.OK,
+                        System.Windows.Forms.MessageBoxIcon.Information
+                    );
+
+                    // Try to connect to running SAP B1 instance anyway (for development)
+                    System.Console.WriteLine("Attempting to connect to running SAP B1 instance...");
+                }
+
                 // Use the new ContractManagementApplication class
                 _app = new ContractManagementApplication();
                 _app.Run();
@@ -26,7 +45,27 @@ namespace ContractManagementAddon
             }
             catch (Exception ex)
             {
-                System.Windows.Forms.MessageBox.Show(ex.Message);
+                string errorMessage = $"Failed to start Contract Management Add-On:\n\n{ex.Message}";
+
+                if (ex.Message.Contains("connection string") || ex.Message.Contains("parameter is incorrect"))
+                {
+                    errorMessage += "\n\n" +
+                        "Connection Error - Possible Solutions:\n" +
+                        "1. Ensure SAP Business One is running and you are logged in\n" +
+                        "2. Register this add-on in SAP B1 Add-On Administration\n" +
+                        "3. Restart SAP Business One after registration\n" +
+                        "4. Check that the addon.srf file is in the correct location";
+                }
+
+                System.Windows.Forms.MessageBox.Show(
+                    errorMessage,
+                    "Add-On Initialization Error",
+                    System.Windows.Forms.MessageBoxButtons.OK,
+                    System.Windows.Forms.MessageBoxIcon.Error
+                );
+
+                System.Console.WriteLine(errorMessage);
+                System.Console.WriteLine($"\nStack Trace:\n{ex.StackTrace}");
             }
         }
 
