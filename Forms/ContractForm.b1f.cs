@@ -6,6 +6,9 @@ using ContractManagementAddon.Models;
 using ContractManagementAddon.Services;
 using ContractManagementAddon.Utilities;
 
+// Alias to resolve ambiguity between SAPbouiCOM.Application and SAPbouiCOM.Framework.Application
+using FrameworkApp = SAPbouiCOM.Framework.Application;
+
 namespace ContractManagementAddon.Forms
 {
     /// <summary>
@@ -119,7 +122,7 @@ namespace ContractManagementAddon.Forms
 
                 // Initialize contract service
                 // Note: We need access to Company object - will need to refactor Application access
-                SAPbobsCOM.Company company = (SAPbobsCOM.Company)SAPbouiCOM.Framework.Application.SBO_Application.Company.GetDICompany();
+                SAPbobsCOM.Company company = (SAPbobsCOM.Company)FrameworkApp.SBO_Application.Company.GetDICompany();
                 _contractService = new ContractService(company);
 
                 // Set default status to Draft if empty
@@ -142,7 +145,7 @@ namespace ContractManagementAddon.Forms
             catch (Exception ex)
             {
                 Logger.Error("Error in OnCustomInitialize", ex);
-                SAPbouiCOM.Framework.Application.SBO_Application.StatusBar.SetText($"Error initializing form: {ex.Message}",
+                FrameworkApp.SBO_Application.StatusBar.SetText($"Error initializing form: {ex.Message}",
                     BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Error);
             }
         }
@@ -162,7 +165,7 @@ namespace ContractManagementAddon.Forms
             catch (Exception ex)
             {
                 Logger.Error("Error in btnOK_ClickBefore", ex);
-                SAPbouiCOM.Framework.Application.SBO_Application.StatusBar.SetText($"Error: {ex.Message}",
+                FrameworkApp.SBO_Application.StatusBar.SetText($"Error: {ex.Message}",
                     BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Error);
                 BubbleEvent = false;
             }
@@ -183,7 +186,7 @@ namespace ContractManagementAddon.Forms
             catch (Exception ex)
             {
                 Logger.Error("Error in btnFind_ClickBefore", ex);
-                SAPbouiCOM.Framework.Application.SBO_Application.StatusBar.SetText($"Error: {ex.Message}",
+                FrameworkApp.SBO_Application.StatusBar.SetText($"Error: {ex.Message}",
                     BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Error);
                 BubbleEvent = false;
             }
@@ -204,7 +207,7 @@ namespace ContractManagementAddon.Forms
             catch (Exception ex)
             {
                 Logger.Error("Error in btnCust_ClickBefore", ex);
-                SAPbouiCOM.Framework.Application.SBO_Application.StatusBar.SetText($"Error: {ex.Message}",
+                FrameworkApp.SBO_Application.StatusBar.SetText($"Error: {ex.Message}",
                     BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Error);
                 BubbleEvent = false;
             }
@@ -321,14 +324,14 @@ namespace ContractManagementAddon.Forms
                 {
                     // Create new
                     _contractService.CreateContract(contract);
-                    SAPbouiCOM.Framework.Application.SBO_Application.StatusBar.SetText($"Contract {contract.Code} created successfully",
+                    FrameworkApp.SBO_Application.StatusBar.SetText($"Contract {contract.Code} created successfully",
                         BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Success);
                 }
                 else
                 {
                     // Update existing
                     _contractService.UpdateContract(contract);
-                    SAPbouiCOM.Framework.Application.SBO_Application.StatusBar.SetText($"Contract {contract.Code} updated successfully",
+                    FrameworkApp.SBO_Application.StatusBar.SetText($"Contract {contract.Code} updated successfully",
                         BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Success);
                 }
 
@@ -339,7 +342,7 @@ namespace ContractManagementAddon.Forms
             catch (Exception ex)
             {
                 Logger.Error("Error saving contract", ex);
-                SAPbouiCOM.Framework.Application.SBO_Application.StatusBar.SetText($"Error saving contract: {ex.Message}",
+                FrameworkApp.SBO_Application.StatusBar.SetText($"Error saving contract: {ex.Message}",
                     BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Error);
             }
         }
@@ -398,7 +401,7 @@ namespace ContractManagementAddon.Forms
         private void FindContract()
         {
             // In production, implement search dialog
-            SAPbouiCOM.Framework.Application.SBO_Application.StatusBar.SetText("Find function - to be implemented",
+            FrameworkApp.SBO_Application.StatusBar.SetText("Find function - to be implemented",
                 BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Warning);
             Logger.Info("Find function called - to be implemented");
         }
@@ -411,13 +414,13 @@ namespace ContractManagementAddon.Forms
             try
             {
                 // Open SAP B1 Business Partner chooser
-                SAPbouiCOM.Framework.Application.SBO_Application.ActivateMenuItem("4883"); // Business Partner master data menu
+                FrameworkApp.SBO_Application.ActivateMenuItem("4883"); // Business Partner master data menu
                 Logger.Info("Customer chooser opened");
             }
             catch (Exception ex)
             {
                 Logger.Error("Error opening customer chooser", ex);
-                SAPbouiCOM.Framework.Application.SBO_Application.StatusBar.SetText("Customer chooser - to be implemented",
+                FrameworkApp.SBO_Application.StatusBar.SetText("Customer chooser - to be implemented",
                     BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Warning);
             }
         }
