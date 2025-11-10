@@ -127,8 +127,12 @@ namespace ContractManagementAddon.Utilities
                 // Remove @ prefix if present
                 string cleanTableName = tableName.TrimStart('@');
 
-                // Check if the user table exists in OUTB (User Tables)
-                string query = $"SELECT COUNT(*) FROM OUTB WHERE TableName = '{cleanTableName}'";
+                // Check if the user table exists in OUTB (User Tables metadata)
+                // For HANA, use double quotes for case-sensitive column names
+                string query = company.DbServerType == BoDataServerTypes.dst_HANADB
+                    ? $"SELECT COUNT(*) FROM OUTB WHERE \"TableName\" = '{cleanTableName}'"
+                    : $"SELECT COUNT(*) FROM OUTB WHERE TableName = '{cleanTableName}'";
+
                 object result = ExecuteScalar(company, query);
 
                 return Convert.ToInt32(result) > 0;
