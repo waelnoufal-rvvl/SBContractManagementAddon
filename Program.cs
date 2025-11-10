@@ -17,6 +17,24 @@ namespace ContractManagementAddon
         {
             try
             {
+                // Check if SAP B1 is running by trying to get the connection string
+                if (args.Length < 1)
+                {
+                    // No connection string provided - show helpful message
+                    string message = "This add-on must be started from SAP Business One.\n\n" +
+                                   "To run this add-on:\n" +
+                                   "1. Start SAP Business One and log in\n" +
+                                   "2. Register this add-on using Add-On Administration\n" +
+                                   "3. The add-on will start automatically\n\n" +
+                                   "For development/testing:\n" +
+                                   "- Ensure SAP B1 is running\n" +
+                                   "- The add-on will attempt to connect to the running instance";
+
+                    System.Windows.Forms.MessageBox.Show(message, "Contract Management Add-On",
+                        System.Windows.Forms.MessageBoxButtons.OK,
+                        System.Windows.Forms.MessageBoxIcon.Information);
+                }
+
                 Application oApp = null;
                 if (args.Length < 1)
                 {
@@ -42,7 +60,17 @@ namespace ContractManagementAddon
             }
             catch (Exception ex)
             {
-                System.Windows.Forms.MessageBox.Show(ex.Message);
+                string errorMsg = "Failed to start Contract Management Add-On:\n\n" + ex.Message;
+                if (ex.Message.Contains("Could not find SBO"))
+                {
+                    errorMsg += "\n\nPlease ensure:\n" +
+                               "1. SAP Business One is running\n" +
+                               "2. You are logged into a company\n" +
+                               "3. The add-on is registered in Add-On Administration";
+                }
+                System.Windows.Forms.MessageBox.Show(errorMsg, "Connection Error",
+                    System.Windows.Forms.MessageBoxButtons.OK,
+                    System.Windows.Forms.MessageBoxIcon.Error);
             }
         }
 
