@@ -326,6 +326,55 @@ namespace ContractManagementAddon.Localization
             }
         }
 
+        /// <summary>
+        /// Get text direction for current language
+        /// </summary>
+        /// <returns>"RTL" for right-to-left languages, "LTR" for left-to-right</returns>
+        public string GetTextDirection()
+        {
+            return IsRightToLeft ? "RTL" : "LTR";
+        }
+
+        /// <summary>
+        /// Calculate RTL position for a control
+        /// </summary>
+        /// <param name="left">Original left position</param>
+        /// <param name="width">Control width</param>
+        /// <param name="containerWidth">Container width</param>
+        /// <returns>Mirrored left position for RTL</returns>
+        public int CalculateRTLPosition(int left, int width, int containerWidth)
+        {
+            if (!IsRightToLeft)
+                return left;
+
+            return containerWidth - left - width;
+        }
+
+        /// <summary>
+        /// Get default text alignment for current language
+        /// </summary>
+        /// <returns>Text alignment value</returns>
+        public string GetDefaultTextAlignment()
+        {
+            return IsRightToLeft ? "Right" : "Left";
+        }
+
+        /// <summary>
+        /// Get button order for current language
+        /// </summary>
+        /// <param name="buttons">Array of button identifiers</param>
+        /// <returns>Ordered button array (reversed for RTL)</returns>
+        public string[] GetButtonOrder(params string[] buttons)
+        {
+            if (!IsRightToLeft || buttons == null)
+                return buttons;
+
+            var reversed = new string[buttons.Length];
+            Array.Copy(buttons, reversed, buttons.Length);
+            Array.Reverse(reversed);
+            return reversed;
+        }
+
         #endregion
 
         #region Private Methods

@@ -2,11 +2,20 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using ContractManagementAddon.Forms;
+using ContractManagementAddon.Core;
 
 namespace ContractManagementAddon
 {
     class Menu
     {
+        private ContractManagementApplication _app;
+
+        public Menu(ContractManagementApplication app)
+        {
+            _app = app;
+        }
+
         public void AddMenuItems()
         {
             SAPbouiCOM.Menus oMenus = null;
@@ -20,7 +29,7 @@ namespace ContractManagementAddon
 
             oCreationPackage.Type = SAPbouiCOM.BoMenuType.mt_POPUP;
             oCreationPackage.UniqueID = "ContractManagementAddon";
-            oCreationPackage.String = "ContractManagementAddon";
+            oCreationPackage.String = "Contract Management";
             oCreationPackage.Enabled = true;
             oCreationPackage.Position = -1;
 
@@ -28,12 +37,12 @@ namespace ContractManagementAddon
 
             try
             {
-                //  If the manu already exists this code will fail
+                //  If the menu already exists this code will fail
                 oMenus.AddEx(oCreationPackage);
             }
-            catch (Exception e)
+            catch
             {
-
+                // Menu already exists, continue
             }
 
             try
@@ -42,13 +51,28 @@ namespace ContractManagementAddon
                 oMenuItem = Application.SBO_Application.Menus.Item("ContractManagementAddon");
                 oMenus = oMenuItem.SubMenus;
 
-                // Create s sub menu
+                // Create Dashboard menu
                 oCreationPackage.Type = SAPbouiCOM.BoMenuType.mt_STRING;
-                oCreationPackage.UniqueID = "ContractManagementAddon.Form1";
-                oCreationPackage.String = "Form1";
+                oCreationPackage.UniqueID = "ContractManagementAddon.Dashboard";
+                oCreationPackage.String = "Dashboard";
+                oMenus.AddEx(oCreationPackage);
+
+                // Create Contract menu
+                oCreationPackage.UniqueID = "ContractManagementAddon.Contract";
+                oCreationPackage.String = "Contracts";
+                oMenus.AddEx(oCreationPackage);
+
+                // Create IPC menu
+                oCreationPackage.UniqueID = "ContractManagementAddon.IPC";
+                oCreationPackage.String = "IPCs";
+                oMenus.AddEx(oCreationPackage);
+
+                // Create Change Order menu
+                oCreationPackage.UniqueID = "ContractManagementAddon.ChangeOrder";
+                oCreationPackage.String = "Change Orders";
                 oMenus.AddEx(oCreationPackage);
             }
-            catch (Exception er)
+            catch
             { //  Menu already exists
                 Application.SBO_Application.SetStatusBarMessage("Menu Already Exists", SAPbouiCOM.BoMessageTime.bmt_Short, true);
             }
@@ -60,10 +84,30 @@ namespace ContractManagementAddon
 
             try
             {
-                if (pVal.BeforeAction && pVal.MenuUID == "ContractManagementAddon.Form1")
+                if (pVal.BeforeAction)
                 {
-                    Form1 activeForm = new Form1();
-                    activeForm.Show();
+                    switch (pVal.MenuUID)
+                    {
+                        case "ContractManagementAddon.Dashboard":
+                            DashboardForm dashboardForm = new DashboardForm(_app);
+                            dashboardForm.Show();
+                            break;
+
+                        case "ContractManagementAddon.Contract":
+                            ContractForm contractForm = new ContractForm(_app);
+                            contractForm.Show();
+                            break;
+
+                        case "ContractManagementAddon.IPC":
+                            IPCForm ipcForm = new IPCForm(_app);
+                            ipcForm.Show();
+                            break;
+
+                        case "ContractManagementAddon.ChangeOrder":
+                            ChangeOrderForm coForm = new ChangeOrderForm(_app);
+                            coForm.Show();
+                            break;
+                    }
                 }
             }
             catch (Exception ex)

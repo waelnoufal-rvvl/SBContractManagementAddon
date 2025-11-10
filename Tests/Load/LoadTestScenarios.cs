@@ -3,6 +3,8 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using ContractManagementAddon.Tests.Utilities;
+using NBomber.Contracts;
+using NBomber.CSharp;
 
 namespace ContractManagementAddon.Tests.Load
 {
