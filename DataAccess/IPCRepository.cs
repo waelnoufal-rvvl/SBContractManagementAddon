@@ -28,7 +28,7 @@ namespace ContractManagementAddon.DataAccess
 
             try
             {
-                string query = $@"SELECT ""Code"", ""DocNum"", ""U_ContractCode"", ""U_IPCNumber"", ""U_IPCDate"",
+                string query = $@"SELECT ""Code"", ""U_DocNum"", ""U_ContractCode"", ""U_IPCNumber"", ""U_IPCDate"",
                                  ""U_GrossAmount"", ""U_NetAmount"", ""U_Status""
                                  FROM ""@IPC_HDR""
                                  WHERE ""U_ContractCode"" = '{DatabaseHelper.EscapeSqlString(contractCode)}'
@@ -41,7 +41,7 @@ namespace ContractManagementAddon.DataAccess
                     IPC ipc = new IPC
                     {
                         Code = SafeConversion.SafeToString(recordset.Fields.Item("Code").Value),
-                        DocNum = SafeConversion.SafeToString(recordset.Fields.Item("DocNum").Value),
+                        DocNum = SafeConversion.SafeToString(recordset.Fields.Item("U_DocNum").Value),
                         ContractCode = SafeConversion.SafeToString(recordset.Fields.Item("U_ContractCode").Value),
                         IPCNumber = SafeConversion.SafeToInt(recordset.Fields.Item("U_IPCNumber").Value),
                         IPCDate = SafeConversion.SafeToDateTime(recordset.Fields.Item("U_IPCDate").Value),
@@ -346,7 +346,7 @@ namespace ContractManagementAddon.DataAccess
             IPC ipc = new IPC
             {
                 Code = SafeConversion.SafeToString(recordset.Fields.Item("Code").Value),
-                DocNum = SafeConversion.SafeToString(recordset.Fields.Item("DocNum").Value),
+                DocNum = SafeConversion.SafeToString(recordset.Fields.Item("U_DocNum").Value),
                 ContractCode = SafeConversion.SafeToString(recordset.Fields.Item("U_ContractCode").Value),
                 IPCNumber = SafeConversion.SafeToInt(recordset.Fields.Item("U_IPCNumber").Value),
                 IPCDate = SafeConversion.SafeToDateTime(recordset.Fields.Item("U_IPCDate").Value),

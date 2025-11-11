@@ -28,11 +28,11 @@ namespace ContractManagementAddon.DataAccess
 
             try
             {
-                string query = @"SELECT ""Code"", ""DocNum"", ""U_CustomerCode"", ""U_CustomerName"",
+                string query = @"SELECT ""Code"", ""U_DocNum"", ""U_CustomerCode"", ""U_CustomerName"",
                                 ""U_Description"", ""U_StartDate"", ""U_EndDate"", ""U_Status"",
                                 ""U_TotalValue"", ""U_Currency"", ""U_ContractMgr""
                                 FROM ""@CONTRACT_HDR""
-                                ORDER BY ""DocNum"" DESC";
+                                ORDER BY ""U_DocNum"" DESC";
 
                 recordset = DatabaseHelper.ExecuteQuery(_company, query);
 
@@ -41,7 +41,7 @@ namespace ContractManagementAddon.DataAccess
                     Contract contract = new Contract
                     {
                         Code = SafeConversion.SafeToString(recordset.Fields.Item("Code").Value),
-                        DocNum = SafeConversion.SafeToString(recordset.Fields.Item("DocNum").Value),
+                        DocNum = SafeConversion.SafeToString(recordset.Fields.Item("U_DocNum").Value),
                         CustomerCode = SafeConversion.SafeToString(recordset.Fields.Item("U_CustomerCode").Value),
                         CustomerName = SafeConversion.SafeToString(recordset.Fields.Item("U_CustomerName").Value),
                         Description = SafeConversion.SafeToString(recordset.Fields.Item("U_Description").Value),
@@ -329,7 +329,7 @@ namespace ContractManagementAddon.DataAccess
             return new Contract
             {
                 Code = SafeConversion.SafeToString(recordset.Fields.Item("Code").Value),
-                DocNum = SafeConversion.SafeToString(recordset.Fields.Item("DocNum").Value),
+                DocNum = SafeConversion.SafeToString(recordset.Fields.Item("U_DocNum").Value),
                 CustomerCode = SafeConversion.SafeToString(recordset.Fields.Item("U_CustomerCode").Value),
                 CustomerName = SafeConversion.SafeToString(recordset.Fields.Item("U_CustomerName").Value),
                 ProjectCode = SafeConversion.SafeToString(recordset.Fields.Item("U_ProjectCode").Value),

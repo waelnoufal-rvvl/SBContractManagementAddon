@@ -28,7 +28,7 @@ namespace ContractManagementAddon.DataAccess
 
             try
             {
-                string query = $@"SELECT ""Code"", ""DocNum"", ""U_ContractCode"", ""U_CONumber"", ""U_CODate"",
+                string query = $@"SELECT ""Code"", ""U_DocNum"", ""U_ContractCode"", ""U_CONumber"", ""U_CODate"",
                                  ""U_Type"", ""U_Description"", ""U_Amount"", ""U_Status""
                                  FROM ""@CO_HDR""
                                  WHERE ""U_ContractCode"" = '{DatabaseHelper.EscapeSqlString(contractCode)}'
@@ -41,7 +41,7 @@ namespace ContractManagementAddon.DataAccess
                     ChangeOrder co = new ChangeOrder
                     {
                         Code = SafeConversion.SafeToString(recordset.Fields.Item("Code").Value),
-                        DocNum = SafeConversion.SafeToString(recordset.Fields.Item("DocNum").Value),
+                        DocNum = SafeConversion.SafeToString(recordset.Fields.Item("U_DocNum").Value),
                         ContractCode = SafeConversion.SafeToString(recordset.Fields.Item("U_ContractCode").Value),
                         ChangeOrderNumber = SafeConversion.SafeToInt(recordset.Fields.Item("U_CONumber").Value),
                         ChangeOrderDate = SafeConversion.SafeToDateTime(recordset.Fields.Item("U_CODate").Value),
@@ -357,7 +357,7 @@ namespace ContractManagementAddon.DataAccess
             ChangeOrder co = new ChangeOrder
             {
                 Code = SafeConversion.SafeToString(recordset.Fields.Item("Code").Value),
-                DocNum = SafeConversion.SafeToString(recordset.Fields.Item("DocNum").Value),
+                DocNum = SafeConversion.SafeToString(recordset.Fields.Item("U_DocNum").Value),
                 ContractCode = SafeConversion.SafeToString(recordset.Fields.Item("U_ContractCode").Value),
                 ChangeOrderNumber = SafeConversion.SafeToInt(recordset.Fields.Item("U_CONumber").Value),
                 ChangeOrderDate = SafeConversion.SafeToDateTime(recordset.Fields.Item("U_CODate").Value),

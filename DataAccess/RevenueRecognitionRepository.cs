@@ -270,7 +270,7 @@ namespace ContractManagementAddon.DataAccess
             return new PerformanceObligation
             {
                 Code = SafeConversion.SafeToString(recordset.Fields.Item("Code").Value),
-                DocNum = SafeConversion.SafeToString(recordset.Fields.Item("DocNum").Value),
+                DocNum = SafeConversion.SafeToString(recordset.Fields.Item("U_DocNum").Value),
                 ContractCode = SafeConversion.SafeToString(recordset.Fields.Item("U_ContractCode").Value),
                 ObligationNumber = SafeConversion.SafeToInt(recordset.Fields.Item("U_OblNumber").Value),
                 Description = SafeConversion.SafeToString(recordset.Fields.Item("U_Description").Value),
@@ -424,7 +424,7 @@ namespace ContractManagementAddon.DataAccess
             return new RevenueSchedule
             {
                 Code = SafeConversion.SafeToString(recordset.Fields.Item("Code").Value),
-                DocNum = SafeConversion.SafeToString(recordset.Fields.Item("DocNum").Value),
+                DocNum = SafeConversion.SafeToString(recordset.Fields.Item("U_DocNum").Value),
                 ContractCode = SafeConversion.SafeToString(recordset.Fields.Item("U_ContractCode").Value),
                 PerformanceObligationCode = SafeConversion.SafeToString(recordset.Fields.Item("U_PerfOblCode").Value),
                 PeriodStartDate = SafeConversion.SafeToDateTime(recordset.Fields.Item("U_PeriodStartDate").Value),
@@ -596,7 +596,7 @@ namespace ContractManagementAddon.DataAccess
             return new DeferredRevenue
             {
                 Code = SafeConversion.SafeToString(recordset.Fields.Item("Code").Value),
-                DocNum = SafeConversion.SafeToString(recordset.Fields.Item("DocNum").Value),
+                DocNum = SafeConversion.SafeToString(recordset.Fields.Item("U_DocNum").Value),
                 ContractCode = SafeConversion.SafeToString(recordset.Fields.Item("U_ContractCode").Value),
                 PerformanceObligationCode = SafeConversion.SafeToString(recordset.Fields.Item("U_PerformObligCode").Value),
                 IPCCode = SafeConversion.SafeToString(recordset.Fields.Item("U_IPCCode").Value),
