@@ -28,11 +28,11 @@ namespace ContractManagementAddon.DataAccess
 
             try
             {
-                string query = $@"SELECT Code, DocNum, U_ContractCode, U_CONumber, U_CODate,
-                                 U_Type, U_Description, U_Amount, U_Status
-                                 FROM [@CO_HDR]
-                                 WHERE U_ContractCode = '{DatabaseHelper.EscapeSqlString(contractCode)}'
-                                 ORDER BY U_CONumber";
+                string query = $@"SELECT ""Code"", ""DocNum"", ""U_ContractCode"", ""U_CONumber"", ""U_CODate"",
+                                 ""U_Type"", ""U_Description"", ""U_Amount"", ""U_Status""
+                                 FROM ""@CO_HDR""
+                                 WHERE ""U_ContractCode"" = '{DatabaseHelper.EscapeSqlString(contractCode)}'
+                                 ORDER BY ""U_CONumber""";
 
                 recordset = DatabaseHelper.ExecuteQuery(_company, query);
 
@@ -81,7 +81,7 @@ namespace ContractManagementAddon.DataAccess
 
             try
             {
-                string query = $@"SELECT * FROM [@CO_HDR] WHERE Code = '{DatabaseHelper.EscapeSqlString(code)}'";
+                string query = $@"SELECT * FROM ""@CO_HDR"" WHERE ""Code"" = '{DatabaseHelper.EscapeSqlString(code)}'";
                 recordset = DatabaseHelper.ExecuteQuery(_company, query);
 
                 if (recordset.EoF)
@@ -122,7 +122,7 @@ namespace ContractManagementAddon.DataAccess
 
             try
             {
-                string query = $@"SELECT * FROM [@CO_LNS] WHERE Code = '{DatabaseHelper.EscapeSqlString(coCode)}' ORDER BY LineId";
+                string query = $@"SELECT * FROM ""@CO_LNS"" WHERE ""Code"" = '{DatabaseHelper.EscapeSqlString(coCode)}' ORDER BY ""LineId""";
                 recordset = DatabaseHelper.ExecuteQuery(_company, query);
 
                 while (!recordset.EoF)
@@ -299,9 +299,9 @@ namespace ContractManagementAddon.DataAccess
         {
             try
             {
-                string query = $@"SELECT COALESCE(MAX(U_CONumber), 0) + 1 AS NextNum
-                                 FROM [@CO_HDR]
-                                 WHERE U_ContractCode = '{DatabaseHelper.EscapeSqlString(contractCode)}'";
+                string query = $@"SELECT COALESCE(MAX(""U_CONumber""), 0) + 1 AS ""NextNum""
+                                 FROM ""@CO_HDR""
+                                 WHERE ""U_ContractCode"" = '{DatabaseHelper.EscapeSqlString(contractCode)}'";
 
                 object result = DatabaseHelper.ExecuteScalar(_company, query);
                 return SafeConversion.SafeToInt(result, 1);
@@ -321,20 +321,20 @@ namespace ContractManagementAddon.DataAccess
         {
             try
             {
-                string query = $@"SELECT COALESCE(SUM(U_Amount), 0) AS TotalAmount
-                                 FROM [@CO_HDR]
-                                 WHERE U_ContractCode = '{DatabaseHelper.EscapeSqlString(contractCode)}'
-                                 AND U_Status = 'Approved'
-                                 AND U_Type = 'Addition'";
+                string query = $@"SELECT COALESCE(SUM(""U_Amount""), 0) AS ""TotalAmount""
+                                 FROM ""@CO_HDR""
+                                 WHERE ""U_ContractCode"" = '{DatabaseHelper.EscapeSqlString(contractCode)}'
+                                 AND ""U_Status"" = 'Approved'
+                                 AND ""U_Type"" = 'Addition'";
 
                 object result = DatabaseHelper.ExecuteScalar(_company, query);
                 double additions = SafeConversion.SafeToDouble(result, 0);
 
-                query = $@"SELECT COALESCE(SUM(U_Amount), 0) AS TotalAmount
-                          FROM [@CO_HDR]
-                          WHERE U_ContractCode = '{DatabaseHelper.EscapeSqlString(contractCode)}'
-                          AND U_Status = 'Approved'
-                          AND U_Type = 'Deduction'";
+                query = $@"SELECT COALESCE(SUM(""U_Amount""), 0) AS ""TotalAmount""
+                          FROM ""@CO_HDR""
+                          WHERE ""U_ContractCode"" = '{DatabaseHelper.EscapeSqlString(contractCode)}'
+                          AND ""U_Status"" = 'Approved'
+                          AND ""U_Type"" = 'Deduction'";
 
                 result = DatabaseHelper.ExecuteScalar(_company, query);
                 double deductions = SafeConversion.SafeToDouble(result, 0);

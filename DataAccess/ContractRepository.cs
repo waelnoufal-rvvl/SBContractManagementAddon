@@ -28,11 +28,11 @@ namespace ContractManagementAddon.DataAccess
 
             try
             {
-                string query = @"SELECT Code, DocNum, U_CustomerCode, U_CustomerName,
-                                U_Description, U_StartDate, U_EndDate, U_Status,
-                                U_TotalValue, U_Currency, U_ContractMgr
-                                FROM [@CONTRACT_HDR]
-                                ORDER BY DocNum DESC";
+                string query = @"SELECT ""Code"", ""DocNum"", ""U_CustomerCode"", ""U_CustomerName"",
+                                ""U_Description"", ""U_StartDate"", ""U_EndDate"", ""U_Status"",
+                                ""U_TotalValue"", ""U_Currency"", ""U_ContractMgr""
+                                FROM ""@CONTRACT_HDR""
+                                ORDER BY ""DocNum"" DESC";
 
                 recordset = DatabaseHelper.ExecuteQuery(_company, query);
 
@@ -83,7 +83,7 @@ namespace ContractManagementAddon.DataAccess
 
             try
             {
-                string query = $@"SELECT * FROM [@CONTRACT_HDR] WHERE Code = '{DatabaseHelper.EscapeSqlString(code)}'";
+                string query = $@"SELECT * FROM ""@CONTRACT_HDR"" WHERE ""Code"" = '{DatabaseHelper.EscapeSqlString(code)}'";
                 recordset = DatabaseHelper.ExecuteQuery(_company, query);
 
                 if (recordset.EoF)
@@ -124,7 +124,7 @@ namespace ContractManagementAddon.DataAccess
 
             try
             {
-                string query = $@"SELECT * FROM [@CONTRACT_LNS] WHERE Code = '{DatabaseHelper.EscapeSqlString(contractCode)}' ORDER BY LineId";
+                string query = $@"SELECT * FROM ""@CONTRACT_LNS"" WHERE ""Code"" = '{DatabaseHelper.EscapeSqlString(contractCode)}' ORDER BY ""LineId""";
                 recordset = DatabaseHelper.ExecuteQuery(_company, query);
 
                 while (!recordset.EoF)

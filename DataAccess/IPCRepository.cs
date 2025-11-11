@@ -28,11 +28,11 @@ namespace ContractManagementAddon.DataAccess
 
             try
             {
-                string query = $@"SELECT Code, DocNum, U_ContractCode, U_IPCNumber, U_IPCDate,
-                                 U_GrossAmount, U_NetAmount, U_Status
-                                 FROM [@IPC_HDR]
-                                 WHERE U_ContractCode = '{DatabaseHelper.EscapeSqlString(contractCode)}'
-                                 ORDER BY U_IPCNumber";
+                string query = $@"SELECT ""Code"", ""DocNum"", ""U_ContractCode"", ""U_IPCNumber"", ""U_IPCDate"",
+                                 ""U_GrossAmount"", ""U_NetAmount"", ""U_Status""
+                                 FROM ""@IPC_HDR""
+                                 WHERE ""U_ContractCode"" = '{DatabaseHelper.EscapeSqlString(contractCode)}'
+                                 ORDER BY ""U_IPCNumber""";
 
                 recordset = DatabaseHelper.ExecuteQuery(_company, query);
 
@@ -80,7 +80,7 @@ namespace ContractManagementAddon.DataAccess
 
             try
             {
-                string query = $@"SELECT * FROM [@IPC_HDR] WHERE Code = '{DatabaseHelper.EscapeSqlString(code)}'";
+                string query = $@"SELECT * FROM ""@IPC_HDR"" WHERE ""Code"" = '{DatabaseHelper.EscapeSqlString(code)}'";
                 recordset = DatabaseHelper.ExecuteQuery(_company, query);
 
                 if (recordset.EoF)
@@ -121,7 +121,7 @@ namespace ContractManagementAddon.DataAccess
 
             try
             {
-                string query = $@"SELECT * FROM [@IPC_LNS] WHERE Code = '{DatabaseHelper.EscapeSqlString(ipcCode)}' ORDER BY LineId";
+                string query = $@"SELECT * FROM ""@IPC_LNS"" WHERE ""Code"" = '{DatabaseHelper.EscapeSqlString(ipcCode)}' ORDER BY ""LineId""";
                 recordset = DatabaseHelper.ExecuteQuery(_company, query);
 
                 while (!recordset.EoF)
@@ -300,9 +300,9 @@ namespace ContractManagementAddon.DataAccess
         {
             try
             {
-                string query = $@"SELECT COALESCE(MAX(U_IPCNumber), 0) + 1 AS NextNum
-                                 FROM [@IPC_HDR]
-                                 WHERE U_ContractCode = '{DatabaseHelper.EscapeSqlString(contractCode)}'";
+                string query = $@"SELECT COALESCE(MAX(""U_IPCNumber""), 0) + 1 AS ""NextNum""
+                                 FROM ""@IPC_HDR""
+                                 WHERE ""U_ContractCode"" = '{DatabaseHelper.EscapeSqlString(contractCode)}'";
 
                 object result = DatabaseHelper.ExecuteScalar(_company, query);
                 return SafeConversion.SafeToInt(result, 1);
@@ -322,10 +322,10 @@ namespace ContractManagementAddon.DataAccess
         {
             try
             {
-                string query = $@"SELECT COALESCE(SUM(U_GrossAmount), 0) AS TotalAmount
-                                 FROM [@IPC_HDR]
-                                 WHERE U_ContractCode = '{DatabaseHelper.EscapeSqlString(contractCode)}'
-                                 AND U_Status IN ('Approved', 'Paid')";
+                string query = $@"SELECT COALESCE(SUM(""U_GrossAmount""), 0) AS ""TotalAmount""
+                                 FROM ""@IPC_HDR""
+                                 WHERE ""U_ContractCode"" = '{DatabaseHelper.EscapeSqlString(contractCode)}'
+                                 AND ""U_Status"" IN ('Approved', 'Paid')";
 
                 object result = DatabaseHelper.ExecuteScalar(_company, query);
                 return SafeConversion.SafeToDouble(result, 0);

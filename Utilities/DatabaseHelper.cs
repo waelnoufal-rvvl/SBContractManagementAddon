@@ -176,8 +176,8 @@ namespace ContractManagementAddon.Utilities
             try
             {
                 string query = string.IsNullOrEmpty(series)
-                    ? "SELECT MAX(CAST(DocNum AS INT)) + 1 FROM [@CONTRACT_HDR]"
-                    : $"SELECT MAX(CAST(DocNum AS INT)) + 1 FROM [@CONTRACT_HDR] WHERE Series = '{series}'";
+                    ? "SELECT MAX(CAST(\"DocNum\" AS INT)) + 1 FROM \"@CONTRACT_HDR\""
+                    : $"SELECT MAX(CAST(\"DocNum\" AS INT)) + 1 FROM \"@CONTRACT_HDR\" WHERE \"Series\" = '{series}'";
 
                 object result = ExecuteScalar(company, query);
 
