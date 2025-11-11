@@ -199,8 +199,8 @@ namespace ContractManagementAddon.Forms
                 grid.DataTable.Columns.Add("Description", BoFieldsType.ft_AlphaNumeric, 200);
                 grid.DataTable.Columns.Add("Value", BoFieldsType.ft_Price);
                 grid.DataTable.Columns.Add("Status", BoFieldsType.ft_AlphaNumeric, 20);
-                grid.DataTable.Columns.Add("Start Date", BoFieldsType.ft_Date);
-                grid.DataTable.Columns.Add("End Date", BoFieldsType.ft_Date);
+                grid.DataTable.Columns.Add("StartDate", BoFieldsType.ft_Date);
+                grid.DataTable.Columns.Add("EndDate", BoFieldsType.ft_Date);
 
                 // Load data
                 grid.DataTable.Rows.Clear();
@@ -213,8 +213,8 @@ namespace ContractManagementAddon.Forms
                     grid.DataTable.SetValue("Description", row, contract.Description);
                     grid.DataTable.SetValue("Value", row, contract.TotalValue);
                     grid.DataTable.SetValue("Status", row, contract.Status);
-                    grid.DataTable.SetValue("Start Date", row, contract.StartDate);
-                    grid.DataTable.SetValue("End Date", row, contract.EndDate);
+                    grid.DataTable.SetValue("StartDate", row, contract.StartDate);
+                    grid.DataTable.SetValue("EndDate", row, contract.EndDate);
                 }
 
                 grid.AutoResizeColumns();
