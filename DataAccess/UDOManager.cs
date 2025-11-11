@@ -159,6 +159,7 @@ namespace ContractManagementAddon.DataAccess
         private void CreateContractFields()
         {
             // Header fields
+            AddUserField("CONTRACT_HDR", "DocNum", "Document Number", BoFieldTypes.db_Alpha, 20);
             AddUserField("CONTRACT_HDR", "CustomerCode", "Customer Code", BoFieldTypes.db_Alpha, 15);
             AddUserField("CONTRACT_HDR", "CustomerName", "Customer Name", BoFieldTypes.db_Alpha, 100);
             AddUserField("CONTRACT_HDR", "ProjectCode", "Project Code", BoFieldTypes.db_Alpha, 20);
@@ -275,6 +276,7 @@ namespace ContractManagementAddon.DataAccess
         private void CreateIPCFields()
         {
             // Header fields
+            AddUserField("IPC_HDR", "DocNum", "Document Number", BoFieldTypes.db_Alpha, 20);
             AddUserField("IPC_HDR", "ContractCode", "Contract Code", BoFieldTypes.db_Alpha, 20);
             AddUserField("IPC_HDR", "IPCNumber", "IPC Number", BoFieldTypes.db_Numeric);
             AddUserField("IPC_HDR", "IPCDate", "IPC Date", BoFieldTypes.db_Date);
@@ -390,6 +392,7 @@ namespace ContractManagementAddon.DataAccess
         private void CreateChangeOrderFields()
         {
             // Header fields
+            AddUserField("CO_HDR", "DocNum", "Document Number", BoFieldTypes.db_Alpha, 20);
             AddUserField("CO_HDR", "ContractCode", "Contract Code", BoFieldTypes.db_Alpha, 20);
             AddUserField("CO_HDR", "CONumber", "CO Number", BoFieldTypes.db_Numeric);
             AddUserField("CO_HDR", "CODate", "CO Date", BoFieldTypes.db_Date);
@@ -1111,6 +1114,7 @@ namespace ContractManagementAddon.DataAccess
                     Logger.Info("Performance Obligation header table created");
 
                     // Add header fields
+                    AddUserField("CM_PERF_OBL", "DocNum", "Document Number", BoFieldTypes.db_Alpha, 20);
                     AddUserField("CM_PERF_OBL", "ContractCode", "Contract Code", BoFieldTypes.db_Alpha, 20);
                     AddUserField("CM_PERF_OBL", "OblNumber", "Obligation Number", BoFieldTypes.db_Numeric);
                     AddUserField("CM_PERF_OBL", "Description", "Description", BoFieldTypes.db_Memo);
@@ -1205,6 +1209,7 @@ namespace ContractManagementAddon.DataAccess
                     userTable = null;
 
                     // Add fields
+                    AddUserField("CM_REV_SCHEDULE", "DocNum", "Document Number", BoFieldTypes.db_Alpha, 20);
                     AddUserField("CM_REV_SCHEDULE", "ContractCode", "Contract Code", BoFieldTypes.db_Alpha, 20);
                     AddUserField("CM_REV_SCHEDULE", "PerfOblCode", "Performance Obligation Code", BoFieldTypes.db_Alpha, 50);
                     AddUserField("CM_REV_SCHEDULE", "PeriodStartDate", "Period Start Date", BoFieldTypes.db_Date);
@@ -1264,6 +1269,7 @@ namespace ContractManagementAddon.DataAccess
                     userTable = null;
 
                     // Add fields
+                    AddUserField("CM_DEFERRED_REV", "DocNum", "Document Number", BoFieldTypes.db_Alpha, 20);
                     AddUserField("CM_DEFERRED_REV", "ContractCode", "Contract Code", BoFieldTypes.db_Alpha, 20);
                     AddUserField("CM_DEFERRED_REV", "PerformObligCode", "Performance Obligation Code", BoFieldTypes.db_Alpha, 50);
                     AddUserField("CM_DEFERRED_REV", "IPCCode", "IPC Code", BoFieldTypes.db_Alpha, 50);
