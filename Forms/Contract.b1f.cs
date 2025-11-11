@@ -20,8 +20,6 @@ namespace ContractManagementAddon.Forms
 
         // Control declarations
         private StaticText stTitle;
-        private Folder fldGeneral;
-        private Folder fldLines;
         private StaticText stCode;
         private EditText txtCode;
         private StaticText stCust;
@@ -178,7 +176,7 @@ namespace ContractManagementAddon.Forms
                 oItem.FromPane = 1;
                 oItem.ToPane = 1;
                 oEdit = (EditText)oItem.Specific;
-                oEdit.DataBind.SetBound(true, "", "DT_HEAD", "Code");
+                oEdit.DataBind.SetBound(true, "DT_HEAD", "Code");
 
                 // Customer label
                 oItem = this.UIAPIRawForm.Items.Add("stCust", BoFormItemTypes.it_STATIC);
@@ -200,7 +198,7 @@ namespace ContractManagementAddon.Forms
                 oItem.FromPane = 1;
                 oItem.ToPane = 1;
                 oEdit = (EditText)oItem.Specific;
-                oEdit.DataBind.SetBound(true, "", "DT_HEAD", "Customer");
+                oEdit.DataBind.SetBound(true, "DT_HEAD","Customer");
 
                 // Customer chooser button
                 oItem = this.UIAPIRawForm.Items.Add("btnCust", BoFormItemTypes.it_BUTTON);
@@ -223,7 +221,7 @@ namespace ContractManagementAddon.Forms
                 oItem.ToPane = 1;
                 oItem.Enabled = false;
                 oEdit = (EditText)oItem.Specific;
-                oEdit.DataBind.SetBound(true, "", "DT_HEAD", "CustName");
+                oEdit.DataBind.SetBound(true, "DT_HEAD","CustName");
 
                 // Description label
                 oItem = this.UIAPIRawForm.Items.Add("stDesc", BoFormItemTypes.it_STATIC);
@@ -245,7 +243,7 @@ namespace ContractManagementAddon.Forms
                 oItem.FromPane = 1;
                 oItem.ToPane = 1;
                 oEdit = (EditText)oItem.Specific;
-                oEdit.DataBind.SetBound(true, "", "DT_HEAD", "Descript");
+                oEdit.DataBind.SetBound(true, "DT_HEAD","Descript");
 
                 // Start Date label
                 oItem = this.UIAPIRawForm.Items.Add("stStart", BoFormItemTypes.it_STATIC);
@@ -267,7 +265,7 @@ namespace ContractManagementAddon.Forms
                 oItem.FromPane = 1;
                 oItem.ToPane = 1;
                 oEdit = (EditText)oItem.Specific;
-                oEdit.DataBind.SetBound(true, "", "DT_HEAD", "StartDate");
+                oEdit.DataBind.SetBound(true, "DT_HEAD","StartDate");
 
                 // End Date label
                 oItem = this.UIAPIRawForm.Items.Add("stEnd", BoFormItemTypes.it_STATIC);
@@ -289,7 +287,7 @@ namespace ContractManagementAddon.Forms
                 oItem.FromPane = 1;
                 oItem.ToPane = 1;
                 oEdit = (EditText)oItem.Specific;
-                oEdit.DataBind.SetBound(true, "", "DT_HEAD", "EndDate");
+                oEdit.DataBind.SetBound(true, "DT_HEAD","EndDate");
 
                 // Value label
                 oItem = this.UIAPIRawForm.Items.Add("stValue", BoFormItemTypes.it_STATIC);
@@ -311,7 +309,7 @@ namespace ContractManagementAddon.Forms
                 oItem.FromPane = 1;
                 oItem.ToPane = 1;
                 oEdit = (EditText)oItem.Specific;
-                oEdit.DataBind.SetBound(true, "", "DT_HEAD", "Value");
+                oEdit.DataBind.SetBound(true, "DT_HEAD","Value");
 
                 // Status label
                 oItem = this.UIAPIRawForm.Items.Add("stStatus", BoFormItemTypes.it_STATIC);
@@ -333,7 +331,7 @@ namespace ContractManagementAddon.Forms
                 oItem.FromPane = 1;
                 oItem.ToPane = 1;
                 oCombo = (ComboBox)oItem.Specific;
-                oCombo.DataBind.SetBound(true, "", "DT_HEAD", "Status");
+                oCombo.DataBind.SetBound(true, "DT_HEAD","Status");
                 oCombo.ValidValues.Add("D", "Draft");
                 oCombo.ValidValues.Add("A", "Active");
                 oCombo.ValidValues.Add("C", "Closed");
@@ -359,7 +357,7 @@ namespace ContractManagementAddon.Forms
                 oItem.FromPane = 1;
                 oItem.ToPane = 1;
                 oEdit = (EditText)oItem.Specific;
-                oEdit.DataBind.SetBound(true, "", "DT_HEAD", "Retention");
+                oEdit.DataBind.SetBound(true, "DT_HEAD","Retention");
 
                 // === PANE 2: LINES TAB ===
 
@@ -483,10 +481,8 @@ namespace ContractManagementAddon.Forms
         /// <summary>
         /// Form click event handler
         /// </summary>
-        private void Form_ClickAfter(ref ItemEvent pVal, out bool BubbleEvent)
+        private void Form_ClickAfter(SBOItemEventArg pVal)
         {
-            BubbleEvent = true;
-
             try
             {
                 switch (pVal.ItemUID)
@@ -512,7 +508,6 @@ namespace ContractManagementAddon.Forms
                 Logger.Error("Error in Form_ClickAfter", ex);
                 FrameworkApp.SBO_Application.StatusBar.SetText($"Error: {ex.Message}",
                     BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Error);
-                BubbleEvent = false;
             }
         }
 
