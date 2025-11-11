@@ -374,7 +374,7 @@ namespace ContractManagementAddon.Forms
         /// <summary>
         /// Display contract data with proper localization
         /// </summary>
-        public void DisplayContract(Contract contract)
+        public void DisplayContract(Models.Contract contract)
         {
             // Contract code and name - no formatting needed
             _txtContractCode.Value = contract.Code;
