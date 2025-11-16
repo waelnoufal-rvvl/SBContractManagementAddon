@@ -65,12 +65,16 @@ namespace ContractManagementAddon
             {
                 if (pVal.BeforeAction && pVal.MenuUID == "ContractManagementAddon.Dashboard")
                 {
-                    // Note: This Menu class is deprecated. The new architecture uses MenuManager and EventManager.
-                    // For now, just show a message
-                    Application.SBO_Application.StatusBar.SetText(
-                        "Please use the new Contract Management menu under Modules",
-                        SAPbouiCOM.BoMessageTime.bmt_Short,
-                        SAPbouiCOM.BoStatusBarMessageType.smt_Warning);
+                    // Create a simple wrapper to get Company from SAP Application
+                    var company = (SAPbobsCOM.Company)Application.SBO_Application.Company.GetDICompany();
+
+                    // Create a minimal app wrapper
+                    var appWrapper = new Core.ContractManagementApplicationWrapper(
+                        Application.SBO_Application,
+                        company);
+
+                    DashboardForm dashboardForm = new DashboardForm(appWrapper);
+                    dashboardForm.Show();
                 }
             }
             catch (Exception ex)
