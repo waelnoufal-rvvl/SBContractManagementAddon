@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="utf-16"?>
+<Application>
+  <forms>
+    <action type="add">
+      <form
+        uid="FRM_RVCM_CNTRCT"
+        type="0"
+        BorderStyle="bbs_Sizable"
+        title="Contract Management"
+        left="100"
+        top="100"
+        width="950"
+        height="650"
+        client_width="950"
+        client_height="650"
+        AutoManaged="0"
+        SupportedModes="15"
+        default_button="btnAdd">
+
+        <!-- DATA SOURCES -->
+        <datasources>
+          <DataTables>
+            <DataTable Uid="DT_CNTR_LINES" />
+            <DataTable Uid="DT_WF" />
+          </DataTables>
+          <DBDataSources>
+            <DBDataSource TableName="@RVCM_CNTRCT"  Uid="DB_CNTR" />
+            <DBDataSource TableName="@RVCM_CNTRCT1" Uid="DB_CNTR1" />
+            <DBDataSource TableName="@RVCM_WF_HIST" Uid="DB_WF" />
+          </DBDataSources>
+        </datasources>
+
+        <items>
+
+          <!-- HEADER BAR -->
+          <item uid="lblTitle" type="8" left="10" top="10" width="930" height="20">
+            <specific caption="Contract Information / معلومات العقد" backColor="14671839" font_Bold="1" />
+          </item>
+
+          <!-- CONTRACT CODE -->
+          <item uid="lblCode" type="8" left="10" top="40" width="120" height="14">
+            <specific caption="Contract No." />
+          </item>
+          <item uid="txtCode" type="16" left="140" top="40" width="160" height="14">
+            <specific>
+              <databind databound="1" table="@RVCM_CNTRCT" alias="Code" />
+            </specific>
+            <AutoManagedAttribute>
+              <Enabled>0</Enabled>
+            </AutoManagedAttribute>
+          </item>
+
+          <!-- CONTRACT NAME -->
+          <item uid="lblName" type="8" left="10" top="60" width="120" height="14">
+            <specific caption="Contract Name" />
+          </item>
+          <item uid="txtName" type="16" left="140" top="60" width="300" height="14">
+            <specific>
+              <databind databound="1" table="@RVCM_CNTRCT" alias="U_ContractName" />
+            </specific>
+          </item>
+
+          <!-- CONTRACT NAME AR -->
+          <item uid="lblNameAR" type="8" left="10" top="80" width="120" height="14">
+            <specific caption="اسم العقد" />
+          </item>
+          <item uid="txtNameAR" type="16" left="140" top="80" width="300" height="14">
+            <specific>
+              <databind databound="1" table="@RVCM_CNTRCT" alias="U_ContractNameAR" />
+            </specific>
+          </item>
+
+          <!-- CUSTOMER -->
+          <item uid="lblCardCode" type="8" left="10" top="100" width="120" height="14">
+            <specific caption="Customer Code" />
+          </item>
+          <item uid="txtCardCode" type="16" left="140" top="100" width="100" height="14">
+            <specific>
+              <databind databound="1" table="@RVCM_CNTRCT" alias="U_CardCode" />
+            </specific>
+            <LinkedObjectType>2</LinkedObjectType>
+          </item>
+          <item uid="txtCardName" type="16" left="245" top="100" width="300" height="14">
+            <specific>
+              <databind databound="1" table="@RVCM_CNTRCT" alias="U_CardName" />
+            </specific>
+            <AutoManagedAttribute>
+              <Enabled>0</Enabled>
+            </AutoManagedAttribute>
+          </item>
+
+          <!-- PROJECT -->
+          <item uid="lblProjCode" type="8" left="10" top="120" width="120" height="14">
+            <specific caption="Project No." />
+          </item>
+          <item uid="txtProjCode" type="16" left="140" top="120" width="120" height="14">
+            <specific>
+              <databind databound="1" table="@RVCM_CNTRCT" alias="U_ProjectNum" />
+            </specific>
+          </item>
+          <item uid="txtProjName" type="16" left="265" top="120" width="280" height="14">
+            <specific>
+              <databind databound="1" table="@RVCM_CNTRCT" alias="U_ProjectName" />
+            </specific>
+          </item>
+
+          <!-- SECTOR / REGION / UNIT -->
+          <item uid="lblSector" type="8" left="10" top="140" width="120" height="14">
+            <specific caption="Sector" />
+          </item>
+          <item uid="txtSector" type="16" left="140" top="140" width="150" height="14">
+            <specific>
+              <databind databound="1" table="@RVCM_CNTRCT" alias="U_Sector" />
+            </specific>
+          </item>
+
+          <item uid="lblRegion" type="8" left="310" top="140" width="80" height="14">
+            <specific caption="Region" />
+          </item>
+          <item uid="txtRegion" type="16" left="400" top="140" width="145" height="14">
+            <specific>
+              <databind databound="1" table="@RVCM_CNTRCT" alias="U_Region" />
+            </specific>
+          </item>
+
+          <item uid="lblUnit" type="8" left="560" top="140" width="80" height="14">
+            <specific caption="Unit No." />
+          </item>
+          <item uid="txtUnit" type="16" left="650" top="140" width="120" height="14">
+            <specific>
+              <databind databound="1" table="@RVCM_CNTRCT" alias="U_UnitNumber" />
+            </specific>
+          </item>
+
+          <!-- DATES -->
+          <item uid="lblStart" type="8" left="10" top="160" width="120" height="14">
+            <specific caption="Start Date" />
+          </item>
+          <item uid="dtStart" type="16" left="140" top="160" width="90" height="14">
+            <specific>
+              <databind databound="1" table="@RVCM_CNTRCT" alias="U_StartDate" />
+            </specific>
+          </item>
+
+          <item uid="lblEnd" type="8" left="250" top="160" width="80" height="14">
+            <specific caption="End Date" />
+          </item>
+          <item uid="dtEnd" type="16" left="340" top="160" width="90" height="14">
+            <specific>
+              <databind databound="1" table="@RVCM_CNTRCT" alias="U_EndDate" />
+            </specific>
+          </item>
+
+          <!-- CONTRACT VALUE / CURRENCY -->
+          <item uid="lblVal" type="8" left="10" top="180" width="120" height="14">
+            <specific caption="Contract Value" />
+          </item>
+          <item uid="txtVal" type="16" left="140" top="180" width="120" height="14">
+            <specific>
+              <databind databound="1" table="@RVCM_CNTRCT" alias="U_ContractVal" />
+            </specific>
+          </item>
+
+          <item uid="lblCurr" type="8" left="270" top="180" width="60" height="14">
+            <specific caption="Currency" />
+          </item>
+          <item uid="cmbCurr" type="121" left="340" top="180" width="80" height="14">
+            <specific>
+              <databind databound="1" table="@RVCM_CNTRCT" alias="U_Currency" />
+            </specific>
+          </item>
+
+          <!-- TAX & TOTAL -->
+          <item uid="lblTaxRate" type="8" left="10" top="200" width="120" height="14">
+            <specific caption="Tax Rate %" />
+          </item>
+          <item uid="txtTaxRate" type="16" left="140" top="200" width="80" height="14">
+            <specific>
+              <databind databound="1" table="@RVCM_CNTRCT" alias="U_TaxRate" />
+            </specific>
+          </item>
+
+          <item uid="lblTot" type="8" left="250" top="200" width="80" height="14">
+            <specific caption="Total Value" />
+          </item>
+          <item uid="txtTot" type="16" left="340" top="200" width="145" height="14">
+            <specific>
+              <databind databound="1" table="@RVCM_CNTRCT" alias="U_TotalValue" />
+            </specific>
+            <AutoManagedAttribute>
+              <Enabled>0</Enabled>
+            </AutoManagedAttribute>
+          </item>
+
+          <!-- STATUS / APPROVAL -->
+          <item uid="lblStatus" type="8" left="10" top="220" width="120" height="14">
+            <specific caption="Status" />
+          </item>
+          <item uid="cmbStatus" type="121" left="140" top="220" width="120" height="14">
+            <specific>
+              <databind databound="1" table="@RVCM_CNTRCT" alias="U_Status" />
+              <ValidValues>
+                <ValidValue value="D" description="Draft" />
+                <ValidValue value="S" description="Submitted" />
+                <ValidValue value="A" description="Active" />
+                <ValidValue value="H" description="On Hold" />
+                <ValidValue value="C" description="Completed" />
+                <ValidValue value="X" description="Cancelled" />
+              </ValidValues>
+            </specific>
+          </item>
+
+          <item uid="lblApp" type="8" left="270" top="220" width="80" height="14">
+            <specific caption="Approval" />
+          </item>
+          <item uid="cmbApp" type="121" left="340" top="220" width="145" height="14">
+            <specific>
+              <databind databound="1" table="@RVCM_CNTRCT" alias="U_ApprovalSts" />
+              <ValidValues>
+                <ValidValue value="P" description="Pending" />
+                <ValidValue value="A" description="Approved" />
+                <ValidValue value="R" description="Rejected" />
+              </ValidValues>
+            </specific>
+          </item>
+
+          <!-- REMARKS -->
+          <item uid="lblRem" type="8" left="10" top="240" width="120" height="14">
+            <specific caption="Remarks" />
+          </item>
+          <item uid="txtRem" type="16" left="140" top="240" width="500" height="40">
+            <specific>
+              <databind databound="1" table="@RVCM_CNTRCT" alias="U_Remarks" />
+            </specific>
+          </item>
+
+          <!-- ATTACHMENTS BUTTON (opens B1 attachments via code) -->
+          <item uid="btnAttach" type="4" left="660" top="240" width="80" height="19">
+            <specific caption="Attach..." />
+          </item>
+
+          <!-- FOLDER TABS -->
+          <item uid="fldLines" type="117" left="10" top="290" width="930" height="20">
+            <specific caption="Contract Lines" ValOn="1" ValOff="0" />
+          </item>
+          <item uid="fldWF" type="117" left="120" top="290" width="930" height="20">
+            <specific caption="Workflow Log" ValOn="2" ValOff="0" />
+          </item>
+
+          <!-- LINES MATRIX -->
+          <item uid="mtxLines" type="127" left="10" top="310" width="930" height="230">
+            <specific SelectionMode="2" layout="0" TabOrder="0">
+              <columns>
+                <column uid="colLineId" type="16" title="#" width="30" editable="0">
+                  <databind databound="1" table="@RVCM_CNTRCT1" alias="LineNum" />
+                </column>
+                <column uid="colItemCode" type="16" title="Item Code" width="90" editable="1">
+                  <databind databound="1" table="@RVCM_CNTRCT1" alias="U_ItemCode" />
+                </column>
+                <column uid="colDesc" type="16" title="Description" width="200" editable="1">
+                  <databind databound="1" table="@RVCM_CNTRCT1" alias="U_ItemDesc" />
+                </column>
+                <column uid="colQty" type="16" title="Qty" width="60" editable="1">
+                  <databind databound="1" table="@RVCM_CNTRCT1" alias="U_Quantity" />
+                </column>
+                <column uid="colUnit" type="16" title="Unit" width="60" editable="1">
+                  <databind databound="1" table="@RVCM_CNTRCT1" alias="U_Unit" />
+                </column>
+                <column uid="colPrice" type="16" title="Unit Price" width="80" editable="1">
+                  <databind databound="1" table="@RVCM_CNTRCT1" alias="U_UnitPrice" />
+                </column>
+                <column uid="colDisc" type="16" title="Disc %" width="60" editable="1">
+                  <databind databound="1" table="@RVCM_CNTRCT1" alias="U_DiscountPct" />
+                </column>
+                <column uid="colLineTot" type="16" title="Line Total" width="100" editable="0">
+                  <databind databound="1" table="@RVCM_CNTRCT1" alias="U_LineTotal" />
+                </column>
+                <column uid="colTaxCode" type="16" title="Tax Code" width="70" editable="1">
+                  <databind databound="1" table="@RVCM_CNTRCT1" alias="U_TaxCode" />
+                </column>
+                <column uid="colStatus" type="16" title="Status" width="60" editable="1">
+                  <databind databound="1" table="@RVCM_CNTRCT1" alias="U_LineStatus" />
+                </column>
+              </columns>
+            </specific>
+          </item>
+
+          <!-- WORKFLOW MATRIX -->
+          <item uid="mtxWF" type="127" left="10" top="310" width="930" height="230">
+            <specific SelectionMode="1" layout="0" TabOrder="1">
+              <columns>
+                <column uid="colWFDate" type="16" title="Date" width="130" editable="0">
+                  <databind databound="1" table="@RVCM_WF_HIST" alias="U_ChangeDate" />
+                </column>
+                <column uid="colWFUser" type="16" title="User" width="120" editable="0">
+                  <databind databound="1" table="@RVCM_WF_HIST" alias="U_ChangedBy" />
+                </column>
+                <column uid="colFrom" type="16" title="From" width="80" editable="0">
+                  <databind databound="1" table="@RVCM_WF_HIST" alias="U_FromStatus" />
+                </column>
+                <column uid="colTo" type="16" title="To" width="80" editable="0">
+                  <databind databound="1" table="@RVCM_WF_HIST" alias="U_ToStatus" />
+                </column>
+                <column uid="colAction" type="16" title="Action" width="100" editable="0">
+                  <databind databound="1" table="@RVCM_WF_HIST" alias="U_ActionType" />
+                </column>
+                <column uid="colComment" type="16" title="Comments" width="350" editable="0">
+                  <databind databound="1" table="@RVCM_WF_HIST" alias="U_Comments" />
+                </column>
+              </columns>
+            </specific>
+          </item>
+
+          <!-- BUTTONS -->
+          <item uid="btnAdd" type="4" left="10" top="560" width="80" height="19">
+            <specific caption="Add" />
+          </item>
+          <item uid="btnUpdate" type="4" left="95" top="560" width="80" height="19">
+            <specific caption="Update" />
+          </item>
+          <item uid="btnCancel" type="4" left="180" top="560" width="80" height="19">
+            <specific caption="Cancel" />
+          </item>
+          <item uid="btnApprove" type="4" left="265" top="560" width="100" height="19">
+            <specific caption="Approve" />
+          </item>
+          <item uid="btnIPC" type="4" left="370" top="560" width="120" height="19">
+            <specific caption="Create IPC" />
+          </item>
+          <item uid="btnClose" type="4" left="860" top="560" width="80" height="19">
+            <specific caption="Close" />
+          </item>
+
+        </items>
+      </form>
+    </action>
+  </forms>
+</Application>

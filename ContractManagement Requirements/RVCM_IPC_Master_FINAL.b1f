@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="utf-16"?>
+<Application>
+  <forms>
+    <action type="add">
+      <form
+        uid="FRM_RVCM_ICP"
+        type="0"
+        BorderStyle="bbs_Sizable"
+        title="Interim Payment Certificate (IPC)"
+        left="120"
+        top="80"
+        width="950"
+        height="700"
+        client_width="950"
+        client_height="700"
+        AutoManaged="0"
+        SupportedModes="15"
+        default_button="btnAdd">
+
+        <!-- DATA SOURCES -->
+        <datasources>
+          <DataTables>
+            <DataTable Uid="DT_IPC_LINES" />
+            <DataTable Uid="DT_WF" />
+          </DataTables>
+          <DBDataSources>
+            <DBDataSource TableName="@RVCM_ICP"      Uid="DB_IPC" />
+            <DBDataSource TableName="@RVCM_ICP1"     Uid="DB_IPC1" />
+            <DBDataSource TableName="@RVCM_WF_HIST"  Uid="DB_WF" />
+          </DBDataSources>
+        </datasources>
+
+        <items>
+
+          <!-- HEADER BAR -->
+          <item uid="lblTitle" type="8" left="10" top="10" width="930" height="20">
+            <specific caption="Interim Payment Certificate / مستخلص مرحلي" backColor="16764057" font_Bold="1" />
+          </item>
+
+          <!-- IPC CODE / NUMBER -->
+          <item uid="lblCode" type="8" left="10" top="40" width="120" height="14">
+            <specific caption="IPC Code" />
+          </item>
+          <item uid="txtCode" type="16" left="140" top="40" width="180" height="14">
+            <specific>
+              <databind databound="1" table="@RVCM_ICP" alias="Code" />
+            </specific>
+            <AutoManagedAttribute>
+              <Enabled>0</Enabled>
+            </AutoManagedAttribute>
+          </item>
+
+          <item uid="lblIPCNo" type="8" left="340" top="40" width="80" height="14">
+            <specific caption="IPC No." />
+          </item>
+          <item uid="txtIPCNo" type="16" left="430" top="40" width="100" height="14">
+            <specific>
+              <databind databound="1" table="@RVCM_ICP" alias="U_ICPNumber" />
+            </specific>
+          </item>
+
+          <!-- CONTRACT -->
+          <item uid="lblCntrCode" type="8" left="10" top="60" width="120" height="14">
+            <specific caption="Contract No." />
+          </item>
+          <item uid="txtCntrCode" type="16" left="140" top="60" width="120" height="14">
+            <specific>
+              <databind databound="1" table="@RVCM_ICP" alias="U_ContractCode" />
+            </specific>
+          </item>
+
+          <!-- CUSTOMER -->
+          <item uid="lblCardCode" type="8" left="10" top="80" width="120" height="14">
+            <specific caption="Customer Code" />
+          </item>
+          <item uid="txtCardCode" type="16" left="140" top="80" width="100" height="14">
+            <specific>
+              <databind databound="1" table="@RVCM_ICP" alias="U_CardCode" />
+            </specific>
+            <LinkedObjectType>2</LinkedObjectType>
+          </item>
+
+          <!-- DATES -->
+          <item uid="lblCertDate" type="8" left="10" top="100" width="120" height="14">
+            <specific caption="Certificate Date" />
+          </item>
+          <item uid="dtCert" type="16" left="140" top="100" width="90" height="14">
+            <specific>
+              <databind databound="1" table="@RVCM_ICP" alias="U_CertDate" />
+            </specific>
+          </item>
+
+          <item uid="lblFrom" type="8" left="250" top="100" width="80" height="14">
+            <specific caption="Period From" />
+          </item>
+          <item uid="dtFrom" type="16" left="340" top="100" width="90" height="14">
+            <specific>
+              <databind databound="1" table="@RVCM_ICP" alias="U_PeriodFrom" />
+            </specific>
+          </item>
+
+          <item uid="lblTo" type="8" left="450" top="100" width="80" height="14">
+            <specific caption="Period To" />
+          </item>
+          <item uid="dtTo" type="16" left="540" top="100" width="90" height="14">
+            <specific>
+              <databind databound="1" table="@RVCM_ICP" alias="U_PeriodTo" />
+            </specific>
+          </item>
+
+          <!-- STATUS -->
+          <item uid="lblStatus" type="8" left="10" top="120" width="120" height="14">
+            <specific caption="Status" />
+          </item>
+          <item uid="cmbStatus" type="121" left="140" top="120" width="120" height="14">
+            <specific>
+              <databind databound="1" table="@RVCM_ICP" alias="U_Status" />
+              <ValidValues>
+                <ValidValue value="D" description="Draft" />
+                <ValidValue value="S" description="Submitted" />
+                <ValidValue value="A" description="Approved" />
+                <ValidValue value="P" description="Paid" />
+                <ValidValue value="R" description="Rejected" />
+              </ValidValues>
+            </specific>
+          </item>
+
+          <!-- FINANCIAL SUMMARY -->
+          <item uid="lblGross" type="8" left="10" top="150" width="120" height="14">
+            <specific caption="Gross Value" />
+          </item>
+          <item uid="txtGross" type="16" left="140" top="150" width="120" height="14">
+            <specific>
+              <databind databound="1" table="@RVCM_ICP" alias="U_GrossValue" />
+            </specific>
+          </item>
+
+          <item uid="lblPrev" type="8" left="280" top="150" width="120" height="14">
+            <specific caption="Prev. Certified" />
+          </item>
+          <item uid="txtPrev" type="16" left="410" top="150" width="120" height="14">
+            <specific>
+              <databind databound="1" table="@RVCM_ICP" alias="U_PreviousCertified" />
+            </specific>
+          </item>
+
+          <item uid="lblCurr" type="8" left="550" top="150" width="120" height="14">
+            <specific caption="This IPC Cert." />
+          </item>
+          <item uid="txtCurr" type="16" left="680" top="150" width="120" height="14">
+            <specific>
+              <databind databound="1" table="@RVCM_ICP" alias="U_CurrentCertified" />
+            </specific>
+          </item>
+
+          <!-- DEDUCTIONS -->
+          <item uid="lblRetPct" type="8" left="10" top="170" width="120" height="14">
+            <specific caption="Retention %" />
+          </item>
+          <item uid="txtRetPct" type="16" left="140" top="170" width="60" height="14">
+            <specific>
+              <databind databound="1" table="@RVCM_ICP" alias="U_RetentionPct" />
+            </specific>
+          </item>
+
+          <item uid="lblRetAmt" type="8" left="210" top="170" width="100" height="14">
+            <specific caption="Retention Amt" />
+          </item>
+          <item uid="txtRetAmt" type="16" left="320" top="170" width="120" height="14">
+            <specific>
+              <databind databound="1" table="@RVCM_ICP" alias="U_RetentionAmt" />
+            </specific>
+          </item>
+
+          <item uid="lblAdv" type="8" left="10" top="190" width="120" height="14">
+            <specific caption="Advance Deduct" />
+          </item>
+          <item uid="txtAdv" type="16" left="140" top="190" width="120" height="14">
+            <specific>
+              <databind databound="1" table="@RVCM_ICP" alias="U_AdvDeduct" />
+            </specific>
+          </item>
+
+          <item uid="lblMat" type="8" left="280" top="190" width="120" height="14">
+            <specific caption="Material Deduct" />
+          </item>
+          <item uid="txtMat" type="16" left="410" top="190" width="120" height="14">
+            <specific>
+              <databind databound="1" table="@RVCM_ICP" alias="U_MatDeduct" />
+            </specific>
+          </item>
+
+          <item uid="lblOther" type="8" left="550" top="190" width="120" height="14">
+            <specific caption="Other Deduct" />
+          </item>
+          <item uid="txtOther" type="16" left="680" top="190" width="120" height="14">
+            <specific>
+              <databind databound="1" table="@RVCM_ICP" alias="U_OtherDeduct" />
+            </specific>
+          </item>
+
+          <!-- VAT & TOTAL -->
+          <item uid="lblVAT" type="8" left="10" top="210" width="120" height="14">
+            <specific caption="VAT Amount" />
+          </item>
+          <item uid="txtVAT" type="16" left="140" top="210" width="120" height="14">
+            <specific>
+              <databind databound="1" table="@RVCM_ICP" alias="U_VATAmount" />
+            </specific>
+          </item>
+
+          <item uid="lblTotalDue" type="8" left="280" top="210" width="120" height="14">
+            <specific caption="Total Due" />
+          </item>
+          <item uid="txtTotalDue" type="16" left="410" top="210" width="120" height="14">
+            <specific>
+              <databind databound="1" table="@RVCM_ICP" alias="U_TotalDue" />
+            </specific>
+          </item>
+
+          <!-- REMARKS -->
+          <item uid="lblNotes" type="8" left="10" top="230" width="120" height="14">
+            <specific caption="Notes" />
+          </item>
+          <item uid="txtNotes" type="16" left="140" top="230" width="660" height="40">
+            <specific>
+              <databind databound="1" table="@RVCM_ICP" alias="U_Remarks" />
+            </specific>
+          </item>
+
+          <!-- ATTACHMENTS BUTTON -->
+          <item uid="btnAttach" type="4" left="810" top="230" width="80" height="19">
+            <specific caption="Attach..." />
+          </item>
+
+          <!-- FOLDER TABS -->
+          <item uid="fldLines" type="117" left="10" top="280" width="930" height="20">
+            <specific caption="IPC Line Items" ValOn="1" ValOff="0" />
+          </item>
+          <item uid="fldWF" type="117" left="130" top="280" width="930" height="20">
+            <specific caption="Workflow Log" ValOn="2" ValOff="0" />
+          </item>
+
+          <!-- LINES MATRIX -->
+          <item uid="mtxLines" type="127" left="10" top="300" width="930" height="260">
+            <specific SelectionMode="2" layout="0" TabOrder="0">
+              <columns>
+                <column uid="colLineId" type="16" title="#" width="30" editable="0">
+                  <databind databound="1" table="@RVCM_ICP1" alias="LineId" />
+                </column>
+                <column uid="colItemCode" type="16" title="Item Code" width="90" editable="1">
+                  <databind databound="1" table="@RVCM_ICP1" alias="U_ItemCode" />
+                </column>
+                <column uid="colItemName" type="16" title="Description" width="130" editable="1">
+                  <databind databound="1" table="@RVCM_ICP1" alias="U_ItemName" />
+                </column>
+                <column uid="colUOM" type="16" title="UOM" width="50" editable="1">
+                  <databind databound="1" table="@RVCM_ICP1" alias="U_UOM" />
+                </column>
+                <column uid="colContractQty" type="16" title="Contract Qty" width="80" editable="0">
+                  <databind databound="1" table="@RVCM_ICP1" alias="U_ContractQty" />
+                </column>
+                <column uid="colPrevQty" type="16" title="Prev Qty" width="70" editable="0">
+                  <databind databound="1" table="@RVCM_ICP1" alias="U_PreviousQty" />
+                </column>
+                <column uid="colCurrQty" type="16" title="Curr Qty" width="70" editable="1">
+                  <databind databound="1" table="@RVCM_ICP1" alias="U_CurrentQty" />
+                </column>
+                <column uid="colCumQty" type="16" title="Cum Qty" width="70" editable="0">
+                  <databind databound="1" table="@RVCM_ICP1" alias="U_CumulativeQty" />
+                </column>
+                <column uid="colRate" type="16" title="Rate" width="70" editable="0">
+                  <databind databound="1" table="@RVCM_ICP1" alias="U_ContractRate" />
+                </column>
+                <column uid="colCurrVal" type="16" title="Curr Value" width="90" editable="0">
+                  <databind databound="1" table="@RVCM_ICP1" alias="U_CurrentValue" />
+                </column>
+                <column uid="colCompPct" type="16" title="% Complete" width="70" editable="0">
+                  <databind databound="1" table="@RVCM_ICP1" alias="U_CompletionPct" />
+                </column>
+              </columns>
+            </specific>
+          </item>
+
+          <!-- WORKFLOW MATRIX -->
+          <item uid="mtxWF" type="127" left="10" top="300" width="930" height="260">
+            <specific SelectionMode="1" layout="0" TabOrder="1">
+              <columns>
+                <column uid="colWFDate" type="16" title="Date" width="130" editable="0">
+                  <databind databound="1" table="@RVCM_WF_HIST" alias="U_ChangeDate" />
+                </column>
+                <column uid="colWFUser" type="16" title="User" width="120" editable="0">
+                  <databind databound="1" table="@RVCM_WF_HIST" alias="U_ChangedBy" />
+                </column>
+                <column uid="colFrom" type="16" title="From" width="80" editable="0">
+                  <databind databound="1" table="@RVCM_WF_HIST" alias="U_FromStatus" />
+                </column>
+                <column uid="colTo" type="16" title="To" width="80" editable="0">
+                  <databind databound="1" table="@RVCM_WF_HIST" alias="U_ToStatus" />
+                </column>
+                <column uid="colAction" type="16" title="Action" width="100" editable="0">
+                  <databind databound="1" table="@RVCM_WF_HIST" alias="U_ActionType" />
+                </column>
+                <column uid="colComment" type="16" title="Comments" width="350" editable="0">
+                  <databind databound="1" table="@RVCM_WF_HIST" alias="U_Comments" />
+                </column>
+              </columns>
+            </specific>
+          </item>
+
+          <!-- BUTTONS -->
+          <item uid="btnAdd" type="4" left="10" top="590" width="80" height="19">
+            <specific caption="Add" />
+          </item>
+          <item uid="btnUpdate" type="4" left="95" top="590" width="80" height="19">
+            <specific caption="Update" />
+          </item>
+          <item uid="btnSubmit" type="4" left="180" top="590" width="90" height="19">
+            <specific caption="Submit" />
+          </item>
+          <item uid="btnApprove" type="4" left="275" top="590" width="90" height="19">
+            <specific caption="Approve" />
+          </item>
+          <item uid="btnReject" type="4" left="370" top="590" width="90" height="19">
+            <specific caption="Reject" />
+          </item>
+          <item uid="btnInvoice" type="4" left="465" top="590" width="120" height="19">
+            <specific caption="Generate AR Invoice" />
+          </item>
+          <item uid="btnClose" type="4" left="860" top="590" width="80" height="19">
+            <specific caption="Close" />
+          </item>
+
+        </items>
+      </form>
+    </action>
+  </forms>
+</Application>
