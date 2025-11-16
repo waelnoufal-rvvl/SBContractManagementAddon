@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using ContractManagementAddon.Core;
+using ContractManagementAddon.Forms;
 
 namespace ContractManagementAddon
 {
@@ -28,12 +30,12 @@ namespace ContractManagementAddon
 
             try
             {
-                //  If the manu already exists this code will fail
+                //  If the menu already exists this code will fail
                 oMenus.AddEx(oCreationPackage);
             }
-            catch (Exception e)
+            catch
             {
-
+                // Menu already exists, ignore
             }
 
             try
@@ -42,14 +44,15 @@ namespace ContractManagementAddon
                 oMenuItem = Application.SBO_Application.Menus.Item("ContractManagementAddon");
                 oMenus = oMenuItem.SubMenus;
 
-                // Create s sub menu
+                // Create sub menu
                 oCreationPackage.Type = SAPbouiCOM.BoMenuType.mt_STRING;
-                oCreationPackage.UniqueID = "ContractManagementAddon.Form1";
-                oCreationPackage.String = "Form1";
+                oCreationPackage.UniqueID = "ContractManagementAddon.Dashboard";
+                oCreationPackage.String = "Contract Dashboard";
                 oMenus.AddEx(oCreationPackage);
             }
-            catch (Exception er)
-            { //  Menu already exists
+            catch
+            {
+                // Menu already exists
                 Application.SBO_Application.SetStatusBarMessage("Menu Already Exists", SAPbouiCOM.BoMessageTime.bmt_Short, true);
             }
         }
@@ -60,10 +63,12 @@ namespace ContractManagementAddon
 
             try
             {
-                if (pVal.BeforeAction && pVal.MenuUID == "ContractManagementAddon.Form1")
+                if (pVal.BeforeAction && pVal.MenuUID == "ContractManagementAddon.Dashboard")
                 {
-                    Form1 activeForm = new Form1();
-                    activeForm.Show();
+                    // Get the application instance from the global Application
+                    var app = new ContractManagementApplication(Application.SBO_Application, null);
+                    DashboardForm dashboardForm = new DashboardForm(app);
+                    dashboardForm.Show();
                 }
             }
             catch (Exception ex)
