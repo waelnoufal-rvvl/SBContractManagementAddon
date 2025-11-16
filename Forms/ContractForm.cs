@@ -22,20 +22,20 @@ namespace ContractManagementAddon.Forms
 
         private const string FORM_TYPE = "FRM_CONTRACT";
 
-        // Control IDs
+        // Control IDs (max 10 chars for SAP B1)
         private const string BTN_NEW = "btnNew";
         private const string BTN_SAVE = "btnSave";
         private const string BTN_DELETE = "btnDelete";
         private const string BTN_FIND = "btnFind";
         private const string TXT_CODE = "txtCode";
-        private const string TXT_CUSTOMER = "txtCustomer";
+        private const string TXT_CUSTOMER = "txtCust";
         private const string TXT_DESC = "txtDesc";
         private const string DT_START = "dtStart";
         private const string DT_END = "dtEnd";
         private const string TXT_VALUE = "txtValue";
         private const string CMB_STATUS = "cmbStatus";
-        private const string TXT_RETENTION = "txtRetention";
-        private const string GRID_LINES = "gridLines";
+        private const string TXT_RETENTION = "txtReten";
+        private const string GRID_LINES = "grdLines";
 
         public ContractForm(IContractManagementApp app)
         {
@@ -125,7 +125,7 @@ namespace ContractManagementAddon.Forms
                 topPosition += rowHeight;
 
                 // Customer
-                AddLabel("lblCustomer", "", leftMargin, topPosition, labelWidth, 14);
+                AddLabel("lblCust", "", leftMargin, topPosition, labelWidth, 14);
                 AddTextBox(TXT_CUSTOMER, leftMargin + labelWidth + 10, topPosition, fieldWidth, 14);
                 topPosition += rowHeight;
 
@@ -155,7 +155,7 @@ namespace ContractManagementAddon.Forms
                 topPosition += rowHeight;
 
                 // Retention %
-                AddLabel("lblRetention", "", leftMargin, topPosition, labelWidth, 14);
+                AddLabel("lblReten", "", leftMargin, topPosition, labelWidth, 14);
                 AddEditText(TXT_RETENTION, leftMargin + labelWidth + 10, topPosition, fieldWidth, 14);
                 topPosition += rowHeight;
 
@@ -487,13 +487,13 @@ namespace ContractManagementAddon.Forms
 
                 // Localize labels
                 ((StaticText)_form.Items.Item("lblCode").Specific).Caption = _lang.GetString("Contract_Code");
-                ((StaticText)_form.Items.Item("lblCustomer").Specific).Caption = _lang.GetString("Contract_Customer");
+                ((StaticText)_form.Items.Item("lblCust").Specific).Caption = _lang.GetString("Contract_Customer");
                 ((StaticText)_form.Items.Item("lblDesc").Specific).Caption = _lang.GetString("Contract_Description");
                 ((StaticText)_form.Items.Item("lblStart").Specific).Caption = _lang.GetString("Contract_StartDate");
                 ((StaticText)_form.Items.Item("lblEnd").Specific).Caption = _lang.GetString("Contract_EndDate");
                 ((StaticText)_form.Items.Item("lblValue").Specific).Caption = _lang.GetString("Contract_TotalValue");
                 ((StaticText)_form.Items.Item("lblStatus").Specific).Caption = _lang.GetString("Contract_Status");
-                ((StaticText)_form.Items.Item("lblRetention").Specific).Caption = _lang.GetString("Contract_RetentionPercentage");
+                ((StaticText)_form.Items.Item("lblReten").Specific).Caption = _lang.GetString("Contract_RetentionPercentage");
                 ((StaticText)_form.Items.Item("lblLines").Specific).Caption = _lang.GetString("Contract_Lines");
 
                 // Apply RTL if needed
