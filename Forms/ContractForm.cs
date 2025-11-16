@@ -4,6 +4,7 @@ using ContractManagementAddon.Core;
 using ContractManagementAddon.Models;
 using ContractManagementAddon.Services;
 using ContractManagementAddon.Utilities;
+using ContractManagementAddon.Localization;
 
 namespace ContractManagementAddon.Forms
 {
@@ -16,6 +17,8 @@ namespace ContractManagementAddon.Forms
         private SAPbouiCOM.Form _form;
         private ContractService _contractService;
         private Contract _currentContract;
+        private LanguageManager _lang;
+        private bool _isRTL;
 
         private const string FORM_TYPE = "FRM_CONTRACT";
 
@@ -38,6 +41,9 @@ namespace ContractManagementAddon.Forms
         {
             _app = app ?? throw new ArgumentNullException(nameof(app));
             _contractService = new ContractService(_app.Company);
+            _lang = LanguageManager.Instance;
+            _isRTL = _lang.IsRightToLeft;
+            _lang.LanguageChanged += OnLanguageChanged;
         }
 
         /// <summary>
@@ -61,6 +67,7 @@ namespace ContractManagementAddon.Forms
 
                 CreateForm();
                 InitializeControls();
+                LocalizeForm();
                 AttachEvents();
                 LoadNewContract();
 
@@ -86,7 +93,7 @@ namespace ContractManagementAddon.Forms
             formParams.BorderStyle = BoFormBorderStyle.fbs_Sizable;
 
             _form = _app.UIApp.Forms.AddEx(formParams);
-            _form.Title = "Contract Management";
+            _form.Title = _lang.GetString("Form_Contract_Title");
             _form.Width = 800;
             _form.Height = 600;
             _form.Left = 200;
@@ -106,55 +113,55 @@ namespace ContractManagementAddon.Forms
                 int labelWidth = 120;
                 int fieldWidth = 200;
 
-                // Buttons
-                AddButton(BTN_NEW, "New", 20, 10, 80, 19);
-                AddButton(BTN_SAVE, "Save", 110, 10, 80, 19);
-                AddButton(BTN_DELETE, "Delete", 200, 10, 80, 19);
-                AddButton(BTN_FIND, "Find", 290, 10, 80, 19);
+                // Buttons (will be localized in LocalizeForm)
+                AddButton(BTN_NEW, "", 20, 10, 80, 19);
+                AddButton(BTN_SAVE, "", 110, 10, 80, 19);
+                AddButton(BTN_DELETE, "", 200, 10, 80, 19);
+                AddButton(BTN_FIND, "", 290, 10, 80, 19);
 
                 // Contract Code
-                AddLabel("lblCode", "Contract Code:", leftMargin, topPosition, labelWidth, 14);
+                AddLabel("lblCode", "", leftMargin, topPosition, labelWidth, 14);
                 AddTextBox(TXT_CODE, leftMargin + labelWidth + 10, topPosition, fieldWidth, 14);
                 topPosition += rowHeight;
 
                 // Customer
-                AddLabel("lblCustomer", "Customer:", leftMargin, topPosition, labelWidth, 14);
+                AddLabel("lblCustomer", "", leftMargin, topPosition, labelWidth, 14);
                 AddTextBox(TXT_CUSTOMER, leftMargin + labelWidth + 10, topPosition, fieldWidth, 14);
                 topPosition += rowHeight;
 
                 // Description
-                AddLabel("lblDesc", "Description:", leftMargin, topPosition, labelWidth, 14);
+                AddLabel("lblDesc", "", leftMargin, topPosition, labelWidth, 14);
                 AddTextBox(TXT_DESC, leftMargin + labelWidth + 10, topPosition, 400, 14);
                 topPosition += rowHeight;
 
                 // Start Date
-                AddLabel("lblStart", "Start Date:", leftMargin, topPosition, labelWidth, 14);
+                AddLabel("lblStart", "", leftMargin, topPosition, labelWidth, 14);
                 AddEditText(DT_START, leftMargin + labelWidth + 10, topPosition, fieldWidth, 14);
                 topPosition += rowHeight;
 
                 // End Date
-                AddLabel("lblEnd", "End Date:", leftMargin, topPosition, labelWidth, 14);
+                AddLabel("lblEnd", "", leftMargin, topPosition, labelWidth, 14);
                 AddEditText(DT_END, leftMargin + labelWidth + 10, topPosition, fieldWidth, 14);
                 topPosition += rowHeight;
 
                 // Contract Value
-                AddLabel("lblValue", "Contract Value:", leftMargin, topPosition, labelWidth, 14);
+                AddLabel("lblValue", "", leftMargin, topPosition, labelWidth, 14);
                 AddEditText(TXT_VALUE, leftMargin + labelWidth + 10, topPosition, fieldWidth, 14);
                 topPosition += rowHeight;
 
                 // Status
-                AddLabel("lblStatus", "Status:", leftMargin, topPosition, labelWidth, 14);
+                AddLabel("lblStatus", "", leftMargin, topPosition, labelWidth, 14);
                 AddComboBox(CMB_STATUS, leftMargin + labelWidth + 10, topPosition, fieldWidth, 14);
                 topPosition += rowHeight;
 
                 // Retention %
-                AddLabel("lblRetention", "Retention %:", leftMargin, topPosition, labelWidth, 14);
+                AddLabel("lblRetention", "", leftMargin, topPosition, labelWidth, 14);
                 AddEditText(TXT_RETENTION, leftMargin + labelWidth + 10, topPosition, fieldWidth, 14);
                 topPosition += rowHeight;
 
                 // Lines Grid
                 topPosition += 10;
-                AddLabel("lblLines", "Contract Lines:", leftMargin, topPosition, labelWidth, 14);
+                AddLabel("lblLines", "", leftMargin, topPosition, labelWidth, 14);
                 topPosition += 20;
                 AddGrid(GRID_LINES, leftMargin, topPosition, 750, 200);
 
@@ -246,11 +253,11 @@ namespace ContractManagementAddon.Forms
 
                 // Load status combo
                 ComboBox statusCombo = (ComboBox)_form.Items.Item(CMB_STATUS).Specific;
-                statusCombo.ValidValues.Add("Draft", "Draft");
-                statusCombo.ValidValues.Add("Active", "Active");
-                statusCombo.ValidValues.Add("OnHold", "On Hold");
-                statusCombo.ValidValues.Add("Completed", "Completed");
-                statusCombo.ValidValues.Add("Cancelled", "Cancelled");
+                statusCombo.ValidValues.Add("Draft", _lang.GetString("Status_Draft"));
+                statusCombo.ValidValues.Add("Active", _lang.GetString("Status_Active"));
+                statusCombo.ValidValues.Add("OnHold", _lang.GetString("Status_OnHold"));
+                statusCombo.ValidValues.Add("Completed", _lang.GetString("Status_Completed"));
+                statusCombo.ValidValues.Add("Cancelled", _lang.GetString("Status_Cancelled"));
                 statusCombo.Select(contract.Status, BoSearchKey.psk_ByValue);
 
                 LoadLinesToGrid(contract.Lines);
@@ -460,6 +467,63 @@ namespace ContractManagementAddon.Forms
             item.Top = top;
             item.Width = width;
             item.Height = height;
+        }
+
+        /// <summary>
+        /// Localize all form controls
+        /// </summary>
+        private void LocalizeForm()
+        {
+            try
+            {
+                // Update form title
+                _form.Title = _lang.GetString("Form_Contract_Title");
+
+                // Localize buttons
+                ((Button)_form.Items.Item(BTN_NEW).Specific).Caption = _lang.GetString("Common_New");
+                ((Button)_form.Items.Item(BTN_SAVE).Specific).Caption = _lang.GetString("Common_Save");
+                ((Button)_form.Items.Item(BTN_DELETE).Specific).Caption = _lang.GetString("Common_Delete");
+                ((Button)_form.Items.Item(BTN_FIND).Specific).Caption = _lang.GetString("Common_Find");
+
+                // Localize labels
+                ((StaticText)_form.Items.Item("lblCode").Specific).Caption = _lang.GetString("Contract_Code");
+                ((StaticText)_form.Items.Item("lblCustomer").Specific).Caption = _lang.GetString("Contract_Customer");
+                ((StaticText)_form.Items.Item("lblDesc").Specific).Caption = _lang.GetString("Contract_Description");
+                ((StaticText)_form.Items.Item("lblStart").Specific).Caption = _lang.GetString("Contract_StartDate");
+                ((StaticText)_form.Items.Item("lblEnd").Specific).Caption = _lang.GetString("Contract_EndDate");
+                ((StaticText)_form.Items.Item("lblValue").Specific).Caption = _lang.GetString("Contract_TotalValue");
+                ((StaticText)_form.Items.Item("lblStatus").Specific).Caption = _lang.GetString("Contract_Status");
+                ((StaticText)_form.Items.Item("lblRetention").Specific).Caption = _lang.GetString("Contract_RetentionPercentage");
+                ((StaticText)_form.Items.Item("lblLines").Specific).Caption = _lang.GetString("Contract_Lines");
+
+                // Apply RTL if needed
+                if (_isRTL)
+                {
+                    _lang.LocalizeForm(_form);
+                }
+
+                Logger.Info("Contract form localized successfully");
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Error localizing form", ex);
+            }
+        }
+
+        /// <summary>
+        /// Handle language change event
+        /// </summary>
+        private void OnLanguageChanged(object sender, LanguageChangedEventArgs e)
+        {
+            try
+            {
+                _isRTL = _lang.IsRightToLeft;
+                LocalizeForm();
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Error handling language change", ex);
+            }
         }
     }
 }

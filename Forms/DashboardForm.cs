@@ -3,6 +3,7 @@ using SAPbouiCOM;
 using ContractManagementAddon.Core;
 using ContractManagementAddon.Services;
 using ContractManagementAddon.Utilities;
+using ContractManagementAddon.Localization;
 
 namespace ContractManagementAddon.Forms
 {
@@ -14,6 +15,8 @@ namespace ContractManagementAddon.Forms
         private ContractManagementApplication _app;
         private SAPbouiCOM.Form _form;
         private ContractService _contractService;
+        private LanguageManager _lang;
+        private bool _isRTL;
 
         private const string FORM_TYPE = "FRM_DASHBOARD";
 
@@ -21,6 +24,9 @@ namespace ContractManagementAddon.Forms
         {
             _app = app ?? throw new ArgumentNullException(nameof(app));
             _contractService = new ContractService(_app.Company);
+            _lang = LanguageManager.Instance;
+            _isRTL = _lang.IsRightToLeft;
+            _lang.LanguageChanged += OnLanguageChanged;
         }
 
         /// <summary>
@@ -44,6 +50,7 @@ namespace ContractManagementAddon.Forms
 
                 CreateForm();
                 InitializeControls();
+                LocalizeForm();
                 LoadDashboardData();
 
                 _form.Visible = true;
@@ -71,7 +78,7 @@ namespace ContractManagementAddon.Forms
             formParams.BorderStyle = BoFormBorderStyle.fbs_Sizable;
 
             _form = _app.UIApp.Forms.AddEx(formParams);
-            _form.Title = "Contract Management Dashboard";
+            _form.Title = _lang.GetString("Form_Dashboard_Title");
             _form.Width = 900;
             _form.Height = 650;
             _form.Left = 150;
@@ -91,35 +98,35 @@ namespace ContractManagementAddon.Forms
                 int rowHeight = 30;
 
                 // Title
-                AddLabel("lblTitle", "Contract Management Dashboard", leftMargin, topPosition, 400, 20);
+                AddLabel("lblTitle", "", leftMargin, topPosition, 400, 20);
                 topPosition += 30;
 
                 // Summary Cards
-                AddLabel("lblTotalContracts", "Total Contracts:", leftMargin, topPosition, 150, 14);
+                AddLabel("lblTotalContracts", "", leftMargin, topPosition, 150, 14);
                 AddLabel("lblTotalValue", "0", leftMargin + 160, topPosition, colWidth, 14);
                 topPosition += rowHeight;
 
-                AddLabel("lblActiveContracts", "Active Contracts:", leftMargin, topPosition, 150, 14);
+                AddLabel("lblActiveContracts", "", leftMargin, topPosition, 150, 14);
                 AddLabel("lblActiveValue", "0", leftMargin + 160, topPosition, colWidth, 14);
                 topPosition += rowHeight;
 
-                AddLabel("lblTotalIPCs", "Total IPCs:", leftMargin, topPosition, 150, 14);
+                AddLabel("lblTotalIPCs", "", leftMargin, topPosition, 150, 14);
                 AddLabel("lblIPCValue", "0", leftMargin + 160, topPosition, colWidth, 14);
                 topPosition += rowHeight;
 
-                AddLabel("lblTotalCOs", "Total Change Orders:", leftMargin, topPosition, 150, 14);
+                AddLabel("lblTotalCOs", "", leftMargin, topPosition, 150, 14);
                 AddLabel("lblCOValue", "0", leftMargin + 160, topPosition, colWidth, 14);
                 topPosition += 40;
 
                 // Contract List Grid
-                AddLabel("lblContractList", "Active Contracts:", leftMargin, topPosition, 200, 14);
+                AddLabel("lblContractList", "", leftMargin, topPosition, 200, 14);
                 topPosition += 20;
                 AddGrid("gridContracts", leftMargin, topPosition, 850, 300);
                 topPosition += 320;
 
                 // Refresh button
-                AddButton("btnRefresh", "Refresh", leftMargin, topPosition, 100, 20);
-                AddButton("btnExport", "Export", leftMargin + 110, topPosition, 100, 20);
+                AddButton("btnRefresh", "", leftMargin, topPosition, 100, 20);
+                AddButton("btnExport", "", leftMargin + 110, topPosition, 100, 20);
 
                 Logger.Info("Dashboard form controls initialized");
             }
@@ -248,6 +255,58 @@ namespace ContractManagementAddon.Forms
             item.Top = top;
             item.Width = width;
             item.Height = height;
+        }
+
+        /// <summary>
+        /// Localize all form controls
+        /// </summary>
+        private void LocalizeForm()
+        {
+            try
+            {
+                // Update form title
+                _form.Title = _lang.GetString("Form_Dashboard_Title");
+
+                // Localize labels
+                ((StaticText)_form.Items.Item("lblTitle").Specific).Caption = _lang.GetString("Form_Dashboard_Title");
+                ((StaticText)_form.Items.Item("lblTotalContracts").Specific).Caption = _lang.GetString("Dashboard_TotalContracts");
+                ((StaticText)_form.Items.Item("lblActiveContracts").Specific).Caption = _lang.GetString("Dashboard_ActiveContracts");
+                ((StaticText)_form.Items.Item("lblTotalIPCs").Specific).Caption = _lang.GetString("Dashboard_TotalIPCs");
+                ((StaticText)_form.Items.Item("lblTotalCOs").Specific).Caption = _lang.GetString("Dashboard_TotalChangeOrders");
+                ((StaticText)_form.Items.Item("lblContractList").Specific).Caption = _lang.GetString("Dashboard_ActiveContractsList");
+
+                // Localize buttons
+                ((Button)_form.Items.Item("btnRefresh").Specific).Caption = _lang.GetString("Common_Refresh");
+                ((Button)_form.Items.Item("btnExport").Specific).Caption = _lang.GetString("Common_Export");
+
+                // Apply RTL if needed
+                if (_isRTL)
+                {
+                    _lang.LocalizeForm(_form);
+                }
+
+                Logger.Info("Dashboard form localized successfully");
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Error localizing Dashboard form", ex);
+            }
+        }
+
+        /// <summary>
+        /// Handle language change event
+        /// </summary>
+        private void OnLanguageChanged(object sender, LanguageChangedEventArgs e)
+        {
+            try
+            {
+                _isRTL = _lang.IsRightToLeft;
+                LocalizeForm();
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Error handling language change", ex);
+            }
         }
     }
 }
