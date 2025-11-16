@@ -258,8 +258,12 @@
     <Content Include="Database\CreateIndexes.sql" />
     <Content Include="Database\PerformanceMonitoring.sql" />
     <Content Include="Database\README_Database_Migration.txt" />
-    <Content Include="Localization\Resources\Resources.Arabic.xml" />
-    <Content Include="Localization\Resources\Resources.English.xml" />
+    <Content Include="Localization\Resources\Resources.Arabic.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Localization\Resources\Resources.English.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Queries\RevenueRecognitionQueries.sql" />
     <Content Include="SAP\addon.srf" />
     <Content Include="SAP\addon.xml" />
