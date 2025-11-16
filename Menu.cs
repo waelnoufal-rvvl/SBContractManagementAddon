@@ -22,7 +22,7 @@ namespace ContractManagementAddon
 
             oCreationPackage.Type = SAPbouiCOM.BoMenuType.mt_POPUP;
             oCreationPackage.UniqueID = "ContractManagementAddon";
-            oCreationPackage.String = "ContractManagementAddon";
+            oCreationPackage.String = "Contract Management";
             oCreationPackage.Enabled = true;
             oCreationPackage.Position = -1;
 
@@ -44,10 +44,35 @@ namespace ContractManagementAddon
                 oMenuItem = Application.SBO_Application.Menus.Item("ContractManagementAddon");
                 oMenus = oMenuItem.SubMenus;
 
-                // Create sub menu
+                // Create Contracts menu item
+                oCreationPackage.Type = SAPbouiCOM.BoMenuType.mt_STRING;
+                oCreationPackage.UniqueID = "ContractManagementAddon.Contracts";
+                oCreationPackage.String = "Contracts";
+                oCreationPackage.Position = 1;
+                oMenus.AddEx(oCreationPackage);
+
+                // Create IPC menu item
+                oCreationPackage = ((SAPbouiCOM.MenuCreationParams)(Application.SBO_Application.CreateObject(SAPbouiCOM.BoCreatableObjectType.cot_MenuCreationParams)));
+                oCreationPackage.Type = SAPbouiCOM.BoMenuType.mt_STRING;
+                oCreationPackage.UniqueID = "ContractManagementAddon.IPC";
+                oCreationPackage.String = "Interim Payment Certificates";
+                oCreationPackage.Position = 2;
+                oMenus.AddEx(oCreationPackage);
+
+                // Create Change Orders menu item
+                oCreationPackage = ((SAPbouiCOM.MenuCreationParams)(Application.SBO_Application.CreateObject(SAPbouiCOM.BoCreatableObjectType.cot_MenuCreationParams)));
+                oCreationPackage.Type = SAPbouiCOM.BoMenuType.mt_STRING;
+                oCreationPackage.UniqueID = "ContractManagementAddon.ChangeOrders";
+                oCreationPackage.String = "Change Orders";
+                oCreationPackage.Position = 3;
+                oMenus.AddEx(oCreationPackage);
+
+                // Create Dashboard menu item
+                oCreationPackage = ((SAPbouiCOM.MenuCreationParams)(Application.SBO_Application.CreateObject(SAPbouiCOM.BoCreatableObjectType.cot_MenuCreationParams)));
                 oCreationPackage.Type = SAPbouiCOM.BoMenuType.mt_STRING;
                 oCreationPackage.UniqueID = "ContractManagementAddon.Dashboard";
-                oCreationPackage.String = "Contract Dashboard";
+                oCreationPackage.String = "Dashboard";
+                oCreationPackage.Position = 4;
                 oMenus.AddEx(oCreationPackage);
             }
             catch
@@ -63,7 +88,7 @@ namespace ContractManagementAddon
 
             try
             {
-                if (pVal.BeforeAction && pVal.MenuUID == "ContractManagementAddon.Dashboard")
+                if (pVal.BeforeAction)
                 {
                     // Create a simple wrapper to get Company from SAP Application
                     var company = (SAPbobsCOM.Company)Application.SBO_Application.Company.GetDICompany();
@@ -73,8 +98,28 @@ namespace ContractManagementAddon
                         Application.SBO_Application,
                         company);
 
-                    DashboardForm dashboardForm = new DashboardForm(appWrapper);
-                    dashboardForm.Show();
+                    switch (pVal.MenuUID)
+                    {
+                        case "ContractManagementAddon.Contracts":
+                            ContractForm contractForm = new ContractForm(appWrapper);
+                            contractForm.Show();
+                            break;
+
+                        case "ContractManagementAddon.IPC":
+                            IPCForm ipcForm = new IPCForm(appWrapper);
+                            ipcForm.Show();
+                            break;
+
+                        case "ContractManagementAddon.ChangeOrders":
+                            ChangeOrderForm coForm = new ChangeOrderForm(appWrapper);
+                            coForm.Show();
+                            break;
+
+                        case "ContractManagementAddon.Dashboard":
+                            DashboardForm dashboardForm = new DashboardForm(appWrapper);
+                            dashboardForm.Show();
+                            break;
+                    }
                 }
             }
             catch (Exception ex)
