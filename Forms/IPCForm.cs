@@ -13,7 +13,7 @@ namespace ContractManagementAddon.Forms
     /// </summary>
     public class IPCForm
     {
-        private ContractManagementApplication _app;
+        private IContractManagementApp _app;
         private SAPbouiCOM.Form _form;
         private IPCService _ipcService;
         private LanguageManager _lang;
@@ -22,7 +22,7 @@ namespace ContractManagementAddon.Forms
 
         private const string FORM_TYPE = "FRM_IPC";
 
-        public IPCForm(ContractManagementApplication app)
+        public IPCForm(IContractManagementApp app)
         {
             _app = app ?? throw new ArgumentNullException(nameof(app));
             _ipcService = new IPCService(_app.Company);

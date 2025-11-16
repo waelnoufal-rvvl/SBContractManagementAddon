@@ -13,7 +13,7 @@ namespace ContractManagementAddon.Forms
     /// </summary>
     public class ChangeOrderForm
     {
-        private ContractManagementApplication _app;
+        private IContractManagementApp _app;
         private SAPbouiCOM.Form _form;
         private ChangeOrderService _coService;
         private LanguageManager _lang;
@@ -22,7 +22,7 @@ namespace ContractManagementAddon.Forms
 
         private const string FORM_TYPE = "FRM_CO";
 
-        public ChangeOrderForm(ContractManagementApplication app)
+        public ChangeOrderForm(IContractManagementApp app)
         {
             _app = app ?? throw new ArgumentNullException(nameof(app));
             _coService = new ChangeOrderService(_app.Company);

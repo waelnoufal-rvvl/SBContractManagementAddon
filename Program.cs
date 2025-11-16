@@ -1,13 +1,11 @@
 ﻿using SAPbouiCOM.Framework;
 using System;
-using ContractManagementAddon.Core;
+using System.Collections.Generic;
 
 namespace ContractManagementAddon
 {
     class Program
     {
-        private static ContractManagementApplication _app;
-
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -16,7 +14,6 @@ namespace ContractManagementAddon
         {
             try
             {
-                // Use SAP Framework Application for connection handling
                 Application oApp = null;
                 if (args.Length < 1)
                 {
@@ -24,27 +21,19 @@ namespace ContractManagementAddon
                 }
                 else
                 {
-                    // Connection string passed by SAP B1
+                    //If you want to use an add-on identifier for the development license, you can specify an add-on identifier string as the second parameter.
+                    //oApp = new Application(args[0], "XXXXX");
                     oApp = new Application(args[0]);
                 }
-
-                // Initialize our application after SAP connection is established
-                _app = new ContractManagementApplication();
-                _app.Run();
-
-                // Register shutdown handler
+                Menu MyMenu = new Menu();
+                MyMenu.AddMenuItems();
+                oApp.RegisterMenuEventHandler(MyMenu.SBO_Application_MenuEvent);
                 Application.SBO_Application.AppEvent += new SAPbouiCOM._IApplicationEvents_AppEventEventHandler(SBO_Application_AppEvent);
-
-                // Run the SAP application
                 oApp.Run();
             }
             catch (Exception ex)
             {
-                System.Windows.Forms.MessageBox.Show(
-                    "Failed to start Contract Management Add-On:\n\n" + ex.Message + "\n\n" + ex.StackTrace,
-                    "Contract Management Add-On Error",
-                    System.Windows.Forms.MessageBoxButtons.OK,
-                    System.Windows.Forms.MessageBoxIcon.Error);
+                System.Windows.Forms.MessageBox.Show(ex.Message);
             }
         }
 
@@ -53,11 +42,18 @@ namespace ContractManagementAddon
             switch (EventType)
             {
                 case SAPbouiCOM.BoAppEventTypes.aet_ShutDown:
-                    if (_app != null)
-                    {
-                        _app.Shutdown();
-                    }
+                    //Exit Add-On
                     System.Windows.Forms.Application.Exit();
+                    break;
+                case SAPbouiCOM.BoAppEventTypes.aet_CompanyChanged:
+                    break;
+                case SAPbouiCOM.BoAppEventTypes.aet_FontChanged:
+                    break;
+                case SAPbouiCOM.BoAppEventTypes.aet_LanguageChanged:
+                    break;
+                case SAPbouiCOM.BoAppEventTypes.aet_ServerTerminition:
+                    break;
+                default:
                     break;
             }
         }

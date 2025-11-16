@@ -9,9 +9,36 @@ using ContractManagementAddon.Services;
 namespace ContractManagementAddon.Core
 {
     /// <summary>
+    /// Interface for accessing SAP B1 connection
+    /// </summary>
+    public interface IContractManagementApp
+    {
+        SAPbouiCOM.Application UIApp { get; }
+        SAPbobsCOM.Company Company { get; }
+    }
+
+    /// <summary>
+    /// Lightweight wrapper for forms that already have a SAP connection
+    /// </summary>
+    public class ContractManagementApplicationWrapper : IContractManagementApp
+    {
+        private SAPbouiCOM.Application _uiApp;
+        private SAPbobsCOM.Company _company;
+
+        public SAPbouiCOM.Application UIApp => _uiApp;
+        public SAPbobsCOM.Company Company => _company;
+
+        public ContractManagementApplicationWrapper(SAPbouiCOM.Application uiApp, SAPbobsCOM.Company company)
+        {
+            _uiApp = uiApp ?? throw new ArgumentNullException(nameof(uiApp));
+            _company = company ?? throw new ArgumentNullException(nameof(company));
+        }
+    }
+
+    /// <summary>
     /// Main application class that manages add-on lifecycle
     /// </summary>
-    public class ContractManagementApplication
+    public class ContractManagementApplication : IContractManagementApp
     {
         private SAPbouiCOM.Application _uiApp;
         private SAPbobsCOM.Company _company;

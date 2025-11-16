@@ -12,7 +12,7 @@ namespace ContractManagementAddon.Forms
     /// </summary>
     public class DashboardForm
     {
-        private ContractManagementApplication _app;
+        private IContractManagementApp _app;
         private SAPbouiCOM.Form _form;
         private ContractService _contractService;
         private LanguageManager _lang;
@@ -20,7 +20,7 @@ namespace ContractManagementAddon.Forms
 
         private const string FORM_TYPE = "FRM_DASHBOARD";
 
-        public DashboardForm(ContractManagementApplication app)
+        public DashboardForm(IContractManagementApp app)
         {
             _app = app ?? throw new ArgumentNullException(nameof(app));
             _contractService = new ContractService(_app.Company);

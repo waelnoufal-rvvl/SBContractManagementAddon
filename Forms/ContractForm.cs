@@ -13,7 +13,7 @@ namespace ContractManagementAddon.Forms
     /// </summary>
     public class ContractForm
     {
-        private ContractManagementApplication _app;
+        private IContractManagementApp _app;
         private SAPbouiCOM.Form _form;
         private ContractService _contractService;
         private Contract _currentContract;
@@ -37,7 +37,7 @@ namespace ContractManagementAddon.Forms
         private const string TXT_RETENTION = "txtRetention";
         private const string GRID_LINES = "gridLines";
 
-        public ContractForm(ContractManagementApplication app)
+        public ContractForm(IContractManagementApp app)
         {
             _app = app ?? throw new ArgumentNullException(nameof(app));
             _contractService = new ContractService(_app.Company);
