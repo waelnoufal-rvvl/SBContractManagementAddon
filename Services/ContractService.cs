@@ -15,7 +15,7 @@ namespace ContractManagementAddon.Services
         private Company _company;
         private ContractRepository _contractRepo;
         private IPCRepository _ipcRepo;
-        private ChangeOrderRepository _coRepo;
+        //private ChangeOrderRepository _coRepo;
         private CurrencyService _currencyService;
         private RevenueRecognitionService _revenueService;
 
@@ -24,7 +24,7 @@ namespace ContractManagementAddon.Services
             _company = company ?? throw new ArgumentNullException(nameof(company));
             _contractRepo = new ContractRepository(_company);
             _ipcRepo = new IPCRepository(_company);
-            _coRepo = new ChangeOrderRepository(_company);
+            //_coRepo = new ChangeOrderRepository(_company);
             _currencyService = new CurrencyService(_company);
             _revenueService = new RevenueRecognitionService(_company);
         }
@@ -175,18 +175,18 @@ namespace ContractManagementAddon.Services
             {
                 // Check if contract has IPCs or COs
                 var ipcs = _ipcRepo.GetByContract(code);
-                var cos = _coRepo.GetByContract(code);
+                //var cos = _coRepo.GetByContract(code);
 
                 if (ipcs.Count > 0)
                 {
                     throw new Exception("Cannot delete contract with existing IPCs. Delete IPCs first.");
                 }
 
-                if (cos.Count > 0)
+            /*    if (cos.Count > 0)
                 {
                     throw new Exception("Cannot delete contract with existing Change Orders. Delete COs first.");
                 }
-
+*/
                 _contractRepo.Delete(code);
             }
             catch (Exception ex)
@@ -254,13 +254,13 @@ namespace ContractManagementAddon.Services
                 contract.TotalPaid = contract.TotalIPCAmount - contract.TotalRetention;
 
                 // Get change orders impact
-                double coImpact = _coRepo.GetTotalApprovedCOAmount(contract.Code);
+                //double coImpact = _coRepo.GetTotalApprovedCOAmount(contract.Code);
 
                 // Adjusted contract value
-                double adjustedValue = contract.TotalValue + coImpact;
+                //double adjustedValue = contract.TotalValue + coImpact;
 
                 // Balance remaining
-                contract.Balance = adjustedValue - contract.TotalIPCAmount;
+                contract.Balance = contract.TotalIPCAmount;
 
                 // Completion percentage
                 contract.CalculateCompletion();
@@ -334,9 +334,9 @@ namespace ContractManagementAddon.Services
                 };
 
                 // Add change order totals
-                var changeOrders = _coRepo.GetByContract(code);
-                summary["TotalChangeOrders"] = changeOrders.Count;
-                summary["ChangeOrderValue"] = _coRepo.GetTotalApprovedCOAmount(code);
+                //var changeOrders = _coRepo.GetByContract(code);
+                //summary["TotalChangeOrders"] = changeOrders.Count;
+                //summary["ChangeOrderValue"] = _coRepo.GetTotalApprovedCOAmount(code);
 
                 return summary;
             }

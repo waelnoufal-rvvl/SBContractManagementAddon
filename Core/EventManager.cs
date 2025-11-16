@@ -95,11 +95,11 @@ namespace ContractManagementAddon.Core
                             ipcForm.Show();
                             break;
 
-                        case MenuManager.MenuIds.ChangeOrder:
+                  /*      case MenuManager.MenuIds.ChangeOrder:
                             Logger.Info("Opening Change Orders form...");
                             ChangeOrderForm coForm = new ChangeOrderForm(_app);
                             coForm.Show();
-                            break;
+                            break;*/
 
                         case MenuManager.MenuIds.Dashboard:
                             Logger.Info("Opening Dashboard...");

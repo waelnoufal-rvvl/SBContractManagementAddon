@@ -110,10 +110,10 @@ namespace ContractManagementAddon
                             ipcForm.Show();
                             break;
 
-                        case "ContractManagementAddon.ChangeOrders":
+              /*          case "ContractManagementAddon.ChangeOrders":
                             ChangeOrderForm coForm = new ChangeOrderForm(appWrapper);
                             coForm.Show();
-                            break;
+                            break;*/
 
                         case "ContractManagementAddon.Dashboard":
                             DashboardForm dashboardForm = new DashboardForm(appWrapper);

@@ -56,7 +56,7 @@ namespace ContractManagementAddon.Core
         private RevenueRecognitionService _revenueService;
         private ContractService _contractService;
         private IPCService _ipcService;
-        private ChangeOrderService _changeOrderService;
+        //private ChangeOrderService _changeOrderService;
 
         public SAPbouiCOM.Application UIApp => _uiApp;
         public SAPbobsCOM.Company Company => _company;
@@ -70,7 +70,7 @@ namespace ContractManagementAddon.Core
         public RevenueRecognitionService RevenueService => _revenueService;
         public ContractService ContractService => _contractService;
         public IPCService IPCService => _ipcService;
-        public ChangeOrderService ChangeOrderService => _changeOrderService;
+        //public ChangeOrderService ChangeOrderService => _changeOrderService;
 
         /// <summary>
         /// Initialize and run the add-on
@@ -111,7 +111,7 @@ namespace ContractManagementAddon.Core
                 // Initialize business services
                 _contractService = new ContractService(_company);
                 _ipcService = new IPCService(_company);
-                _changeOrderService = new ChangeOrderService(_company);
+                //_changeOrderService = new ChangeOrderService(_company);
 
                 // Create approval templates (first-time setup)
                 try

@@ -202,7 +202,6 @@
     <Compile Include="Core\ConnectionManager.cs" />
     <Compile Include="Core\EventManager.cs" />
     <Compile Include="Core\MenuManager.cs" />
-    <Compile Include="DataAccess\ChangeOrderRepository.cs" />
     <Compile Include="DataAccess\ContractRepository.cs" />
     <Compile Include="DataAccess\CurrencyRepository.cs" />
     <Compile Include="DataAccess\IPCRepository.cs" />
@@ -226,7 +225,6 @@
     <Compile Include="Services\ApprovalWorkflowManager.cs" />
     <Compile Include="Services\AttachmentService.cs" />
     <Compile Include="Services\CalculationService.cs" />
-    <Compile Include="Services\ChangeOrderService.cs" />
     <Compile Include="Services\ContractService.cs" />
     <Compile Include="Services\CurrencyService.cs" />
     <Compile Include="Services\EmailNotificationService.cs" />
