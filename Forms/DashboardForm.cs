@@ -115,7 +115,7 @@ namespace ContractManagementAddon.Forms
                 topPosition += rowHeight;
 
                 AddLabel("lblTotCO", "", leftMargin, topPosition, 150, 14);
-                AddLabel("lblCOValue", "0", leftMargin + 160, topPosition, colWidth, 14);
+                AddLabel("lblCOVal", "0", leftMargin + 160, topPosition, colWidth, 14);
                 topPosition += 40;
 
                 // Contract List Grid

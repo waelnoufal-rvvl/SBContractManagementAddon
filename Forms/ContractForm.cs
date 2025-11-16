@@ -22,7 +22,7 @@ namespace ContractManagementAddon.Forms
 
         private const string FORM_TYPE = "FRM_CONTRACT";
 
-        // Control IDs
+        // Control IDs (max 10 chars for SAP B1)
         private const string BTN_NEW = "btnNew";
         private const string BTN_SAVE = "btnSave";
         private const string BTN_DELETE = "btnDelete";
@@ -35,7 +35,7 @@ namespace ContractManagementAddon.Forms
         private const string TXT_VALUE = "txtValue";
         private const string CMB_STATUS = "cmbStatus";
         private const string TXT_RETENTION = "txtReten";
-        private const string GRID_LINES = "gridLines";
+        private const string GRID_LINES = "grdLines";
 
         public ContractForm(IContractManagementApp app)
         {
