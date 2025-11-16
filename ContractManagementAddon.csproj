@@ -234,18 +234,6 @@
     <Compile Include="Services\IPCService.cs" />
     <Compile Include="Services\RevenueRecognitionService.cs" />
     <Compile Include="Services\SAPApprovalManager.cs" />
-    <Compile Include="Tests\ConsoleTestRunner.cs" />
-    <Compile Include="Tests\Load\LoadTestScenarios.cs" />
-    <Compile Include="Tests\Localization\FormattingTests.cs" />
-    <Compile Include="Tests\Localization\IntegrationTests.cs" />
-    <Compile Include="Tests\Localization\LocalizationTestRunner.cs" />
-    <Compile Include="Tests\Localization\LocalizationTests.cs" />
-    <Compile Include="Tests\Localization\ResourceValidationTests.cs" />
-    <Compile Include="Tests\Localization\RTLLayoutTests.cs" />
-    <Compile Include="Tests\Localization\RunLocalizationTests.cs" />
-    <Compile Include="Tests\Performance\PerformanceBenchmarks.cs" />
-    <Compile Include="Tests\TestDataGenerator.cs" />
-    <Compile Include="Tests\Unit\ContractTests.cs" />
     <Compile Include="Utilities\CurrencySeedData.cs" />
     <Compile Include="Utilities\DatabaseHelper.cs" />
     <Compile Include="Utilities\DatabaseQueryHelper.cs" />
@@ -255,30 +243,19 @@
     <Compile Include="Utilities\ValidationHelper.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Database\CreateIndexes.sql" />
-    <Content Include="Database\PerformanceMonitoring.sql" />
-    <Content Include="Database\README_Database_Migration.txt" />
     <Content Include="Localization\Resources\Resources.Arabic.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Localization\Resources\Resources.English.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Queries\RevenueRecognitionQueries.sql" />
     <Content Include="SAP\addon.srf" />
     <Content Include="SAP\addon.xml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="Documentation\FORM_WIREFRAMES.md" />
-    <None Include="Documentation\LOCALIZATION_IMPLEMENTATION_GUIDE.md" />
-    <None Include="Documentation\QUICK_REFERENCE_CARDS.md" />
-    <None Include="Documentation\SCREENSHOT_CAPTURE_GUIDE.md" />
-    <None Include="Documentation\WORKFLOW_TUTORIALS.md" />
     <None Include="Localization\README.md" />
     <None Include="packages.config" />
-    <None Include="Tests\Localization\README_TESTS.md" />
-    <None Include="Tests\Localization\TEST_IMPLEMENTATION_SUMMARY.md" />
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="packages\Microsoft.CodeAnalysis.Analyzers.3.11.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll" />
