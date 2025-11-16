@@ -195,7 +195,7 @@ namespace ContractManagementAddon.Forms
                 // Customer Name
                 AddLabel(LBL_CUSTNM, "", leftMargin, topPosition, labelWidth, 14);
                 AddTextBox(TXT_CUSTNM, leftMargin + labelWidth + 5, topPosition, textWidth, 14);
-                ((EditText)_form.Items.Item(TXT_CUSTNM).Specific).Active = false; // Read-only
+                _form.Items.Item(TXT_CUSTNM).Enabled = false; // Read-only
                 topPosition += sectionGap;
 
                 // ===== CONTACT INFORMATION SECTION =====
@@ -253,7 +253,7 @@ namespace ContractManagementAddon.Forms
                 // Total Value
                 AddLabel(LBL_TOTAL, "", leftMargin, topPosition, labelWidth, 14);
                 AddTextBox(TXT_TOTAL, leftMargin + labelWidth + 5, topPosition, textWidth, 14);
-                ((EditText)_form.Items.Item(TXT_TOTAL).Specific).Active = false; // Read-only
+                _form.Items.Item(TXT_TOTAL).Enabled = false; // Read-only (calculated field)
                 topPosition += rowHeight;
 
                 // Retention %
