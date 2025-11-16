@@ -102,26 +102,26 @@ namespace ContractManagementAddon.Forms
                 topPosition += 30;
 
                 // Summary Cards
-                AddLabel("lblTotCont", "", leftMargin, topPosition, 150, 14);
-                AddLabel("lblTotVal", "0", leftMargin + 160, topPosition, colWidth, 14);
+                AddLabel("lblTotalContracts", "", leftMargin, topPosition, 150, 14);
+                AddLabel("lblTotalValue", "0", leftMargin + 160, topPosition, colWidth, 14);
                 topPosition += rowHeight;
 
-                AddLabel("lblActCont", "", leftMargin, topPosition, 150, 14);
-                AddLabel("lblActVal", "0", leftMargin + 160, topPosition, colWidth, 14);
+                AddLabel("lblActiveContracts", "", leftMargin, topPosition, 150, 14);
+                AddLabel("lblActiveValue", "0", leftMargin + 160, topPosition, colWidth, 14);
                 topPosition += rowHeight;
 
-                AddLabel("lblTotIPC", "", leftMargin, topPosition, 150, 14);
-                AddLabel("lblIPCVal", "0", leftMargin + 160, topPosition, colWidth, 14);
+                AddLabel("lblTotalIPCs", "", leftMargin, topPosition, 150, 14);
+                AddLabel("lblIPCValue", "0", leftMargin + 160, topPosition, colWidth, 14);
                 topPosition += rowHeight;
 
-                AddLabel("lblTotCO", "", leftMargin, topPosition, 150, 14);
-                AddLabel("lblCOVal", "0", leftMargin + 160, topPosition, colWidth, 14);
+                AddLabel("lblTotalCOs", "", leftMargin, topPosition, 150, 14);
+                AddLabel("lblCOValue", "0", leftMargin + 160, topPosition, colWidth, 14);
                 topPosition += 40;
 
                 // Contract List Grid
-                AddLabel("lblContLst", "", leftMargin, topPosition, 200, 14);
+                AddLabel("lblContractList", "", leftMargin, topPosition, 200, 14);
                 topPosition += 20;
-                AddGrid("grdContr", leftMargin, topPosition, 850, 300);
+                AddGrid("gridContracts", leftMargin, topPosition, 850, 300);
                 topPosition += 320;
 
                 // Refresh button
@@ -167,9 +167,9 @@ namespace ContractManagementAddon.Forms
                 }
 
                 // Update summary labels
-                ((StaticText)_form.Items.Item("lblTotVal").Specific).Caption =
+                ((StaticText)_form.Items.Item("lblTotalValue").Specific).Caption =
                     $"{totalContracts} contracts - {FormatterHelper.FormatCurrency(totalValue)}";
-                ((StaticText)_form.Items.Item("lblActVal").Specific).Caption =
+                ((StaticText)_form.Items.Item("lblActiveValue").Specific).Caption =
                     $"{activeContracts} contracts - {FormatterHelper.FormatCurrency(activeValue)}";
 
                 // Load contracts to grid
@@ -191,7 +191,7 @@ namespace ContractManagementAddon.Forms
         {
             try
             {
-                Grid grid = (Grid)_form.Items.Item("grdContr").Specific;
+                Grid grid = (Grid)_form.Items.Item("gridContracts").Specific;
                 grid.DataTable = _form.DataSources.DataTables.Add("DT_CONTRACTS");
 
                 // Add columns
@@ -269,11 +269,11 @@ namespace ContractManagementAddon.Forms
 
                 // Localize labels
                 ((StaticText)_form.Items.Item("lblTitle").Specific).Caption = _lang.GetString("Form_Dashboard_Title");
-                ((StaticText)_form.Items.Item("lblTotCont").Specific).Caption = _lang.GetString("Dashboard_TotalContracts");
-                ((StaticText)_form.Items.Item("lblActCont").Specific).Caption = _lang.GetString("Dashboard_ActiveContracts");
-                ((StaticText)_form.Items.Item("lblTotIPC").Specific).Caption = _lang.GetString("Dashboard_TotalIPCs");
-                ((StaticText)_form.Items.Item("lblTotCO").Specific).Caption = _lang.GetString("Dashboard_TotalChangeOrders");
-                ((StaticText)_form.Items.Item("lblContLst").Specific).Caption = _lang.GetString("Dashboard_ActiveContractsList");
+                ((StaticText)_form.Items.Item("lblTotalContracts").Specific).Caption = _lang.GetString("Dashboard_TotalContracts");
+                ((StaticText)_form.Items.Item("lblActiveContracts").Specific).Caption = _lang.GetString("Dashboard_ActiveContracts");
+                ((StaticText)_form.Items.Item("lblTotalIPCs").Specific).Caption = _lang.GetString("Dashboard_TotalIPCs");
+                ((StaticText)_form.Items.Item("lblTotalCOs").Specific).Caption = _lang.GetString("Dashboard_TotalChangeOrders");
+                ((StaticText)_form.Items.Item("lblContractList").Specific).Caption = _lang.GetString("Dashboard_ActiveContractsList");
 
                 // Localize buttons
                 ((Button)_form.Items.Item("btnRefresh").Specific).Caption = _lang.GetString("Common_Refresh");

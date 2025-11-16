@@ -101,8 +101,8 @@ namespace ContractManagementAddon.Forms
                 AddLabel("lblTitle", "", leftMargin, 10, 400, 20);
 
                 // Contract selection
-                AddLabel("lblContr", "", leftMargin, topPosition, 120, 14);
-                AddTextBox("txtContr", leftMargin + 130, topPosition, 200, 14);
+                AddLabel("lblContract", "", leftMargin, topPosition, 120, 14);
+                AddTextBox("txtContract", leftMargin + 130, topPosition, 200, 14);
                 topPosition += rowHeight;
 
                 // IPC Number
@@ -121,8 +121,8 @@ namespace ContractManagementAddon.Forms
                 topPosition += rowHeight;
 
                 // Retention
-                AddLabel("lblReten", "", leftMargin, topPosition, 120, 14);
-                AddEditText("txtReten", leftMargin + 130, topPosition, 150, 14);
+                AddLabel("lblRetention", "", leftMargin, topPosition, 120, 14);
+                AddEditText("txtRetention", leftMargin + 130, topPosition, 150, 14);
                 topPosition += rowHeight;
 
                 // Net Amount
@@ -232,11 +232,11 @@ namespace ContractManagementAddon.Forms
 
                 // Localize labels
                 ((StaticText)_form.Items.Item("lblTitle").Specific).Caption = _lang.GetString("Form_IPC_Title");
-                ((StaticText)_form.Items.Item("lblContr").Specific).Caption = _lang.GetString("Contract_Code");
+                ((StaticText)_form.Items.Item("lblContract").Specific).Caption = _lang.GetString("Contract_Code");
                 ((StaticText)_form.Items.Item("lblIPCNum").Specific).Caption = _lang.GetString("IPC_Number");
                 ((StaticText)_form.Items.Item("lblIPCDate").Specific).Caption = _lang.GetString("IPC_Date");
                 ((StaticText)_form.Items.Item("lblGross").Specific).Caption = _lang.GetString("IPC_GrossAmount");
-                ((StaticText)_form.Items.Item("lblReten").Specific).Caption = _lang.GetString("IPC_Retention");
+                ((StaticText)_form.Items.Item("lblRetention").Specific).Caption = _lang.GetString("IPC_Retention");
                 ((StaticText)_form.Items.Item("lblNet").Specific).Caption = _lang.GetString("IPC_NetAmount");
                 ((StaticText)_form.Items.Item("lblStatus").Specific).Caption = _lang.GetString("IPC_Status");
                 ((StaticText)_form.Items.Item("lblLines").Specific).Caption = _lang.GetString("IPC_Lines");

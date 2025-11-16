@@ -101,8 +101,8 @@ namespace ContractManagementAddon.Forms
                 AddLabel("lblTitle", "", leftMargin, 10, 300, 20);
 
                 // Contract Code
-                AddLabel("lblContr", "", leftMargin, topPosition, 120, 14);
-                AddTextBox("txtContr", leftMargin + 130, topPosition, 200, 14);
+                AddLabel("lblContract", "", leftMargin, topPosition, 120, 14);
+                AddTextBox("txtContract", leftMargin + 130, topPosition, 200, 14);
                 topPosition += rowHeight;
 
                 // CO Number
@@ -246,7 +246,7 @@ namespace ContractManagementAddon.Forms
 
                 // Localize labels
                 ((StaticText)_form.Items.Item("lblTitle").Specific).Caption = _lang.GetString("Form_ChangeOrder_Title");
-                ((StaticText)_form.Items.Item("lblContr").Specific).Caption = _lang.GetString("Contract_Code");
+                ((StaticText)_form.Items.Item("lblContract").Specific).Caption = _lang.GetString("Contract_Code");
                 ((StaticText)_form.Items.Item("lblCONum").Specific).Caption = _lang.GetString("CO_Number");
                 ((StaticText)_form.Items.Item("lblCODate").Specific).Caption = _lang.GetString("CO_Date");
                 ((StaticText)_form.Items.Item("lblType").Specific).Caption = _lang.GetString("CO_Type");
