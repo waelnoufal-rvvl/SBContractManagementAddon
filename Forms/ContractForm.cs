@@ -20,6 +20,7 @@ namespace ContractManagementAddon.Forms
         private Contract _currentContract;
         private LanguageManager _lang;
         private bool _isRTL;
+        private bool _isLoadingQuotation = false;
 
         private const string FORM_TYPE = "FRM_CONTRACT";
         private const string CFL_CUST = "CFL_CUST";
@@ -785,7 +786,17 @@ namespace ContractManagementAddon.Forms
                       HandleChooseFromList(ref pVal);
                       return;
                   }
-  
+
+                  // Handle quotation reference field validation - load customer data after CFL completes
+                  if (pVal.ItemUID == TXT_QREF &&
+                      pVal.EventType == BoEventTypes.et_VALIDATE &&
+                      !pVal.BeforeAction)
+                  {
+                      Logger.Info("TXT_QREF VALIDATE event fired - loading customer data");
+                      LoadCustomerDataFromQuotation();
+                      return;
+                  }
+
                   if (!pVal.BeforeAction && pVal.EventType == BoEventTypes.et_ITEM_PRESSED)
                   {
                       switch (pVal.ItemUID)
@@ -832,22 +843,40 @@ namespace ContractManagementAddon.Forms
           {
               try
               {
+                  Logger.Info($"HandleChooseFromList called - ItemUID: {pVal.ItemUID}");
+
                   ChooseFromListEvent cflEvent = (ChooseFromListEvent)pVal;
 
+                  Logger.Info($"CFL UID: {cflEvent.ChooseFromListUID}");
+
                   if (cflEvent.SelectedObjects == null)
+                  {
+                      Logger.Info("SelectedObjects is null - user cancelled");
                       return;
+                  }
 
                   DataTable dataTable = cflEvent.SelectedObjects;
                   if (dataTable.Rows.Count == 0)
+                  {
+                      Logger.Info("No rows selected");
                       return;
+                  }
+
+                  Logger.Info($"Selected {dataTable.Rows.Count} row(s)");
 
                   if (cflEvent.ChooseFromListUID == CFL_CUST)
                   {
+                      Logger.Info("Handling customer CFL");
                       HandleCustomerChooseFromList(dataTable);
                   }
                   else if (cflEvent.ChooseFromListUID == CFL_QREF)
                   {
+                      Logger.Info("Handling quotation CFL");
                       HandleQuotationChooseFromList(dataTable);
+                  }
+                  else
+                  {
+                      Logger.Info($"Unknown CFL UID: {cflEvent.ChooseFromListUID}");
                   }
               }
               catch (Exception ex)
@@ -865,13 +894,33 @@ namespace ContractManagementAddon.Forms
               ((EditText)_form.Items.Item(TXT_CUSTNM).Specific).Value = cardName;
 
               // Load additional customer info from OCRD
+              LoadCustomerDetails(cardCode);
+          }
+
+          /// <summary>
+          /// Load additional customer details (type, phone, email) from OCRD table
+          /// </summary>
+          private void LoadCustomerDetails(string cardCode)
+          {
               SAPbobsCOM.Recordset recordset =
                   (SAPbobsCOM.Recordset)_app.Company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
 
               try
               {
-                  string query =
-                      $"SELECT CardType, Phone1, E_Mail FROM OCRD WHERE CardCode = '{DatabaseHelper.EscapeSqlString(cardCode)}'";
+                  string query;
+                  if (_app.Company.DbServerType == SAPbobsCOM.BoDataServerTypes.dst_HANADB)
+                  {
+                      // HANA requires quoted identifiers (case-sensitive)
+                      query =
+                          $"SELECT \"CardType\", \"Phone1\", \"E_Mail\" FROM \"OCRD\" WHERE \"CardCode\" = '{DatabaseHelper.EscapeSqlString(cardCode)}'";
+                  }
+                  else
+                  {
+                      // SQL Server, other databases
+                      query =
+                          $"SELECT CardType, Phone1, E_Mail FROM OCRD WHERE CardCode = '{DatabaseHelper.EscapeSqlString(cardCode)}'";
+                  }
+
                   recordset.DoQuery(query);
 
                   if (!recordset.EoF)
@@ -913,22 +962,166 @@ namespace ContractManagementAddon.Forms
           {
               try
               {
-                  string docEntryStr = dataTable.GetValue("DocEntry", 0).ToString();
-                  string docNumStr = dataTable.GetValue("DocNum", 0).ToString();
-                  string cardCode = dataTable.GetValue("CardCode", 0).ToString();
-                  string cardName = dataTable.GetValue("CardName", 0).ToString();
-
-                  // Load quotation lines into contract matrix
-                  // Header fields (quotation reference, customer) are intentionally not updated here
-                  // to avoid SAP B1 focus/value restrictions during CFL handling.
-                  if (int.TryParse(docEntryStr, out int docEntry))
+                  // Prevent infinite loop from re-entrant calls
+                  if (_isLoadingQuotation)
                   {
-                      LoadQuotationLinesToMatrix(docEntry);
+                      Logger.Info("Already loading quotation - skipping to prevent infinite loop");
+                      return;
+                  }
+
+                  _isLoadingQuotation = true;
+
+                  try
+                  {
+                      Logger.Info("HandleQuotationChooseFromList called");
+
+                      string docEntryStr = dataTable.GetValue("DocEntry", 0).ToString();
+                      string docNumStr = dataTable.GetValue("DocNum", 0).ToString();
+                      string cardCode = dataTable.GetValue("CardCode", 0).ToString();
+                      string cardName = dataTable.GetValue("CardName", 0).ToString();
+
+                      Logger.Info($"Quotation DocEntry: {docEntryStr}, DocNum: {docNumStr}");
+                      Logger.Info($"Customer: {cardCode} - {cardName}");
+
+                      // Set the quotation reference field manually (SAP B1 CFL doesn't always set it automatically)
+                      try
+                      {
+                          ((EditText)_form.Items.Item(TXT_QREF).Specific).Value = docNumStr;
+                          Logger.Info($"Set quotation reference to: {docNumStr}");
+                      }
+                      catch (Exception ex)
+                      {
+                          Logger.Warning($"Could not set quotation reference field: {ex.Message}");
+                      }
+
+                      // Load quotation lines
+                      if (int.TryParse(docEntryStr, out int docEntry))
+                      {
+                          Logger.Info($"Loading quotation lines for DocEntry: {docEntry}");
+                          LoadQuotationLinesToMatrix(docEntry);
+
+                          // After loading lines, set customer data
+                          // We do this here instead of waiting for VALIDATE event since we already have the data
+                          _form.Freeze(true);
+                          try
+                          {
+                              ((EditText)_form.Items.Item(TXT_CUSTCD).Specific).Value = cardCode;
+                              ((EditText)_form.Items.Item(TXT_CUSTNM).Specific).Value = cardName;
+                              Logger.Info("Set customer code and name");
+
+                              // Load additional customer details
+                              LoadCustomerDetails(cardCode);
+                          }
+                          catch (Exception ex)
+                          {
+                              Logger.Warning($"Could not set customer data: {ex.Message}");
+                          }
+                          finally
+                          {
+                              _form.Freeze(false);
+                          }
+                      }
+                      else
+                      {
+                          Logger.Warning($"Could not parse DocEntry: {docEntryStr}");
+                      }
+                  }
+                  finally
+                  {
+                      _isLoadingQuotation = false;
                   }
               }
               catch (Exception ex)
               {
                   Logger.Error("Error handling quotation ChooseFromList", ex);
+                  _isLoadingQuotation = false;
+              }
+          }
+
+          /// <summary>
+          /// Load customer data from the selected quotation (called after CFL event completes)
+          /// </summary>
+          private void LoadCustomerDataFromQuotation()
+          {
+              try
+              {
+                  // Prevent infinite loop - if already loading from CFL, don't process VALIDATE events
+                  if (_isLoadingQuotation)
+                  {
+                      Logger.Info("Already loading quotation from CFL - skipping VALIDATE event processing");
+                      return;
+                  }
+
+                  Logger.Info("LoadCustomerDataFromQuotation called");
+
+                  string quotationRef = ((EditText)_form.Items.Item(TXT_QREF).Specific).Value?.Trim();
+                  Logger.Info($"Quotation reference value: '{quotationRef}'");
+
+                  if (string.IsNullOrEmpty(quotationRef))
+                  {
+                      Logger.Warning("Quotation reference is empty - cannot load customer data");
+                      return;
+                  }
+
+                  // Query the quotation to get customer code and name
+                  SAPbobsCOM.Recordset rs =
+                      (SAPbobsCOM.Recordset)_app.Company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
+
+                  try
+                  {
+                      string query;
+                      if (_app.Company.DbServerType == SAPbobsCOM.BoDataServerTypes.dst_HANADB)
+                      {
+                          query =
+                              $"SELECT \"CardCode\", \"CardName\" FROM \"OQUT\" WHERE \"DocNum\" = '{DatabaseHelper.EscapeSqlString(quotationRef)}'";
+                      }
+                      else
+                      {
+                          query =
+                              $"SELECT CardCode, CardName FROM OQUT WHERE DocNum = '{DatabaseHelper.EscapeSqlString(quotationRef)}'";
+                      }
+
+                      Logger.Info($"Executing query: {query}");
+                      rs.DoQuery(query);
+
+                      if (!rs.EoF)
+                      {
+                          string cardCode = SafeConversion.SafeToString(rs.Fields.Item("CardCode").Value);
+                          string cardName = SafeConversion.SafeToString(rs.Fields.Item("CardName").Value);
+
+                          Logger.Info($"Found customer: {cardCode} - {cardName}");
+
+                          // Freeze form to prevent UI updates during value setting
+                          _form.Freeze(true);
+
+                          try
+                          {
+                              ((EditText)_form.Items.Item(TXT_CUSTCD).Specific).Value = cardCode;
+                              ((EditText)_form.Items.Item(TXT_CUSTNM).Specific).Value = cardName;
+
+                              Logger.Info("Customer code and name set successfully");
+
+                              // Load additional customer details
+                              LoadCustomerDetails(cardCode);
+                          }
+                          finally
+                          {
+                              _form.Freeze(false);
+                          }
+                      }
+                      else
+                      {
+                          Logger.Warning($"No quotation found with DocNum: {quotationRef}");
+                      }
+                  }
+                  finally
+                  {
+                      System.Runtime.InteropServices.Marshal.ReleaseComObject(rs);
+                  }
+              }
+              catch (Exception ex)
+              {
+                  Logger.Error("Error loading customer data from quotation", ex);
               }
           }
 
@@ -1096,32 +1289,77 @@ namespace ContractManagementAddon.Forms
             try
             {
                 Matrix matrix = (Matrix)_form.Items.Item(MTX_LINES).Specific;
-                matrix.Clear();
 
-                if (lines == null || lines.Count == 0)
+                // Freeze form during matrix loading
+                _form.Freeze(true);
+
+                try
                 {
-                    matrix.AddRow();
-                    matrix.ClearRowData(1);
-                    return;
-                }
+                    // Temporarily disable ALL column editing to avoid validation errors during loading
+                    Column colItem = (Column)matrix.Columns.Item("ColItem");
+                    Column colDesc = (Column)matrix.Columns.Item("ColDesc");
+                    Column colQty = (Column)matrix.Columns.Item("ColQty");
+                    Column colUnit = (Column)matrix.Columns.Item("ColUnit");
+                    Column colPrice = (Column)matrix.Columns.Item("ColPrice");
+                    Column colTotal = (Column)matrix.Columns.Item("ColTotal");
 
-                for (int i = 0; i < lines.Count; i++)
+                    bool itemWasEditable = colItem.Editable;
+                    bool descWasEditable = colDesc.Editable;
+                    bool qtyWasEditable = colQty.Editable;
+                    bool unitWasEditable = colUnit.Editable;
+                    bool priceWasEditable = colPrice.Editable;
+                    bool totalWasEditable = colTotal.Editable;
+
+                    colItem.Editable = false;
+                    colDesc.Editable = false;
+                    colQty.Editable = false;
+                    colUnit.Editable = false;
+                    colPrice.Editable = false;
+                    colTotal.Editable = false;
+
+                    try
+                    {
+                        matrix.Clear();
+
+                        if (lines == null || lines.Count == 0)
+                        {
+                            matrix.AddRow();
+                            matrix.ClearRowData(1);
+                            return;
+                        }
+
+                        for (int i = 0; i < lines.Count; i++)
+                        {
+                            var line = lines[i];
+                            matrix.AddRow();
+                            int row = i + 1;
+
+                            // Use InvariantCulture for numeric formatting to avoid locale issues
+                            SetMatrixCellSafe(matrix, "ColItem", row, line.ItemCode ?? "");
+                            SetMatrixCellSafe(matrix, "ColDesc", row, line.ItemDescription ?? "");
+                            SetMatrixCellSafe(matrix, "ColQty", row, line.Quantity.ToString(CultureInfo.InvariantCulture));
+                            SetMatrixCellSafe(matrix, "ColUnit", row, line.UnitOfMeasure ?? "");
+                            SetMatrixCellSafe(matrix, "ColPrice", row, line.UnitPrice.ToString(CultureInfo.InvariantCulture));
+                            SetMatrixCellSafe(matrix, "ColTotal", row, line.LineTotal.ToString(CultureInfo.InvariantCulture));
+                            // Other RVCM_CNTRCT1 fields (Cost Code, Stage, Discount, Tax, Dates, Status, Remarks)
+                            // are not yet mapped on the ContractLine model and remain empty for now.
+                        }
+                    }
+                    finally
+                    {
+                        // Restore original editable state of ALL columns
+                        colItem.Editable = itemWasEditable;
+                        colDesc.Editable = descWasEditable;
+                        colQty.Editable = qtyWasEditable;
+                        colUnit.Editable = unitWasEditable;
+                        colPrice.Editable = priceWasEditable;
+                        colTotal.Editable = totalWasEditable;
+                    }
+                }
+                finally
                 {
-                    var line = lines[i];
-                    matrix.AddRow();
-                    int row = i + 1;
-
-                    ((EditText)matrix.Columns.Item("ColItem").Cells.Item(row).Specific).Value = line.ItemCode ?? "";
-                    ((EditText)matrix.Columns.Item("ColDesc").Cells.Item(row).Specific).Value = line.ItemDescription ?? "";
-                    ((EditText)matrix.Columns.Item("ColQty").Cells.Item(row).Specific).Value = line.Quantity.ToString();
-                    ((EditText)matrix.Columns.Item("ColUnit").Cells.Item(row).Specific).Value = line.UnitOfMeasure ?? "";
-                    ((EditText)matrix.Columns.Item("ColPrice").Cells.Item(row).Specific).Value = line.UnitPrice.ToString();
-                    ((EditText)matrix.Columns.Item("ColTotal").Cells.Item(row).Specific).Value = line.LineTotal.ToString();
-                    // Other RVCM_CNTRCT1 fields (Cost Code, Stage, Discount, Tax, Dates, Status, Remarks)
-                    // are not yet mapped on the ContractLine model and remain empty for now.
+                    _form.Freeze(false);
                 }
-
-                matrix.LoadFromDataSource();
             }
             catch (Exception ex)
             {
@@ -1370,86 +1608,141 @@ namespace ContractManagementAddon.Forms
             try
             {
                 Matrix matrix = (Matrix)_form.Items.Item(MTX_LINES).Specific;
-                matrix.Clear();
 
-                SAPbobsCOM.Recordset rs =
-                    (SAPbobsCOM.Recordset)_app.Company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
+                // Freeze form to prevent UI updates during loading
+                _form.Freeze(true);
 
                 try
                 {
-                    string query;
-                    string unitField;
-                    if (_app.Company.DbServerType == SAPbobsCOM.BoDataServerTypes.dst_HANADB)
-                    {
-                        // HANA is case-sensitive; QUT1 uses lower-case unitMsr
-                        query =
-                            "SELECT \"ItemCode\", \"Dscription\", \"Quantity\", \"unitMsr\", \"Price\", \"DiscPrcnt\", " +
-                            "\"LineTotal\", \"TaxCode\", \"VatPrcnt\", \"VatSum\" " +
-                            $"FROM \"QUT1\" WHERE \"DocEntry\" = {quotationDocEntry} ORDER BY \"LineNum\"";
-                        unitField = "unitMsr";
-                    }
-                    else
-                    {
-                        query =
-                            "SELECT ItemCode, Dscription, Quantity, UnitMsr, Price, DiscPrcnt, " +
-                            "LineTotal, TaxCode, VatPrcnt, VatSum " +
-                            $"FROM QUT1 WHERE DocEntry = {quotationDocEntry} ORDER BY LineNum";
-                        unitField = "UnitMsr";
-                    }
+                    // Temporarily disable ALL column editing to avoid validation errors during loading
+                    Column colItem = (Column)matrix.Columns.Item("ColItem");
+                    Column colDesc = (Column)matrix.Columns.Item("ColDesc");
+                    Column colQty = (Column)matrix.Columns.Item("ColQty");
+                    Column colUnit = (Column)matrix.Columns.Item("ColUnit");
+                    Column colPrice = (Column)matrix.Columns.Item("ColPrice");
+                    Column colTotal = (Column)matrix.Columns.Item("ColTotal");
 
-                    rs.DoQuery(query);
+                    bool itemWasEditable = colItem.Editable;
+                    bool descWasEditable = colDesc.Editable;
+                    bool qtyWasEditable = colQty.Editable;
+                    bool unitWasEditable = colUnit.Editable;
+                    bool priceWasEditable = colPrice.Editable;
+                    bool totalWasEditable = colTotal.Editable;
 
-                    int row = 0;
-                    while (!rs.EoF)
+                    colItem.Editable = false;
+                    colDesc.Editable = false;
+                    colQty.Editable = false;
+                    colUnit.Editable = false;
+                    colPrice.Editable = false;
+                    colTotal.Editable = false;
+
+                    try
                     {
-                        matrix.AddRow();
-                        row++;
+                        matrix.Clear();
 
-                        string itemCode = SafeConversion.SafeToString(rs.Fields.Item("ItemCode").Value);
-                        string desc = SafeConversion.SafeToString(rs.Fields.Item("Dscription").Value);
-                        // Sanitize description to avoid invalid characters/lengths
-                        if (!string.IsNullOrEmpty(desc))
+                        SAPbobsCOM.Recordset rs =
+                            (SAPbobsCOM.Recordset)_app.Company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
+
+                    try
+                    {
+                        string query;
+                        string unitField;
+                        if (_app.Company.DbServerType == SAPbobsCOM.BoDataServerTypes.dst_HANADB)
                         {
-                            desc = desc.Replace("\r", " ").Replace("\n", " ");
-                            if (desc.Length > 254)
-                                desc = desc.Substring(0, 254);
+                            // HANA is case-sensitive; QUT1 uses lower-case unitMsr
+                            query =
+                                "SELECT \"ItemCode\", \"Dscription\", \"Quantity\", \"unitMsr\", \"Price\", \"DiscPrcnt\", " +
+                                "\"LineTotal\", \"TaxCode\", \"VatPrcnt\", \"VatSum\" " +
+                                $"FROM \"QUT1\" WHERE \"DocEntry\" = {quotationDocEntry} ORDER BY \"LineNum\"";
+                            unitField = "unitMsr";
+                        }
+                        else
+                        {
+                            query =
+                                "SELECT ItemCode, Dscription, Quantity, UnitMsr, Price, DiscPrcnt, " +
+                                "LineTotal, TaxCode, VatPrcnt, VatSum " +
+                                $"FROM QUT1 WHERE DocEntry = {quotationDocEntry} ORDER BY LineNum";
+                            unitField = "UnitMsr";
                         }
 
-                        double qty = SafeConversion.SafeToDouble(rs.Fields.Item("Quantity").Value);
-                        string unit = SafeConversion.SafeToString(rs.Fields.Item(unitField).Value);
-                        double price = SafeConversion.SafeToDouble(rs.Fields.Item("Price").Value);
-                        double lineTotal = SafeConversion.SafeToDouble(rs.Fields.Item("LineTotal").Value);
+                        rs.DoQuery(query);
 
-                        // Use a minimal safe subset of fields to avoid SAP internal errors:
-                        // only Item, Description, Quantity, Unit, Unit Price, Line Total.
-                        string qtyStr = qty.ToString();
-                        string totalStr = lineTotal.ToString();
+                        int row = 0;
+                        while (!rs.EoF)
+                        {
+                            matrix.AddRow();
+                            row++;
 
-                        SetMatrixCell(matrix, "ColItem", row, itemCode);
-                        SetMatrixCell(matrix, "ColDesc", row, desc);
-                        SetMatrixCell(matrix, "ColQty", row, qtyStr);
-                        SetMatrixCell(matrix, "ColUnit", row, unit);
-                        SetMatrixCell(matrix, "ColTotal", row, totalStr);
+                            string itemCode = SafeConversion.SafeToString(rs.Fields.Item("ItemCode").Value);
+                            string desc = SafeConversion.SafeToString(rs.Fields.Item("Dscription").Value);
+                            // Sanitize description to avoid invalid characters/lengths
+                            if (!string.IsNullOrEmpty(desc))
+                            {
+                                desc = desc.Replace("\r", " ").Replace("\n", " ");
+                                if (desc.Length > 254)
+                                    desc = desc.Substring(0, 254);
+                            }
 
-                        rs.MoveNext();
+                            double qty = SafeConversion.SafeToDouble(rs.Fields.Item("Quantity").Value);
+                            string unit = SafeConversion.SafeToString(rs.Fields.Item(unitField).Value);
+                            double price = SafeConversion.SafeToDouble(rs.Fields.Item("Price").Value);
+                            double lineTotal = SafeConversion.SafeToDouble(rs.Fields.Item("LineTotal").Value);
+
+                            // Format numeric values using InvariantCulture to avoid locale issues
+                            string qtyStr = qty.ToString(CultureInfo.InvariantCulture);
+                            string priceStr = price.ToString(CultureInfo.InvariantCulture);
+                            string totalStr = lineTotal.ToString(CultureInfo.InvariantCulture);
+
+                            // Set cell values - only basic fields to avoid validation issues
+                            Logger.Info($"Row {row}: Setting Item='{itemCode}', Desc='{desc}', Qty='{qtyStr}', Unit='{unit}', Price='{priceStr}', Total='{totalStr}'");
+
+                            SetMatrixCellSafe(matrix, "ColItem", row, itemCode);
+                            SetMatrixCellSafe(matrix, "ColDesc", row, desc);
+                            SetMatrixCellSafe(matrix, "ColQty", row, qtyStr);
+                            SetMatrixCellSafe(matrix, "ColUnit", row, unit);
+                            SetMatrixCellSafe(matrix, "ColPrice", row, priceStr);
+                            SetMatrixCellSafe(matrix, "ColTotal", row, totalStr);
+
+                            // Force matrix to refresh the row
+                            matrix.FlushToDataSource();
+
+                            rs.MoveNext();
+                        }
+
+                        if (row == 0)
+                        {
+                            matrix.AddRow();
+                            matrix.ClearRowData(1);
+                        }
+                    }
+                    finally
+                    {
+                        System.Runtime.InteropServices.Marshal.ReleaseComObject(rs);
                     }
 
-                    if (row == 0)
+                    Logger.Info($"Loaded quotation {quotationDocEntry} lines into contract matrix");
+                    }
+                    finally
                     {
-                        matrix.AddRow();
-                        matrix.ClearRowData(1);
+                        // Restore original editable state of ALL columns
+                        colItem.Editable = itemWasEditable;
+                        colDesc.Editable = descWasEditable;
+                        colQty.Editable = qtyWasEditable;
+                        colUnit.Editable = unitWasEditable;
+                        colPrice.Editable = priceWasEditable;
+                        colTotal.Editable = totalWasEditable;
                     }
                 }
                 finally
                 {
-                    System.Runtime.InteropServices.Marshal.ReleaseComObject(rs);
+                    _form.Freeze(false);
                 }
-
-                Logger.Info($"Loaded quotation {quotationDocEntry} lines into contract matrix");
             }
             catch (Exception ex)
             {
                 Logger.Error("Error loading quotation lines to matrix", ex);
+                _app.UIApp.StatusBar.SetText($"Error loading quotation lines: {ex.Message}",
+                    BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Error);
             }
         }
 
@@ -1527,17 +1820,51 @@ namespace ContractManagementAddon.Forms
         }
 
         /// <summary>
-        /// Safely set a matrix cell value, swallowing "Bad Value" errors that can occur due to UI constraints.
+        /// Safely set a matrix cell value with proper error handling and logging.
         /// </summary>
-        private void SetMatrixCell(Matrix matrix, string columnId, int row, string value)
+        private void SetMatrixCellSafe(Matrix matrix, string columnId, int row, string value)
         {
             try
             {
-                ((EditText)matrix.Columns.Item(columnId).Cells.Item(row).Specific).Value = value ?? string.Empty;
+                if (value == null)
+                    value = string.Empty;
+
+                // Get the cell and set the value
+                var cell = matrix.Columns.Item(columnId).Cells.Item(row);
+                EditText editText = (EditText)cell.Specific;
+                editText.Value = value;
             }
-            catch
+            catch (System.Runtime.InteropServices.COMException comEx)
             {
-                // Ignore COMExceptions like "Form - Bad Value" so loading continues
+                // Log specific COM errors for troubleshooting
+                // Common errors: -5002 (bad value), 66000-153 (can't get focus)
+                int errorCode = comEx.ErrorCode;
+                Logger.Warning($"COM error [{errorCode}] setting matrix cell [{columnId}, row {row}] to '{value}': {comEx.Message}");
+
+                // For certain columns, try setting as empty string if value causes issues
+                if (columnId == "ColItem" || columnId == "ColDesc" || columnId == "ColUnit")
+                {
+                    try
+                    {
+                        // For non-numeric columns, empty string is safer than skipping
+                        var cell = matrix.Columns.Item(columnId).Cells.Item(row);
+                        ((EditText)cell.Specific).Value = string.Empty;
+                        Logger.Warning($"Set cell [{columnId}, row {row}] to empty string as fallback");
+                    }
+                    catch
+                    {
+                        Logger.Warning($"Skipping cell [{columnId}, row {row}] - could not set any value");
+                    }
+                }
+                else
+                {
+                    // For numeric columns, skip entirely if there's an error
+                    Logger.Warning($"Skipping cell [{columnId}, row {row}] - validation error");
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Warning($"Error setting matrix cell [{columnId}, row {row}]: {ex.Message}");
             }
         }
 
