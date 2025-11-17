@@ -15,7 +15,6 @@ namespace ContractManagementAddon.Forms
         private IContractManagementApp _app;
         private SAPbouiCOM.Form _form;
         private ContractService _contractService;
-        private IPCService _ipcService;
         private LanguageManager _lang;
         private bool _isRTL;
 
@@ -25,7 +24,6 @@ namespace ContractManagementAddon.Forms
         {
             _app = app ?? throw new ArgumentNullException(nameof(app));
             _contractService = new ContractService(_app.Company);
-            _ipcService = new IPCService(_app.Company);
             _lang = LanguageManager.Instance;
             _isRTL = _lang.IsRightToLeft;
             _lang.LanguageChanged += OnLanguageChanged;
@@ -54,7 +52,6 @@ namespace ContractManagementAddon.Forms
                 InitializeControls();
                 LocalizeForm();
                 LoadDashboardData();
-                AttachEvents();
 
                 _form.Visible = true;
                 Logger.Info("Dashboard form opened");
@@ -157,11 +154,6 @@ namespace ContractManagementAddon.Forms
                 int activeContracts = 0;
                 double totalValue = 0;
                 double activeValue = 0;
-                double totalIPCValue = 0;
-                int totalIPCCount = 0;
-
-                // Per-contract IPC KPIs
-                var ipcKpis = new System.Collections.Generic.Dictionary<string, ContractIpcKpi>();
 
                 foreach (var contract in contracts)
                 {
@@ -172,46 +164,6 @@ namespace ContractManagementAddon.Forms
                         activeContracts++;
                         activeValue += contract.TotalValue;
                     }
-
-                     // IPC KPIs for this contract
-                     try
-                     {
-                         var ipcs = _ipcService.GetIPCsByContract(contract.Code);
-                         double billed = 0;
-
-                         foreach (var ipc in ipcs)
-                         {
-                             // Only approved/paid IPCs contribute to billed amount
-                             if (ipc.Status == "Approved" || ipc.Status == "Paid")
-                             {
-                                 billed += ipc.NetAmount;
-                                 totalIPCValue += ipc.NetAmount;
-                                 totalIPCCount++;
-                             }
-                         }
-
-                         double remaining = contract.TotalValue - billed;
-                         double pctComplete = 0;
-
-                         if (contract.TotalValue > 0)
-                         {
-                             pctComplete = Math.Round(
-                                 (billed / contract.TotalValue) * 100,
-                                 2,
-                                 MidpointRounding.AwayFromZero);
-                         }
-
-                         ipcKpis[contract.Code] = new ContractIpcKpi
-                         {
-                             Billed = billed,
-                             Remaining = remaining,
-                             CompletionPct = pctComplete
-                         };
-                     }
-                     catch (Exception ex)
-                     {
-                         Logger.Error($"Error calculating IPC KPIs for contract {contract.Code}", ex);
-                     }
                 }
 
                 // Update summary labels
@@ -219,11 +171,9 @@ namespace ContractManagementAddon.Forms
                     $"{totalContracts} contracts - {FormatterHelper.FormatCurrency(totalValue)}";
                 ((StaticText)_form.Items.Item("lblActVal").Specific).Caption =
                     $"{activeContracts} contracts - {FormatterHelper.FormatCurrency(activeValue)}";
-                ((StaticText)_form.Items.Item("lblIPCVal").Specific).Caption =
-                    $"{totalIPCCount} IPCs - {FormatterHelper.FormatCurrency(totalIPCValue)}";
 
                 // Load contracts to grid
-                LoadContractsToGrid(contracts, ipcKpis);
+                LoadContractsToGrid(contracts);
 
                 Logger.Info("Dashboard data loaded successfully");
             }
@@ -237,68 +187,35 @@ namespace ContractManagementAddon.Forms
         /// <summary>
         /// Load contracts to grid
         /// </summary>
-        private void LoadContractsToGrid(
-            System.Collections.Generic.List<Models.Contract> contracts,
-            System.Collections.Generic.Dictionary<string, ContractIpcKpi> ipcKpis)
+        private void LoadContractsToGrid(System.Collections.Generic.List<Models.Contract> contracts)
         {
             try
             {
                 Grid grid = (Grid)_form.Items.Item("grdContr").Specific;
-                SAPbouiCOM.DataTable dataTable;
+                grid.DataTable = _form.DataSources.DataTables.Add("DT_CONTRACTS");
 
-                // Reuse existing DataTable if it exists, otherwise create it
-                try
-                {
-                    dataTable = _form.DataSources.DataTables.Item("DT_CONTRACTS");
-                    dataTable.Rows.Clear();
-                }
-                catch
-                {
-                    dataTable = _form.DataSources.DataTables.Add("DT_CONTRACTS");
-                }
-
-                // Ensure columns exist only once
-                if (dataTable.Columns.Count == 0)
-                {
-                    dataTable.Columns.Add("Code", BoFieldsType.ft_AlphaNumeric, 20);
-                    dataTable.Columns.Add("Customer", BoFieldsType.ft_AlphaNumeric, 100);
-                    dataTable.Columns.Add("Description", BoFieldsType.ft_AlphaNumeric, 200);
-                    dataTable.Columns.Add("Value", BoFieldsType.ft_Price);
-                    dataTable.Columns.Add("Status", BoFieldsType.ft_AlphaNumeric, 20);
-                    dataTable.Columns.Add("Start Date", BoFieldsType.ft_Date);
-                    dataTable.Columns.Add("End Date", BoFieldsType.ft_Date);
-                    dataTable.Columns.Add("Billed", BoFieldsType.ft_Price);
-                    dataTable.Columns.Add("Remain", BoFieldsType.ft_Price);
-                    dataTable.Columns.Add("%Comp", BoFieldsType.ft_Percent);
-                }
-
-                grid.DataTable = dataTable;
+                // Add columns
+                grid.DataTable.Columns.Add("Code", BoFieldsType.ft_AlphaNumeric, 20);
+                grid.DataTable.Columns.Add("Customer", BoFieldsType.ft_AlphaNumeric, 100);
+                grid.DataTable.Columns.Add("Description", BoFieldsType.ft_AlphaNumeric, 200);
+                grid.DataTable.Columns.Add("Value", BoFieldsType.ft_Price);
+                grid.DataTable.Columns.Add("Status", BoFieldsType.ft_AlphaNumeric, 20);
+                grid.DataTable.Columns.Add("Start Date", BoFieldsType.ft_Date);
+                grid.DataTable.Columns.Add("End Date", BoFieldsType.ft_Date);
 
                 // Load data
+                grid.DataTable.Rows.Clear();
                 foreach (var contract in contracts)
                 {
-                    int row = dataTable.Rows.Count;
-                    dataTable.Rows.Add();
-                    dataTable.SetValue("Code", row, contract.Code);
-                    dataTable.SetValue("Customer", row, contract.CustomerName ?? contract.CustomerCode);
-                    dataTable.SetValue("Description", row, contract.Description);
-                    dataTable.SetValue("Value", row, contract.TotalValue);
-                    dataTable.SetValue("Status", row, contract.Status);
-                    dataTable.SetValue("Start Date", row, contract.StartDate);
-                    dataTable.SetValue("End Date", row, contract.EndDate);
-
-                    if (ipcKpis != null && ipcKpis.TryGetValue(contract.Code, out var kpi))
-                    {
-                        dataTable.SetValue("Billed", row, kpi.Billed);
-                        dataTable.SetValue("Remain", row, kpi.Remaining);
-                        dataTable.SetValue("%Comp", row, kpi.CompletionPct);
-                    }
-                    else
-                    {
-                        dataTable.SetValue("Billed", row, 0);
-                        dataTable.SetValue("Remain", row, contract.TotalValue);
-                        dataTable.SetValue("%Comp", row, 0);
-                    }
+                    int row = grid.DataTable.Rows.Count; // Get current row count before adding
+                    grid.DataTable.Rows.Add(); // Add() returns void in SAP B1 UI API
+                    grid.DataTable.SetValue("Code", row, contract.Code);
+                    grid.DataTable.SetValue("Customer", row, contract.CustomerName ?? contract.CustomerCode);
+                    grid.DataTable.SetValue("Description", row, contract.Description);
+                    grid.DataTable.SetValue("Value", row, contract.TotalValue);
+                    grid.DataTable.SetValue("Status", row, contract.Status);
+                    grid.DataTable.SetValue("Start Date", row, contract.StartDate);
+                    grid.DataTable.SetValue("End Date", row, contract.EndDate);
                 }
 
                 grid.AutoResizeColumns();
@@ -308,51 +225,6 @@ namespace ContractManagementAddon.Forms
                 Logger.Error("Error loading contracts to grid", ex);
                 throw;
             }
-        }
-
-        /// <summary>
-        /// Attach dashboard events
-        /// </summary>
-        private void AttachEvents()
-        {
-            _app.UIApp.ItemEvent += OnItemEvent;
-        }
-
-        /// <summary>
-        /// Handle item events for dashboard form
-        /// </summary>
-        private void OnItemEvent(string formUID, ref ItemEvent pVal, out bool bubbleEvent)
-        {
-            bubbleEvent = true;
-
-            try
-            {
-                if (_form == null || pVal.FormUID != _form.UniqueID)
-                    return;
-
-                if (!pVal.BeforeAction && pVal.EventType == BoEventTypes.et_ITEM_PRESSED)
-                {
-                    if (pVal.ItemUID == "btnRefresh")
-                    {
-                        LoadDashboardData();
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.Error("Error handling Dashboard form item event", ex);
-                bubbleEvent = false;
-            }
-        }
-
-        /// <summary>
-        /// Lightweight IPC KPI container for dashboard
-        /// </summary>
-        private class ContractIpcKpi
-        {
-            public double Billed { get; set; }
-            public double Remaining { get; set; }
-            public double CompletionPct { get; set; }
         }
 
         // Helper methods for adding controls

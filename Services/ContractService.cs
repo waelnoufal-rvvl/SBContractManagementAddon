@@ -259,8 +259,8 @@ namespace ContractManagementAddon.Services
                 // Adjusted contract value
                 //double adjustedValue = contract.TotalValue + coImpact;
 
-                // Balance remaining = contract total - billed IPC amount
-                contract.Balance = contract.TotalValue - contract.TotalIPCAmount;
+                // Balance remaining
+                contract.Balance = contract.TotalIPCAmount;
 
                 // Completion percentage
                 contract.CalculateCompletion();

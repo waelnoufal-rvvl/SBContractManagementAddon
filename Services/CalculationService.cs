@@ -22,7 +22,7 @@ namespace ContractManagementAddon.Services
                     throw new ArgumentException("Invalid retention percentage");
                 }
 
-                return RoundMoney(grossAmount * (retentionPercentage / 100));
+                return Math.Round(grossAmount * (retentionPercentage / 100), 2);
             }
             catch (Exception ex)
             {
@@ -36,7 +36,7 @@ namespace ContractManagementAddon.Services
         /// </summary>
         public double CalculateNetAmount(double grossAmount, double retentionAmount)
         {
-            return RoundMoney(grossAmount - retentionAmount);
+            return Math.Round(grossAmount - retentionAmount, 2);
         }
 
         /// <summary>
@@ -51,33 +51,11 @@ namespace ContractManagementAddon.Services
                     return 0;
                 }
 
-                return RoundPercentage((completedAmount / totalAmount) * 100);
+                return Math.Round((completedAmount / totalAmount) * 100, 2);
             }
             catch (Exception ex)
             {
                 Logger.Error("Error calculating completion percentage", ex);
-                throw;
-            }
-        }
-
-        /// <summary>
-        /// Calculate completion percentage based on contract quantity and cumulative quantity.
-        /// Implements division-by-zero protection as per Document 7.
-        /// </summary>
-        public double CalculateCompletionByQuantity(double cumulativeQuantity, double contractQuantity)
-        {
-            try
-            {
-                if (contractQuantity <= 0)
-                {
-                    return 0;
-                }
-
-                return RoundPercentage((cumulativeQuantity / contractQuantity) * 100);
-            }
-            catch (Exception ex)
-            {
-                Logger.Error("Error calculating quantity-based completion percentage", ex);
                 throw;
             }
         }
@@ -339,13 +317,13 @@ namespace ContractManagementAddon.Services
 
                 return new Dictionary<string, double>
                 {
-                    ["Revenue"] = RoundMoney(revenue),
-                    ["Costs"] = RoundMoney(costs),
-                    ["Overhead"] = RoundMoney(overhead),
-                    ["GrossProfit"] = RoundMoney(grossProfit),
-                    ["NetProfit"] = RoundMoney(netProfit),
-                    ["GrossMargin"] = RoundPercentage(grossMargin),
-                    ["NetMargin"] = RoundPercentage(netMargin)
+                    ["Revenue"] = Math.Round(revenue, 2),
+                    ["Costs"] = Math.Round(costs, 2),
+                    ["Overhead"] = Math.Round(overhead, 2),
+                    ["GrossProfit"] = Math.Round(grossProfit, 2),
+                    ["NetProfit"] = Math.Round(netProfit, 2),
+                    ["GrossMargin"] = Math.Round(grossMargin, 2),
+                    ["NetMargin"] = Math.Round(netMargin, 2)
                 };
             }
             catch (Exception ex)
@@ -353,22 +331,6 @@ namespace ContractManagementAddon.Services
                 Logger.Error("Error calculating profitability", ex);
                 throw;
             }
-        }
-
-        /// <summary>
-        /// Monetary rounding helper (2 decimals, half-up)
-        /// </summary>
-        private double RoundMoney(double value)
-        {
-            return Math.Round(value, 2, MidpointRounding.AwayFromZero);
-        }
-
-        /// <summary>
-        /// Percentage rounding helper (2 decimals, half-up)
-        /// </summary>
-        private double RoundPercentage(double value)
-        {
-            return Math.Round(value, 2, MidpointRounding.AwayFromZero);
         }
     }
 }

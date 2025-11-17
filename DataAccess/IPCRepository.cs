@@ -28,12 +28,11 @@ namespace ContractManagementAddon.DataAccess
 
             try
             {
-                // Use new RVCM ICP header table as per technical design
-                string query = $@"SELECT ""Code"", ""DocNum"", ""U_ContractCode"", ""U_IPCNumber"", ""U_IPCDate"",
-                                 ""U_GrossValue"", ""U_TotalDue"", ""U_Status""
-                                 FROM ""@RVCM_ICP""
-                                 WHERE ""U_ContractCode"" = '{DatabaseHelper.EscapeSqlString(contractCode)}'
-                                 ORDER BY ""U_IPCNumber""";
+                string query = $@"SELECT Code, DocNum, U_ContractCode, U_IPCNumber, U_IPCDate,
+                                 U_GrossAmount, U_NetAmount, U_Status
+                                 FROM [@IPC_HDR]
+                                 WHERE U_ContractCode = '{DatabaseHelper.EscapeSqlString(contractCode)}'
+                                 ORDER BY U_IPCNumber";
 
                 recordset = DatabaseHelper.ExecuteQuery(_company, query);
 
@@ -46,9 +45,9 @@ namespace ContractManagementAddon.DataAccess
                         ContractCode = SafeConversion.SafeToString(recordset.Fields.Item("U_ContractCode").Value),
                         IPCNumber = SafeConversion.SafeToInt(recordset.Fields.Item("U_IPCNumber").Value),
                         IPCDate = SafeConversion.SafeToDateTime(recordset.Fields.Item("U_IPCDate").Value),
-                        GrossAmount = SafeConversion.SafeToDouble(recordset.Fields.Item("U_GrossValue").Value),
-                        NetAmount = SafeConversion.SafeToDouble(recordset.Fields.Item("U_TotalDue").Value),
-                        Status = MapDbStatusToModel(SafeConversion.SafeToString(recordset.Fields.Item("U_Status").Value))
+                        GrossAmount = SafeConversion.SafeToDouble(recordset.Fields.Item("U_GrossAmount").Value),
+                        NetAmount = SafeConversion.SafeToDouble(recordset.Fields.Item("U_NetAmount").Value),
+                        Status = SafeConversion.SafeToString(recordset.Fields.Item("U_Status").Value)
                     };
 
                     ipcs.Add(ipc);
@@ -81,7 +80,7 @@ namespace ContractManagementAddon.DataAccess
 
             try
             {
-                string query = $@"SELECT * FROM ""@RVCM_ICP"" WHERE ""Code"" = '{DatabaseHelper.EscapeSqlString(code)}'";
+                string query = $@"SELECT * FROM [@IPC_HDR] WHERE Code = '{DatabaseHelper.EscapeSqlString(code)}'";
                 recordset = DatabaseHelper.ExecuteQuery(_company, query);
 
                 if (recordset.EoF)
@@ -122,8 +121,7 @@ namespace ContractManagementAddon.DataAccess
 
             try
             {
-                // New ICP lines table @RVCM_ICP1
-                string query = $@"SELECT * FROM ""@RVCM_ICP1"" WHERE ""Code"" = '{DatabaseHelper.EscapeSqlString(ipcCode)}' ORDER BY ""LineId""";
+                string query = $@"SELECT * FROM [@IPC_LNS] WHERE Code = '{DatabaseHelper.EscapeSqlString(ipcCode)}' ORDER BY LineId";
                 recordset = DatabaseHelper.ExecuteQuery(_company, query);
 
                 while (!recordset.EoF)
@@ -180,22 +178,18 @@ namespace ContractManagementAddon.DataAccess
                 GeneralService generalService = companyService.GetGeneralService("IPC");
                 GeneralData generalData = (GeneralData)generalService.GetDataInterface(GeneralServiceDataInterfaces.gsGeneralData);
 
-                // Set header fields (see RVCM_IPC_Master_FINAL.b1f)
+                // Set header fields
                 generalData.SetProperty("U_ContractCode", ipc.ContractCode);
                 generalData.SetProperty("U_IPCNumber", ipc.IPCNumber);
                 generalData.SetProperty("U_IPCDate", ipc.IPCDate);
-                generalData.SetProperty("U_Period", ipc.Period ?? string.Empty);
-                generalData.SetProperty("U_GrossValue", ipc.GrossAmount);
+                generalData.SetProperty("U_Period", ipc.Period ?? "");
+                generalData.SetProperty("U_GrossAmount", ipc.GrossAmount);
                 generalData.SetProperty("U_RetentionAmt", ipc.RetentionAmount);
-                generalData.SetProperty("U_AdvDeduct", ipc.AdvanceDeduction);
-                generalData.SetProperty("U_MatDeduct", ipc.MaterialDeduction);
-                generalData.SetProperty("U_OtherDeduct", ipc.OtherDeduction);
-                generalData.SetProperty("U_VATAmount", ipc.VATAmount);
-                generalData.SetProperty("U_TotalDue", ipc.NetAmount);
-                generalData.SetProperty("U_PreviousCertified", ipc.PreviousIPCTotal);
-                generalData.SetProperty("U_CurrentCertified", ipc.CurrentAmount);
-                generalData.SetProperty("U_Status", MapModelStatusToDb(ipc.Status));
-                generalData.SetProperty("U_Remarks", ipc.Remarks ?? string.Empty);
+                generalData.SetProperty("U_NetAmount", ipc.NetAmount);
+                generalData.SetProperty("U_PrevIPCTotal", ipc.PreviousIPCTotal);
+                generalData.SetProperty("U_CurrentAmt", ipc.CurrentAmount);
+                generalData.SetProperty("U_Status", ipc.Status);
+                generalData.SetProperty("U_Remarks", ipc.Remarks ?? "");
 
                 // PHASE 1: Multi-Currency fields
                 generalData.SetProperty("U_Currency", ipc.Currency ?? "USD");
@@ -260,17 +254,11 @@ namespace ContractManagementAddon.DataAccess
 
                 // Update header fields
                 generalData.SetProperty("U_IPCDate", ipc.IPCDate);
-                generalData.SetProperty("U_GrossValue", ipc.GrossAmount);
+                generalData.SetProperty("U_GrossAmount", ipc.GrossAmount);
                 generalData.SetProperty("U_RetentionAmt", ipc.RetentionAmount);
-                generalData.SetProperty("U_AdvDeduct", ipc.AdvanceDeduction);
-                generalData.SetProperty("U_MatDeduct", ipc.MaterialDeduction);
-                generalData.SetProperty("U_OtherDeduct", ipc.OtherDeduction);
-                generalData.SetProperty("U_VATAmount", ipc.VATAmount);
-                generalData.SetProperty("U_TotalDue", ipc.NetAmount);
-                generalData.SetProperty("U_PreviousCertified", ipc.PreviousIPCTotal);
-                generalData.SetProperty("U_CurrentCertified", ipc.CurrentAmount);
-                generalData.SetProperty("U_Status", MapModelStatusToDb(ipc.Status));
-                generalData.SetProperty("U_Remarks", ipc.Remarks ?? string.Empty);
+                generalData.SetProperty("U_NetAmount", ipc.NetAmount);
+                generalData.SetProperty("U_Status", ipc.Status);
+                generalData.SetProperty("U_Remarks", ipc.Remarks ?? "");
 
                 // PHASE 1: Multi-Currency fields
                 generalData.SetProperty("U_Currency", ipc.Currency ?? "USD");
@@ -312,9 +300,9 @@ namespace ContractManagementAddon.DataAccess
         {
             try
             {
-                string query = $@"SELECT COALESCE(MAX(""U_IPCNumber""), 0) + 1 AS ""NextNum""
-                                 FROM ""@RVCM_ICP""
-                                 WHERE ""U_ContractCode"" = '{DatabaseHelper.EscapeSqlString(contractCode)}'";
+                string query = $@"SELECT COALESCE(MAX(U_IPCNumber), 0) + 1 AS NextNum
+                                 FROM [@IPC_HDR]
+                                 WHERE U_ContractCode = '{DatabaseHelper.EscapeSqlString(contractCode)}'";
 
                 object result = DatabaseHelper.ExecuteScalar(_company, query);
                 return SafeConversion.SafeToInt(result, 1);
@@ -334,10 +322,10 @@ namespace ContractManagementAddon.DataAccess
         {
             try
             {
-                string query = $@"SELECT COALESCE(SUM(""U_GrossValue""), 0) AS ""TotalAmount""
-                                 FROM ""@RVCM_ICP""
-                                 WHERE ""U_ContractCode"" = '{DatabaseHelper.EscapeSqlString(contractCode)}'
-                                 AND ""U_Status"" IN ('A', 'P')";
+                string query = $@"SELECT COALESCE(SUM(U_GrossAmount), 0) AS TotalAmount
+                                 FROM [@IPC_HDR]
+                                 WHERE U_ContractCode = '{DatabaseHelper.EscapeSqlString(contractCode)}'
+                                 AND U_Status IN ('Approved', 'Paid')";
 
                 object result = DatabaseHelper.ExecuteScalar(_company, query);
                 return SafeConversion.SafeToDouble(result, 0);
@@ -363,16 +351,12 @@ namespace ContractManagementAddon.DataAccess
                 IPCNumber = SafeConversion.SafeToInt(recordset.Fields.Item("U_IPCNumber").Value),
                 IPCDate = SafeConversion.SafeToDateTime(recordset.Fields.Item("U_IPCDate").Value),
                 Period = SafeConversion.SafeToString(recordset.Fields.Item("U_Period").Value),
-                GrossAmount = SafeConversion.SafeToDouble(recordset.Fields.Item("U_GrossValue").Value),
+                GrossAmount = SafeConversion.SafeToDouble(recordset.Fields.Item("U_GrossAmount").Value),
                 RetentionAmount = SafeConversion.SafeToDouble(recordset.Fields.Item("U_RetentionAmt").Value),
-                AdvanceDeduction = SafeConversion.SafeToDouble(recordset.Fields.Item("U_AdvDeduct").Value),
-                MaterialDeduction = SafeConversion.SafeToDouble(recordset.Fields.Item("U_MatDeduct").Value),
-                OtherDeduction = SafeConversion.SafeToDouble(recordset.Fields.Item("U_OtherDeduct").Value),
-                VATAmount = SafeConversion.SafeToDouble(recordset.Fields.Item("U_VATAmount").Value),
-                NetAmount = SafeConversion.SafeToDouble(recordset.Fields.Item("U_TotalDue").Value),
-                PreviousIPCTotal = SafeConversion.SafeToDouble(recordset.Fields.Item("U_PreviousCertified").Value),
-                CurrentAmount = SafeConversion.SafeToDouble(recordset.Fields.Item("U_CurrentCertified").Value),
-                Status = MapDbStatusToModel(SafeConversion.SafeToString(recordset.Fields.Item("U_Status").Value)),
+                NetAmount = SafeConversion.SafeToDouble(recordset.Fields.Item("U_NetAmount").Value),
+                PreviousIPCTotal = SafeConversion.SafeToDouble(recordset.Fields.Item("U_PrevIPCTotal").Value),
+                CurrentAmount = SafeConversion.SafeToDouble(recordset.Fields.Item("U_CurrentAmt").Value),
+                Status = SafeConversion.SafeToString(recordset.Fields.Item("U_Status").Value),
                 ApprovedBy = SafeConversion.SafeToString(recordset.Fields.Item("U_ApprovedBy").Value),
                 Remarks = SafeConversion.SafeToString(recordset.Fields.Item("U_Remarks").Value),
                 ApprovedDate = SafeConversion.SafeToNullableDateTime(recordset.Fields.Item("U_ApprovedDate").Value),
@@ -388,40 +372,6 @@ namespace ContractManagementAddon.DataAccess
             };
 
             return ipc;
-        }
-
-        /// <summary>
-        /// Map database status code (D/S/A/P/R) to model-friendly status text.
-        /// </summary>
-        private string MapDbStatusToModel(string dbStatus)
-        {
-            switch (dbStatus)
-            {
-                case "D": return "Draft";
-                case "S": return "Submitted";
-                case "A": return "Approved";
-                case "P": return "Paid";
-                case "R": return "Rejected";
-                default:
-                    return string.IsNullOrWhiteSpace(dbStatus) ? "Draft" : dbStatus;
-            }
-        }
-
-        /// <summary>
-        /// Map model status text to database status code.
-        /// </summary>
-        private string MapModelStatusToDb(string modelStatus)
-        {
-            switch (modelStatus)
-            {
-                case "Draft": return "D";
-                case "Submitted": return "S";
-                case "Approved": return "A";
-                case "Paid": return "P";
-                case "Rejected": return "R";
-                default:
-                    return string.IsNullOrWhiteSpace(modelStatus) ? "D" : modelStatus;
-            }
         }
     }
 }
