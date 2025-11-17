@@ -46,6 +46,65 @@ namespace ContractManagementAddon.Services
         }
 
         /// <summary>
+        /// Validate that the new IPC's net payment does not exceed the remaining contract value.
+        /// Implements cumulative validation from Document 7.
+        /// </summary>
+        private void ValidateCumulativePayment(Contract contract, IPC ipc)
+        {
+            Recordset recordset = null;
+
+            try
+            {
+                string contractCode = DatabaseHelper.EscapeSqlString(contract.Code);
+
+                string query = $@"
+SELECT     c.""U_TotalValue"" AS ""ContractTotal"",
+           COALESCE(SUM(i.""U_TotalDue""), 0) AS ""TotalBilled"",
+           (c.""U_TotalValue"" - COALESCE(SUM(i.""U_TotalDue""), 0)) AS ""Remaining""
+FROM ""@RVCM_CNTRCT"" c
+LEFT JOIN ""@RVCM_ICP"" i
+       ON c.""Code"" = i.""U_ContractCode""
+      AND i.""U_Status"" IN ('A', 'P')
+WHERE c.""Code"" = '{contractCode}'
+GROUP BY c.""Code"", c.""U_TotalValue""";
+
+                recordset = DatabaseHelper.ExecuteQuery(_company, query);
+
+                if (recordset.EoF)
+                {
+                    // Fallback to contract total if no data found
+                    return;
+                }
+
+                double contractTotal = SafeConversion.SafeToDouble(recordset.Fields.Item("ContractTotal").Value);
+                double totalBilled = SafeConversion.SafeToDouble(recordset.Fields.Item("TotalBilled").Value);
+                double remaining = SafeConversion.SafeToDouble(recordset.Fields.Item("Remaining").Value);
+
+                double newNetPayment = ipc.NetAmount;
+
+                if (newNetPayment > remaining + 0.01) // small tolerance for rounding differences
+                {
+                    throw new Exception(
+                        $"IPC amount exceeds remaining contract value. " +
+                        $"Contract total: {contractTotal:N2}, Billed: {totalBilled:N2}, Remaining: {remaining:N2}, " +
+                        $"New IPC net: {newNetPayment:N2}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error($"Error during cumulative IPC validation for contract {contract.Code}", ex);
+                throw;
+            }
+            finally
+            {
+                if (recordset != null)
+                {
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(recordset);
+                }
+            }
+        }
+
+        /// <summary>
         /// Get IPC by code
         /// </summary>
         public IPC GetIPC(string code)
@@ -81,10 +140,10 @@ namespace ContractManagementAddon.Services
                     ipc.IPCNumber = _ipcRepo.GetNextIPCNumber(ipc.ContractCode);
                 }
 
-                // Get previous IPC total
+                // Get previous IPC total (approved/paid IPCs)
                 ipc.PreviousIPCTotal = _ipcRepo.GetTotalIPCAmount(ipc.ContractCode);
 
-                // Calculate amounts
+                // Calculate IPC financials (Document 7: retention, deductions, VAT, net payable)
                 ipc.CalculateAmounts(contract.RetentionPercentage);
 
                 // PHASE 1: Multi-Currency logic
@@ -97,12 +156,8 @@ namespace ContractManagementAddon.Services
                     throw new Exception("Validation failed:\n" + string.Join("\n", errors));
                 }
 
-                // Business rule: Check if IPC amount doesn't exceed contract balance
-                double totalIPC = ipc.PreviousIPCTotal + ipc.GrossAmount;
-                if (totalIPC > contract.TotalValue)
-                {
-                    throw new Exception($"IPC amount exceeds contract value. Contract: {contract.TotalValue}, Total IPC: {totalIPC}");
-                }
+                // Business rule: cumulative validation based on net payment (Document 7)
+                ValidateCumulativePayment(contract, ipc);
 
                 // Set audit fields
                 ipc.CreatedDate = DateTime.Now;

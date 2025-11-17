@@ -10,19 +10,33 @@ namespace ContractManagementAddon.Models
     {
         public string Code { get; set; }
         public string DocNum { get; set; }
+        public string ContractName { get; set; }
         public string CustomerCode { get; set; }
         public string CustomerName { get; set; }
+        public string CustomerType { get; set; }
+        public int? ContactPersonId { get; set; }
         public string ProjectCode { get; set; }
         public string ProjectName { get; set; }
+        public string Sector { get; set; }
+        public string UserType { get; set; }
+        public string UnitNumber { get; set; }
+        public string Region { get; set; }
         public string Description { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
+        /// <summary>
+        /// Calculated contract duration in days (EndDate - StartDate)
+        /// </summary>
+        public int DurationDays { get; set; }
         public string Status { get; set; } // Draft, Active, OnHold, Completed, Cancelled
+        public string ContractType { get; set; }
         public double TotalValue { get; set; }
         public string Currency { get; set; }
         public double RetentionPercentage { get; set; }
         public string PaymentTerms { get; set; }
         public string ContractManager { get; set; }
+        public string ApprovalStatus { get; set; }
+        public string PriceQuoteRef { get; set; }
         public string Remarks { get; set; }
         public DateTime CreatedDate { get; set; }
         public string CreatedBy { get; set; }
@@ -50,6 +64,7 @@ namespace ContractManagementAddon.Models
         {
             Lines = new List<ContractLine>();
             Status = "Draft";
+            ApprovalStatus = "P";
             Currency = "USD";
             BaseCurrency = "USD";
             ExchangeRate = 1.0;
@@ -67,6 +82,9 @@ namespace ContractManagementAddon.Models
         /// </summary>
         public void CalculateTotal()
         {
+            // Duration is always derived from dates
+            DurationDays = (EndDate - StartDate).Days;
+
             TotalValue = 0;
             if (Lines != null)
             {
@@ -249,9 +267,21 @@ namespace ContractManagementAddon.Models
         public int IPCNumber { get; set; }
         public DateTime IPCDate { get; set; }
         public string Period { get; set; }
+
+        // Core financial amounts
         public double GrossAmount { get; set; }
         public double RetentionAmount { get; set; }
         public double NetAmount { get; set; }
+
+        // Deductions and tax (see Document 7)
+        public double AdvanceDeduction { get; set; }      // U_AdvDeduct
+        public double MaterialDeduction { get; set; }     // U_MatDeduct
+        public double OtherDeduction { get; set; }        // U_OtherDeduct
+        public double TaxRate { get; set; }               // U_TaxRate (percentage, 0-100)
+        public double Subtotal { get; set; }              // After all deductions, before tax
+        public double VATAmount { get; set; }             // Calculated VAT
+        public double NetPayment { get; set; }            // Net payable (U_NetPayment / U_NetPayable equivalent)
+
         public double PreviousIPCTotal { get; set; }
         public double CurrentAmount { get; set; }
         public string Status { get; set; } // Draft, Submitted, Approved, Rejected, Paid
@@ -293,38 +323,63 @@ namespace ContractManagementAddon.Models
         /// </summary>
         public void CalculateAmounts(double retentionPercentage)
         {
-            // Validate retention percentage
+            // Validate inputs
             if (retentionPercentage < 0 || retentionPercentage > 100)
-            {
                 throw new ArgumentException($"Retention percentage must be between 0 and 100. Got: {retentionPercentage}");
-            }
 
-            // Validate Lines collection
+            if (TaxRate < 0 || TaxRate > 100)
+                throw new ArgumentException($"Tax rate must be between 0 and 100. Got: {TaxRate}");
+
             if (Lines == null)
-            {
                 throw new InvalidOperationException("IPC Lines cannot be null");
-            }
 
+            if (AdvanceDeduction < 0 || MaterialDeduction < 0 || OtherDeduction < 0)
+                throw new InvalidOperationException("Deduction amounts cannot be negative");
+
+            // Step 0: Gross value from lines (rounded)
             GrossAmount = 0;
             foreach (var line in Lines)
             {
-                // Validate line amount is non-negative
                 if (line.Amount < 0)
-                {
                     throw new InvalidOperationException($"IPC line amount cannot be negative: {line.Amount}");
-                }
+
                 GrossAmount += line.Amount;
             }
+            GrossAmount = RoundMoney(GrossAmount);
 
-            RetentionAmount = GrossAmount * (retentionPercentage / 100);
-            NetAmount = GrossAmount - RetentionAmount;
-            CurrentAmount = GrossAmount - PreviousIPCTotal;
+            // Step 1: RetentionAmount = GrossValue * (RetentionPct / 100)
+            RetentionAmount = RoundMoney(GrossAmount * (retentionPercentage / 100.0));
 
-            // Validate results
+            // Step 2: Subtotal = GrossValue - AdvanceDeduct - RetentionAmount - MaterialDeduct - OtherDeduct
+            double rawSubtotal = GrossAmount
+                                 - AdvanceDeduction
+                                 - RetentionAmount
+                                 - MaterialDeduction
+                                 - OtherDeduction;
+            Subtotal = RoundMoney(rawSubtotal);
+
+            // Step 3: VATAmount = Subtotal * (TaxRate / 100)
+            VATAmount = RoundMoney(Subtotal * (TaxRate / 100.0));
+
+            // Step 4: NetPayment = Subtotal + VATAmount
+            NetPayment = RoundMoney(Subtotal + VATAmount);
+
+            // For backward compatibility, keep NetAmount in sync with NetPayment
+            NetAmount = NetPayment;
+
+            // Current IPC work value vs previous work (still tracked on gross for now)
+            CurrentAmount = RoundMoney(GrossAmount - PreviousIPCTotal);
+
             if (NetAmount < 0)
-            {
-                throw new InvalidOperationException($"Net amount cannot be negative. Check retention percentage and gross amount.");
-            }
+                throw new InvalidOperationException("Net amount cannot be negative. Check retention, deductions and tax settings.");
+        }
+
+        /// <summary>
+        /// Monetary rounding helper (2 decimals, half-up)
+        /// </summary>
+        private double RoundMoney(double value)
+        {
+            return Math.Round(value, 2, MidpointRounding.AwayFromZero);
         }
 
         /// <summary>

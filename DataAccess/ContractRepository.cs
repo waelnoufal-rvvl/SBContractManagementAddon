@@ -6,11 +6,11 @@ using ContractManagementAddon.Utilities;
 
 namespace ContractManagementAddon.DataAccess
 {
-    /// <summary>
-    /// Repository for Contract data access
-    /// </summary>
-    public class ContractRepository
-    {
+        /// <summary>
+        /// Repository for Contract data access
+        /// </summary>
+        public class ContractRepository
+        {
         private Company _company;
 
         public ContractRepository(Company company)
@@ -28,26 +28,30 @@ namespace ContractManagementAddon.DataAccess
 
             try
             {
-                string query = @"SELECT Code, DocNum, U_CustomerCode, U_CustomerName,
-                                U_Description, U_StartDate, U_EndDate, U_Status,
-                                U_TotalValue, U_Currency, U_ContractMgr
-                                FROM [@CONTRACT_HDR]
-                                ORDER BY DocNum DESC";
+                // Use new RVCM contract header table as per technical design
+                string query = @"SELECT ""Code"", ""DocNum"", ""U_CardCode"", ""U_CardName"",
+                                ""U_ContractName"", ""U_ProjectNum"", ""U_ProjectName"", ""U_Status"",
+                                ""U_TotalValue"", ""U_Currency"", ""U_ContractMgr""
+                                FROM ""@RVCM_CNTRCT""
+                                ORDER BY ""DocNum"" DESC";
 
                 recordset = DatabaseHelper.ExecuteQuery(_company, query);
 
                 while (!recordset.EoF)
                 {
+                    var contractName = SafeConversion.SafeToString(recordset.Fields.Item("U_ContractName").Value);
+
                     Contract contract = new Contract
                     {
                         Code = SafeConversion.SafeToString(recordset.Fields.Item("Code").Value),
                         DocNum = SafeConversion.SafeToString(recordset.Fields.Item("DocNum").Value),
-                        CustomerCode = SafeConversion.SafeToString(recordset.Fields.Item("U_CustomerCode").Value),
-                        CustomerName = SafeConversion.SafeToString(recordset.Fields.Item("U_CustomerName").Value),
-                        Description = SafeConversion.SafeToString(recordset.Fields.Item("U_Description").Value),
-                        StartDate = SafeConversion.SafeToDateTime(recordset.Fields.Item("U_StartDate").Value),
-                        EndDate = SafeConversion.SafeToDateTime(recordset.Fields.Item("U_EndDate").Value),
-                        Status = SafeConversion.SafeToString(recordset.Fields.Item("U_Status").Value),
+                        CustomerCode = SafeConversion.SafeToString(recordset.Fields.Item("U_CardCode").Value),
+                        CustomerName = SafeConversion.SafeToString(recordset.Fields.Item("U_CardName").Value),
+                        ContractName = contractName,
+                        Description = contractName,
+                        ProjectCode = SafeConversion.SafeToString(recordset.Fields.Item("U_ProjectNum").Value),
+                        ProjectName = SafeConversion.SafeToString(recordset.Fields.Item("U_ProjectName").Value),
+                        Status = MapDbStatusToModel(SafeConversion.SafeToString(recordset.Fields.Item("U_Status").Value)),
                         TotalValue = SafeConversion.SafeToDouble(recordset.Fields.Item("U_TotalValue").Value),
                         Currency = SafeConversion.SafeToString(recordset.Fields.Item("U_Currency").Value),
                         ContractManager = SafeConversion.SafeToString(recordset.Fields.Item("U_ContractMgr").Value)
@@ -83,7 +87,7 @@ namespace ContractManagementAddon.DataAccess
 
             try
             {
-                string query = $@"SELECT * FROM [@CONTRACT_HDR] WHERE Code = '{DatabaseHelper.EscapeSqlString(code)}'";
+                string query = $@"SELECT * FROM ""@RVCM_CNTRCT"" WHERE ""Code"" = '{DatabaseHelper.EscapeSqlString(code)}'";
                 recordset = DatabaseHelper.ExecuteQuery(_company, query);
 
                 if (recordset.EoF)
@@ -124,7 +128,8 @@ namespace ContractManagementAddon.DataAccess
 
             try
             {
-                string query = $@"SELECT * FROM [@CONTRACT_LNS] WHERE Code = '{DatabaseHelper.EscapeSqlString(contractCode)}' ORDER BY LineId";
+                // New contract lines table @RVCM_CNTRCT1
+                string query = $@"SELECT * FROM ""@RVCM_CNTRCT1"" WHERE ""U_ContractCode"" = '{DatabaseHelper.EscapeSqlString(contractCode)}' ORDER BY ""LineId""";
                 recordset = DatabaseHelper.ExecuteQuery(_company, query);
 
                 while (!recordset.EoF)
@@ -179,26 +184,41 @@ namespace ContractManagementAddon.DataAccess
                     throw new Exception("Validation failed: " + string.Join(", ", errors));
                 }
 
-                // Use UDO to create
+                // Use UDO to create (assumes UDO CONTRACT is bound to @RVCM_CNTRCT)
                 CompanyService companyService = _company.GetCompanyService();
                 GeneralService generalService = companyService.GetGeneralService("CONTRACT");
                 GeneralData generalData = (GeneralData)generalService.GetDataInterface(GeneralServiceDataInterfaces.gsGeneralData);
 
-                // Set header fields
+                // Set header fields (RVCM contract schema)
                 generalData.SetProperty("Code", contract.Code);
-                generalData.SetProperty("U_CustomerCode", contract.CustomerCode);
-                generalData.SetProperty("U_CustomerName", contract.CustomerName);
-                generalData.SetProperty("U_ProjectCode", contract.ProjectCode ?? "");
+                generalData.SetProperty("U_CardCode", contract.CustomerCode);
+                generalData.SetProperty("U_CardName", contract.CustomerName);
+                generalData.SetProperty("U_CardType", contract.CustomerType ?? string.Empty);
+                if (contract.ContactPersonId.HasValue)
+                    generalData.SetProperty("U_CntctCode", contract.ContactPersonId.Value);
+                generalData.SetProperty("U_ContractName", string.IsNullOrWhiteSpace(contract.ContractName)
+                    ? contract.Description
+                    : contract.ContractName);
+                generalData.SetProperty("U_ProjectNum", contract.ProjectCode ?? "");
                 generalData.SetProperty("U_ProjectName", contract.ProjectName ?? "");
-                generalData.SetProperty("U_Description", contract.Description);
+                generalData.SetProperty("U_Sector", contract.Sector ?? string.Empty);
+                generalData.SetProperty("U_UserType", contract.UserType ?? string.Empty);
+                generalData.SetProperty("U_UnitNumber", contract.UnitNumber ?? string.Empty);
+                generalData.SetProperty("U_Region", contract.Region ?? string.Empty);
+                generalData.SetProperty("U_ContractType", contract.ContractType ?? string.Empty);
                 generalData.SetProperty("U_StartDate", contract.StartDate);
                 generalData.SetProperty("U_EndDate", contract.EndDate);
-                generalData.SetProperty("U_Status", contract.Status);
+                generalData.SetProperty("U_Duration", contract.DurationDays);
+                generalData.SetProperty("U_Status", MapModelStatusToDb(contract.Status));
                 generalData.SetProperty("U_TotalValue", contract.TotalValue);
                 generalData.SetProperty("U_Currency", contract.Currency);
                 generalData.SetProperty("U_RetentionPct", contract.RetentionPercentage);
                 generalData.SetProperty("U_PaymentTerms", contract.PaymentTerms ?? "");
                 generalData.SetProperty("U_ContractMgr", contract.ContractManager ?? "");
+                generalData.SetProperty("U_QuoteRef", contract.PriceQuoteRef ?? string.Empty);
+                generalData.SetProperty("U_ApprovalSts", string.IsNullOrEmpty(contract.ApprovalStatus)
+                    ? "P"
+                    : contract.ApprovalStatus);
                 generalData.SetProperty("U_Remarks", contract.Remarks ?? "");
 
                 // PHASE 1: Multi-Currency fields
@@ -262,16 +282,35 @@ namespace ContractManagementAddon.DataAccess
                 generalParams.SetProperty("Code", contract.Code);
                 GeneralData generalData = generalService.GetByParams(generalParams);
 
-                // Update header fields
-                generalData.SetProperty("U_CustomerCode", contract.CustomerCode);
-                generalData.SetProperty("U_CustomerName", contract.CustomerName);
-                generalData.SetProperty("U_Description", contract.Description);
+                // Update header fields (RVCM contract schema)
+                generalData.SetProperty("U_CardCode", contract.CustomerCode);
+                generalData.SetProperty("U_CardName", contract.CustomerName);
+                generalData.SetProperty("U_CardType", contract.CustomerType ?? string.Empty);
+                if (contract.ContactPersonId.HasValue)
+                    generalData.SetProperty("U_CntctCode", contract.ContactPersonId.Value);
+                generalData.SetProperty("U_ContractName", string.IsNullOrWhiteSpace(contract.ContractName)
+                    ? contract.Description
+                    : contract.ContractName);
+                generalData.SetProperty("U_ProjectNum", contract.ProjectCode ?? "");
+                generalData.SetProperty("U_ProjectName", contract.ProjectName ?? "");
+                generalData.SetProperty("U_Sector", contract.Sector ?? string.Empty);
+                generalData.SetProperty("U_UserType", contract.UserType ?? string.Empty);
+                generalData.SetProperty("U_UnitNumber", contract.UnitNumber ?? string.Empty);
+                generalData.SetProperty("U_Region", contract.Region ?? string.Empty);
+                generalData.SetProperty("U_ContractType", contract.ContractType ?? string.Empty);
                 generalData.SetProperty("U_StartDate", contract.StartDate);
                 generalData.SetProperty("U_EndDate", contract.EndDate);
-                generalData.SetProperty("U_Status", contract.Status);
+                generalData.SetProperty("U_Duration", contract.DurationDays);
+                generalData.SetProperty("U_Status", MapModelStatusToDb(contract.Status));
                 generalData.SetProperty("U_TotalValue", contract.TotalValue);
                 generalData.SetProperty("U_Currency", contract.Currency);
                 generalData.SetProperty("U_RetentionPct", contract.RetentionPercentage);
+                generalData.SetProperty("U_PaymentTerms", contract.PaymentTerms ?? "");
+                generalData.SetProperty("U_ContractMgr", contract.ContractManager ?? "");
+                generalData.SetProperty("U_QuoteRef", contract.PriceQuoteRef ?? string.Empty);
+                generalData.SetProperty("U_ApprovalSts", string.IsNullOrEmpty(contract.ApprovalStatus)
+                    ? "P"
+                    : contract.ApprovalStatus);
                 generalData.SetProperty("U_Remarks", contract.Remarks ?? "");
 
                 // PHASE 1: Multi-Currency fields
@@ -326,32 +365,79 @@ namespace ContractManagementAddon.DataAccess
         /// </summary>
         private Contract MapContract(Recordset recordset)
         {
+            var contractName = SafeConversion.SafeToString(recordset.Fields.Item("U_ContractName").Value);
+
             return new Contract
             {
                 Code = SafeConversion.SafeToString(recordset.Fields.Item("Code").Value),
                 DocNum = SafeConversion.SafeToString(recordset.Fields.Item("DocNum").Value),
-                CustomerCode = SafeConversion.SafeToString(recordset.Fields.Item("U_CustomerCode").Value),
-                CustomerName = SafeConversion.SafeToString(recordset.Fields.Item("U_CustomerName").Value),
-                ProjectCode = SafeConversion.SafeToString(recordset.Fields.Item("U_ProjectCode").Value),
+                CustomerCode = SafeConversion.SafeToString(recordset.Fields.Item("U_CardCode").Value),
+                CustomerName = SafeConversion.SafeToString(recordset.Fields.Item("U_CardName").Value),
+                CustomerType = SafeConversion.SafeToString(recordset.Fields.Item("U_CardType").Value),
+                ContactPersonId = SafeConversion.SafeToNullableInt(recordset.Fields.Item("U_CntctCode").Value),
+                ContractName = contractName,
+                Description = contractName,
+                ProjectCode = SafeConversion.SafeToString(recordset.Fields.Item("U_ProjectNum").Value),
                 ProjectName = SafeConversion.SafeToString(recordset.Fields.Item("U_ProjectName").Value),
-                Description = SafeConversion.SafeToString(recordset.Fields.Item("U_Description").Value),
+                Sector = SafeConversion.SafeToString(recordset.Fields.Item("U_Sector").Value),
+                UserType = SafeConversion.SafeToString(recordset.Fields.Item("U_UserType").Value),
+                UnitNumber = SafeConversion.SafeToString(recordset.Fields.Item("U_UnitNumber").Value),
+                Region = SafeConversion.SafeToString(recordset.Fields.Item("U_Region").Value),
                 StartDate = SafeConversion.SafeToDateTime(recordset.Fields.Item("U_StartDate").Value),
                 EndDate = SafeConversion.SafeToDateTime(recordset.Fields.Item("U_EndDate").Value),
-                Status = SafeConversion.SafeToString(recordset.Fields.Item("U_Status").Value),
+                DurationDays = SafeConversion.SafeToInt(recordset.Fields.Item("U_Duration").Value),
+                Status = MapDbStatusToModel(SafeConversion.SafeToString(recordset.Fields.Item("U_Status").Value)),
+                ContractType = SafeConversion.SafeToString(recordset.Fields.Item("U_ContractType").Value),
                 TotalValue = SafeConversion.SafeToDouble(recordset.Fields.Item("U_TotalValue").Value),
                 Currency = SafeConversion.SafeToString(recordset.Fields.Item("U_Currency").Value),
+                // Retention, payment terms, contract manager, remarks and FX fields are optional in RVCM schema
                 RetentionPercentage = SafeConversion.SafeToDouble(recordset.Fields.Item("U_RetentionPct").Value),
                 PaymentTerms = SafeConversion.SafeToString(recordset.Fields.Item("U_PaymentTerms").Value),
                 ContractManager = SafeConversion.SafeToString(recordset.Fields.Item("U_ContractMgr").Value),
+                PriceQuoteRef = SafeConversion.SafeToString(recordset.Fields.Item("U_QuoteRef").Value),
+                ApprovalStatus = SafeConversion.SafeToString(recordset.Fields.Item("U_ApprovalSts").Value),
                 Remarks = SafeConversion.SafeToString(recordset.Fields.Item("U_Remarks").Value),
 
-                // PHASE 1: Multi-Currency fields
                 BaseCurrency = SafeConversion.SafeToString(recordset.Fields.Item("U_BaseCurrency").Value),
                 ExchangeRate = SafeConversion.SafeToDouble(recordset.Fields.Item("U_ExchangeRate").Value, 1.0),
                 BaseCurrencyValue = SafeConversion.SafeToDouble(recordset.Fields.Item("U_BaseCurrValue").Value),
                 FXGainLoss = SafeConversion.SafeToDouble(recordset.Fields.Item("U_FXGainLoss").Value),
                 LastFXUpdateDate = SafeConversion.SafeToNullableDateTime(recordset.Fields.Item("U_LastFXUpdate").Value)
             };
+        }
+
+        /// <summary>
+        /// Map database contract status code to model-friendly status text.
+        /// </summary>
+        private string MapDbStatusToModel(string dbStatus)
+        {
+            switch (dbStatus)
+            {
+                case "D": return "Draft";
+                case "A": return "Active";
+                case "H": return "OnHold";
+                case "C": return "Completed";
+                case "X": return "Cancelled";
+                default:
+                    return string.IsNullOrWhiteSpace(dbStatus) ? "Draft" : dbStatus;
+            }
+        }
+
+        /// <summary>
+        /// Map model contract status text to database status code.
+        /// </summary>
+        private string MapModelStatusToDb(string modelStatus)
+        {
+            switch (modelStatus)
+            {
+                case "Draft": return "D";
+                case "Active": return "A";
+                case "OnHold": return "H";
+                case "Completed": return "C";
+                case "Cancelled": return "X";
+                default:
+                    return string.IsNullOrWhiteSpace(modelStatus) ? "D" : modelStatus;
+            }
         }
     }
 }
